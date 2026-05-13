@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Produto</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 350px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Detalhes do Produto</h2>
+
+  <div class="card" id="conteudo">
+    A carregar produto...
+  </div>
+
+  <script>
+    // Lê o ID da URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("ID");
+
+    // Base de dados simples
+    const produtos = {
+      1: { nome: "Maçã Fuji", preco: "1.20€", stock: "50 unidades" },
+      2: { nome: "Maçã Gala", preco: "1.10€", stock: "30 unidades" },
+      3: { nome: "Maçã Verde", preco: "1.30€", stock: "40 unidades" }
+    };
+
+    const div = document.getElementById("conteudo");
+
+    // Verifica se o ID existe
+    if (!id) {
+      div.innerHTML = "<p><strong>Erro:</strong> Nenhum ID foi enviado no link.</p>";
+    } 
+    else if (!produtos[id]) {
+      div.innerHTML = `<p><strong>Erro:</strong> Produto não encontrado para o ID ${id}.</p>`;
+    } 
+    else {
+      const p = produtos[id];
+      div.innerHTML = `
+        <p><strong>Nome:</strong> ${p.nome}</p>
+        <p><strong>Preço:</strong> ${p.preco}</p>
+        <p><strong>Stock:</strong> ${p.stock}</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
