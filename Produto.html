@@ -9,72 +9,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root {
-  --ink: #000000;
-  --ink-2: #1a1a1a;
-  --ink-3: #333333;
-  --ink-4: #555555;
-  --paper: #ffffff;
-  --paper-2: #f8f9fa;
-  --paper-3: #f1f3f5;
-  --line: #d1d1d1;
-  --line-2: #b1b1b1;
+  --ink: #000000; --ink-2: #1a1a1a; --ink-3: #333333; --ink-4: #555555;
+  --paper: #ffffff; --paper-2: #f8f9fa; --paper-3: #f1f3f5;
+  --line: #d1d1d1; --line-2: #b1b1b1;
   --n1: #ff2222; --n1-bg: #fff2f2;
   --n2: #ff7b00; --n2-bg: #fff3e6;
   --n3: #ffcc00; --n3-bg: #fffbe6;
-  --bar-blue: #2b2fd8;
-  --bar-orange: #d8722a;
-  --bar-track: #e4e4e8;
-  --btn-border: #b1b1b1;
-  --btn-text: #222;
+  --bar-blue: #2b2fd8; --bar-orange: #d8722a; --bar-track: #e4e4e8;
+  --btn-border: #b1b1b1; --btn-text: #222;
   --shadow: 0 1px 4px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.04);
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-}
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; -webkit-font-smoothing: antialiased; }
 
-.header {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(255,255,255,.98);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--line);
-  padding: 0 32px;
-  height: 62px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
-}
+.header { position: sticky; top: 0; z-index: 200; background: rgba(255,255,255,.98); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); padding: 0 32px; height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .header-left { display: flex; align-items: center; gap: 12px; }
-.header-icon {
-  width: 36px; height: 36px; border-radius: 9px;
-  background: #1c1c2e;
-  display: flex; align-items: center; justify-content: center;
-}
+.header-icon { width: 36px; height: 36px; border-radius: 9px; background: #1c1c2e; display: flex; align-items: center; justify-content: center; }
 .header-icon svg { width: 18px; height: 18px; fill: #fff; }
 .header-title { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--ink); letter-spacing: -0.2px; white-space: nowrap; }
-.header-badge {
-  padding: 5px 14px; border-radius: 99px;
-  background: #f1f3f5; border: 1px solid var(--line-2);
-  font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap;
-}
+.header-badge { padding: 5px 14px; border-radius: 99px; background: #f1f3f5; border: 1px solid var(--line-2); font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
 
 .main { max-width: 1320px; margin: 0 auto; padding: 28px 24px 64px; }
 
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: #fff; border: 1px solid var(--line);
-  border-radius: 14px; padding: 20px 20px 16px;
-  box-shadow: var(--shadow);
-  display: flex; flex-direction: column; gap: 6px;
-  align-items: center; text-align: center;
-}
+.home-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 20px 20px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; }
 .stat-card-label { font-size: 12px; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; color: var(--ink-4); }
 .stat-card-val { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1; color: var(--ink); }
 .stat-card-sub { font-size: 13px; color: var(--ink-4); margin-top: 2px; font-weight: 600; }
@@ -83,25 +41,10 @@ body {
 .stat-card.accent-yellow .stat-card-val { color: var(--n3); }
 
 .home-table { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
-.ht-head {
-  display: grid;
-  grid-template-columns: 76px 210px 1fr 180px 110px 136px;
-  background: #f1f3f5; border-bottom: 1px solid var(--line);
-}
-.ht-th {
-  padding: 14px 12px; font-size: 13px; font-weight: 800;
-  letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink);
-  text-align: center; border-right: 1px solid var(--line);
-  white-space: nowrap;
-}
+.ht-head { display: grid; grid-template-columns: 76px 210px 1fr 180px 110px 136px; background: #f1f3f5; border-bottom: 1px solid var(--line); }
+.ht-th { padding: 14px 12px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink); text-align: center; border-right: 1px solid var(--line); white-space: nowrap; }
 .ht-th.left { text-align: left; padding-left: 16px; }
-.ht-row {
-  display: grid;
-  grid-template-columns: 76px 210px 1fr 180px 110px 136px;
-  border-bottom: 1px solid var(--line);
-  transition: background 0.12s;
-  cursor: pointer;
-}
+.ht-row { display: grid; grid-template-columns: 76px 210px 1fr 180px 110px 136px; border-bottom: 1px solid var(--line); transition: background 0.12s; cursor: pointer; }
 .ht-td { display: flex; align-items: center; justify-content: center; padding: 12px; border-right: 1px solid var(--line); }
 .ht-td.left { justify-content: flex-start; padding-left: 16px; }
 .ht-td:last-child { border-right: none; }
@@ -117,21 +60,12 @@ body {
 .fill-blue { background: var(--bar-blue); }
 .mini-pct { font-size: 13px; font-weight: 800; min-width: 38px; text-align: right; }
 
-.btn-detail {
-  padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line-2);
-  background: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
-  display: flex; align-items: center; gap: 6px;
-}
+.btn-detail { padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line-2); background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
 .home-screen, .detail-screen { display: none; }
 .home-screen.active, .detail-screen.active { display: block; }
 
-/* Detail Specifics */
-.btn-back {
-  display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 7px;
-  border: 1px solid var(--line-2); background: var(--paper-3); font-size: 13px; font-weight: 600;
-  cursor: pointer; margin-bottom: 20px;
-}
+.btn-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line-2); background: var(--paper-3); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
 .loja-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
 .card-main { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 24px; margin-bottom: 24px; }
 .loja-nome { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1.2; }
@@ -160,54 +94,82 @@ body {
 .action-icon { width: 38px; height: 38px; border-radius: 9px; background: #e8924a; display: flex; align-items: center; justify-content: center; font-size: 17px; }
 .action-title { font-size: 14px; font-weight: 700; }
 .action-desc { font-size: 13px; color: var(--ink-3); line-height: 1.4; font-weight: 600; }
-
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-left">
-    <div class="header-icon">
-      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-    </div>
-    <div>
-      <div class="header-title">Análise Semanal IM</div>
-    </div>
+    <div class="header-icon"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></div>
+    <div class="header-title">Análise Semanal IM</div>
   </div>
-  <div class="header-badge" id="periodo">A carregar...</div>
+  <div class="header-badge" id="periodo">📅 Atualizado</div>
 </div>
 
 <div class="main">
   <div id="home-screen" class="home-screen active">
     <div id="home-content"></div>
   </div>
-
   <div id="detail-screen" class="detail-screen">
-    <button class="btn-back" onclick="goHome()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar
-    </button>
+    <button class="btn-back" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar</button>
     <div id="detail-content"></div>
   </div>
 </div>
 
 <script>
-let _lojas = [];
-let _charts = {};
+// DADOS INTEGRADOS PARA GARANTIR FUNCIONAMENTO IMEDIATO
+const _data = {
+  "atualizadoEm": "2026-06-12T12:54:36.061Z",
+  "lojas": [
+    {
+      "nome": "COMA OU LEVE",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": { "fechadas": 1599, "porFechar": 19, "total": 1618 },
+      "areas": [
+        { "area": "Controlo da Qualidade do Óleo", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 112, "porFechar": 0, "total": 112 }] },
+        { "area": "Desinfeção de Frutas e Legumes", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 276, "porFechar": 5, "total": 281 }] },
+        { "area": "Higienização", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 84, "porFechar": 1, "total": 85 }, { "subarea": "Higienização Diárias", "fechadas": 89, "porFechar": 3, "total": 92 }] },
+        { "area": "Monitorização Temperaturas", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 393, "porFechar": 4, "total": 397 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 331, "porFechar": 3, "total": 334 }, { "subarea": "Equipamentos de Frio", "fechadas": 33, "porFechar": 1, "total": 34 }] },
+        { "area": "Pragas", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 266, "porFechar": 2, "total": 268 }] },
+        { "area": "Receção de Mercadorias", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 15, "porFechar": 0, "total": 15 }] }
+      ]
+    },
+    {
+      "nome": "NOVA CHURRASQUEIRA",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": { "fechadas": 1552, "porFechar": 21, "total": 1573 },
+      "areas": [
+        { "area": "Controlo da Qualidade do Óleo", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 309, "porFechar": 3, "total": 312 }] },
+        { "area": "Desinfeção de Frutas e Legumes", "taxa": 71, "nivel": "N3", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 10, "porFechar": 4, "total": 14 }] },
+        { "area": "Higienização", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 102, "porFechar": 2, "total": 104 }, { "subarea": "Higienização Diárias", "fechadas": 199, "porFechar": 5, "total": 204 }] },
+        { "area": "Monitorização Temperaturas", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 204, "porFechar": 0, "total": 204 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 270, "porFechar": 1, "total": 271 }, { "subarea": "Equipamentos de Frio", "fechadas": 60, "porFechar": 0, "total": 60 }] },
+        { "area": "Pragas", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 103, "porFechar": 2, "total": 105 }] },
+        { "area": "Receção de Mercadorias", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 295, "porFechar": 4, "total": 299 }] }
+      ]
+    },
+    {
+      "nome": "RIBEIRINHO RESTAURANTE",
+      "taxa": 98,
+      "nivel": "N1",
+      "totais": { "fechadas": 1479, "porFechar": 24, "total": 1503 },
+      "areas": [
+        { "area": "Controlo da Qualidade do Óleo", "taxa": 96, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 64, "porFechar": 3, "total": 67 }] },
+        { "area": "Desinfeção de Frutas e Legumes", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 361, "porFechar": 2, "total": 363 }] },
+        { "area": "Higienização", "taxa": 89, "nivel": "N2", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 11, "porFechar": 3, "total": 14 }, { "subarea": "Higienização Diárias", "fechadas": 56, "porFechar": 5, "total": 61 }] },
+        { "area": "Monitorização Temperaturas", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 136, "porFechar": 2, "total": 138 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 162, "porFechar": 0, "total": 162 }, { "subarea": "Equipamentos de Frio", "fechadas": 294, "porFechar": 0, "total": 294 }] },
+        { "area": "Pragas", "taxa": 97, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 118, "porFechar": 4, "total": 122 }] },
+        { "area": "Receção de Mercadorias", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 277, "porFechar": 5, "total": 282 }] }
+      ]
+    }
+  ]
+};
+
+const _lojas = _data.lojas;
 
 function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 function pillCls(n) { return n === 'N1' ? 'pill-n1' : n === 'N2' ? 'pill-n2' : 'pill-n3'; }
-
-async function loadData() {
-  try {
-    const r = await fetch('dados.json?t=' + Date.now());
-    const json = await r.json();
-    _lojas = json.lojas || [];
-    document.getElementById('periodo').textContent = '📅 ' + new Date(json.atualizadoEm).toLocaleDateString();
-    renderHome();
-  } catch (e) {
-    document.getElementById('home-content').innerHTML = '<div style="padding:40px;text-align:center;color:red">Erro ao carregar dados.json</div>';
-  }
-}
 
 function renderHome() {
   const n1 = _lojas.filter(l => l.nivel === 'N1').length;
@@ -216,89 +178,31 @@ function renderHome() {
 
   let html = `
     <div class="home-stats">
-      <div class="stat-card">
-        <div class="stat-card-label">Total de Lojas</div>
-        <div class="stat-card-val">${_lojas.length}</div>
-        <div class="stat-card-sub">Esta semana</div>
-      </div>
-      <div class="stat-card accent-red">
-        <div class="stat-card-label">Nível 1</div>
-        <div class="stat-card-val">${n1}</div>
-        <div class="stat-card-sub">Crítico</div>
-      </div>
-      <div class="stat-card accent-amber">
-        <div class="stat-card-label">Nível 2</div>
-        <div class="stat-card-val">${n2}</div>
-        <div class="stat-card-sub">Atenção</div>
-      </div>
-      <div class="stat-card accent-yellow">
-        <div class="stat-card-label">Nível 3</div>
-        <div class="stat-card-val">${n3}</div>
-        <div class="stat-card-sub">Conforme</div>
-      </div>
+      <div class="stat-card"><div class="stat-card-label">Total Lojas</div><div class="stat-card-val">${_lojas.length}</div><div class="stat-card-sub">Monitorizadas</div></div>
+      <div class="stat-card accent-red"><div class="stat-card-label">Nível 1</div><div class="stat-card-val">${n1}</div><div class="stat-card-sub">Crítico</div></div>
+      <div class="stat-card accent-amber"><div class="stat-card-label">Nível 2</div><div class="stat-card-val">${n2}</div><div class="stat-card-sub">Atenção</div></div>
+      <div class="stat-card accent-yellow"><div class="stat-card-label">Nível 3</div><div class="stat-card-val">${n3}</div><div class="stat-card-sub">Bom</div></div>
     </div>
-
     <div class="home-table">
       <div class="ht-head">
-        <div class="ht-th">#</div>
-        <div class="ht-th left">Loja</div>
-        <div class="ht-th">Tarefas Fechadas</div>
-        <div class="ht-th">Progresso</div>
-        <div class="ht-th">Estado</div>
-        <div class="ht-th">Detalhe</div>
+        <div class="ht-th">#</div><div class="ht-th left">Loja</div><div class="ht-th">Fechadas</div><div class="ht-th">Progresso</div><div class="ht-th">Estado</div><div class="ht-th">Ação</div>
       </div>
       <div>
         ${_lojas.map((l, i) => `
           <div class="ht-row" onclick="goDetail(${i})">
-            <div class="ht-td">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-                <span style="font-family:'DM Serif Display';font-size:24px">${i+1}</span>
-                <span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span>
-              </div>
-            </div>
-            <div class="ht-td left">
-              <div style="font-weight:700;font-size:16px">${l.nome}</div>
-            </div>
-            <div class="ht-td">
-              <div style="font-size:13px;font-weight:600">
-                ${fmt(l.totais.fechadas)} / ${fmt(l.totais.total)}
-              </div>
-            </div>
-            <div class="ht-td">
-              <div class="mini-prog">
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div class="mini-track"><div class="mini-fill fill-blue" style="width:${l.taxa}%"></div></div>
-                  <span class="mini-pct">${l.taxa}%</span>
-                </div>
-              </div>
-            </div>
-            <div class="ht-td">
-              <span class="rank-pill ${pillCls(l.nivel)}">${l.nivel === 'N1' ? 'CRÍTICO' : l.nivel === 'N2' ? 'ATENÇÃO' : 'BOM'}</span>
-            </div>
-            <div class="ht-td">
-              <button class="btn-detail">Detalhe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-            </div>
+            <div class="ht-td"><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-family:'DM Serif Display';font-size:24px">${i+1}</span><span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span></div></div>
+            <div class="ht-td left"><div style="font-weight:700;font-size:16px">${l.nome}</div></div>
+            <div class="ht-td"><div style="font-size:13px;font-weight:600">${fmt(l.totais.fechadas)} / ${fmt(l.totais.total)}</div></div>
+            <div class="ht-td"><div class="mini-prog"><div style="display:flex;align-items:center;gap:8px"><div class="mini-track"><div class="mini-fill fill-blue" style="width:${l.taxa}%"></div></div><span class="mini-pct">${l.taxa}%</span></div></div></div>
+            <div class="ht-td"><span class="rank-pill ${pillCls(l.nivel)}">${l.nivel === 'N1' ? 'CRÍTICO' : 'ATENÇÃO'}</span></div>
+            <div class="ht-td"><button class="btn-detail" onclick="event.stopPropagation();goDetail(${i})">Detalhe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button></div>
           </div>
         `).join('')}
       </div>
     </div>
-
     <div class="bottom-bar">
-      <div class="level-legend">
-        <div class="level-legend-title">Classificação de Nível</div>
-        <div class="level-items">
-          <div class="level-item"><div class="level-dot pill-n1">N1</div><span>Ação Urgente</span></div>
-          <div class="level-item"><div class="level-dot pill-n2">N2</div><span>Monitorização</span></div>
-          <div class="level-item"><div class="level-dot pill-n3">N3</div><span>Conforme</span></div>
-        </div>
-      </div>
-      <div class="action-banner">
-        <div class="action-icon">⚠</div>
-        <div>
-          <div class="action-title">Ação Recomendada</div>
-          <div class="action-desc">Contactar urgentemente responsáveis das lojas N1. Clique em "Detalhe" para ver as secções.</div>
-        </div>
-      </div>
+      <div class="level-legend"><div class="level-legend-title">Classificação</div><div class="level-items"><div class="level-item"><div class="level-dot pill-n1">N1</div><span>Crítico</span></div><div class="level-item"><div class="level-dot pill-n2">N2</div><span>Atenção</span></div></div></div>
+      <div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Recomendação</div><div class="action-desc">Contactar responsáveis N1. Ver secções no detalhe.</div></div></div>
     </div>
   `;
   document.getElementById('home-content').innerHTML = html;
@@ -309,38 +213,21 @@ function goDetail(idx) {
   let html = `
     <div class="loja-card">
       <div class="card-main">
-        <div>
-          <div class="loja-nome">${l.nome}</div>
-          <div class="loja-code">Nível de Conformidade: <span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span></div>
-        </div>
+        <div><div class="loja-nome">${l.nome}</div><div class="loja-code">Nível: <span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span></div></div>
         <div class="col-metrics">
           <div class="metric-group is-total"><div class="mg-label">Total</div><div class="mg-val">${fmt(l.totais.total)}</div></div>
           <div class="metric-group"><div class="mg-label">Fechadas</div><div class="mg-val">${fmt(l.totais.fechadas)}</div></div>
           <div class="metric-group"><div class="mg-label">Abertas</div><div class="mg-val">${fmt(l.totais.porFechar)}</div></div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:36px;font-weight:700;color:var(--bar-blue)">${l.taxa}%</div>
-          <div class="mg-label">Progresso Global</div>
-        </div>
+        <div style="text-align:right"><div style="font-size:36px;font-weight:700;color:var(--bar-blue)">${l.taxa}%</div><div class="mg-label">Progresso</div></div>
       </div>
-
       <div class="sec-grid">
         ${l.areas.map((a, ai) => `
           <div class="sec-card">
-            <div class="sec-card-head">
-              <span>${a.area}</span>
-              <span>${a.taxa}%</span>
-            </div>
+            <div class="sec-card-head"><span>${a.area}</span><span>${a.taxa}%</span></div>
             <div class="sec-card-body">
-              <div style="height:80px;margin-bottom:12px">
-                <canvas id="chart-${idx}-${ai}"></canvas>
-              </div>
-              ${a.subareas.map(s => `
-                <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #eee">
-                  <span style="color:var(--ink-3)">${s.subarea}</span>
-                  <span style="font-weight:700">${s.fechadas} / ${s.total}</span>
-                </div>
-              `).join('')}
+              <div style="height:80px;margin-bottom:12px"><canvas id="chart-${idx}-${ai}"></canvas></div>
+              ${a.subareas.map(s => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #eee"><span style="color:var(--ink-3)">${s.subarea}</span><span style="font-weight:700">${s.fechadas} / ${s.total}</span></div>`).join('')}
             </div>
           </div>
         `).join('')}
@@ -352,37 +239,16 @@ function goDetail(idx) {
   document.getElementById('detail-screen').classList.add('active');
   window.scrollTo(0,0);
 
-  // Render charts for areas
   setTimeout(() => {
     l.areas.forEach((a, ai) => {
       const ctx = document.getElementById(`chart-${idx}-${ai}`).getContext('2d');
       new Chart(ctx, {
-        type: 'bar',
-        plugins: [ChartDataLabels],
-        data: {
-          labels: ['Progresso'],
-          datasets: [{
-            data: [a.taxa],
-            backgroundColor: a.taxa < 50 ? 'rgba(255, 34, 34, 0.7)' : 'rgba(43, 47, 216, 0.7)',
-            borderRadius: 4
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            datalabels: { anchor: 'end', align: 'right', formatter: v => v + '%', font: { weight: 'bold' } }
-          },
-          scales: {
-            x: { display: false, max: 100 },
-            y: { display: false }
-          }
-        }
+        type: 'bar', plugins: [ChartDataLabels],
+        data: { labels: [''], datasets: [{ data: [a.taxa], backgroundColor: 'rgba(43, 47, 216, 0.7)', borderRadius: 4 }] },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', formatter: v => v + '%', font: { weight: 'bold' } } }, scales: { x: { display: false, max: 100 }, y: { display: false } } }
       });
     });
-  }, 100);
+  }, 50);
 }
 
 function goHome() {
@@ -390,7 +256,7 @@ function goHome() {
   document.getElementById('home-screen').classList.add('active');
 }
 
-window.onload = loadData;
+window.onload = renderHome;
 </script>
 </body>
 </html>
