@@ -3,260 +3,208 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Análise Semanal IM</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<title>Dashboard Operacional IM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root {
-  --ink: #000000; --ink-2: #1a1a1a; --ink-3: #333333; --ink-4: #555555;
-  --paper: #ffffff; --paper-2: #f8f9fa; --paper-3: #f1f3f5;
-  --line: #d1d1d1; --line-2: #b1b1b1;
-  --n1: #ff2222; --n1-bg: #fff2f2;
-  --n2: #ff7b00; --n2-bg: #fff3e6;
-  --n3: #ffcc00; --n3-bg: #fffbe6;
-  --bar-blue: #2b2fd8; --bar-orange: #d8722a; --bar-track: #e4e4e8;
-  --btn-border: #b1b1b1; --btn-text: #222;
-  --shadow: 0 1px 4px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.04);
+  --ink: #1a1a1a; --ink-light: #666;
+  --paper: #ffffff; --paper-alt: #f8f9fa;
+  --accent: #2b2fd8; --accent-light: #eef0ff;
+  --danger: #ff2222; --danger-light: #fff2f2;
+  --warning: #ff7b00; --warning-light: #fff3e6;
+  --success: #228b22; --success-light: #f0faf0;
+  --line: #e0e0e0;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; -webkit-font-smoothing: antialiased; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper-alt); color: var(--ink); line-height: 1.5; }
 
-.header { position: sticky; top: 0; z-index: 200; background: rgba(255,255,255,.98); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); padding: 0 32px; height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.header-left { display: flex; align-items: center; gap: 12px; }
-.header-icon { width: 36px; height: 36px; border-radius: 9px; background: #1c1c2e; display: flex; align-items: center; justify-content: center; }
-.header-icon svg { width: 18px; height: 18px; fill: #fff; }
-.header-title { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--ink); letter-spacing: -0.2px; white-space: nowrap; }
-.header-badge { padding: 5px 14px; border-radius: 99px; background: #f1f3f5; border: 1px solid var(--line-2); font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+/* Header */
+.header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.header-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; }
+.update-badge { font-size: 0.8rem; background: var(--accent-light); color: var(--accent); padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; }
 
-.main { max-width: 1320px; margin: 0 auto; padding: 28px 24px 64px; }
+.container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
 
-.home-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.stat-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 20px 20px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; }
-.stat-card-label { font-size: 12px; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; color: var(--ink-4); }
-.stat-card-val { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1; color: var(--ink); }
-.stat-card-sub { font-size: 13px; color: var(--ink-4); margin-top: 2px; font-weight: 600; }
-.stat-card.accent-red .stat-card-val { color: var(--n1); }
-.stat-card.accent-amber .stat-card-val { color: var(--n2); }
-.stat-card.accent-yellow .stat-card-val { color: var(--n3); }
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow); text-align: center; }
+.stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-light); margin-bottom: 0.5rem; font-weight: 700; }
+.stat-value { font-family: 'DM Serif Display', serif; font-size: 2.5rem; line-height: 1; }
 
-.home-table { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
-.ht-head { display: grid; grid-template-columns: 76px 210px 1fr 180px 110px 136px; background: #f1f3f5; border-bottom: 1px solid var(--line); }
-.ht-th { padding: 14px 12px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink); text-align: center; border-right: 1px solid var(--line); white-space: nowrap; }
-.ht-th.left { text-align: left; padding-left: 16px; }
-.ht-row { display: grid; grid-template-columns: 76px 210px 1fr 180px 110px 136px; border-bottom: 1px solid var(--line); transition: background 0.12s; cursor: pointer; }
-.ht-td { display: flex; align-items: center; justify-content: center; padding: 12px; border-right: 1px solid var(--line); }
-.ht-td.left { justify-content: flex-start; padding-left: 16px; }
-.ht-td:last-child { border-right: none; }
+/* Table Style */
+.table-container { background: white; border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--paper-alt); padding: 1rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--ink-light); border-bottom: 1px solid var(--line); }
+td { padding: 1.25rem 1rem; border-bottom: 1px solid var(--line); cursor: pointer; transition: background 0.2s; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--paper-alt); }
 
-.rank-pill { padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-.pill-n1 { background: var(--n1-bg); color: var(--n1); }
-.pill-n2 { background: var(--n2-bg); color: var(--n2); }
-.pill-n3 { background: var(--n3-bg); color: var(--n3); }
+.rank { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--ink-light); width: 50px; }
+.loja-name { font-weight: 700; font-size: 1.1rem; }
+.progress-container { display: flex; align-items: center; gap: 1rem; min-width: 200px; }
+.progress-bar { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.6s ease; }
+.progress-text { font-weight: 700; font-size: 0.9rem; min-width: 40px; }
 
-.mini-prog { width: 100%; display: flex; flex-direction: column; gap: 4px; }
-.mini-track { height: 6px; border-radius: 99px; background: var(--bar-track); overflow: hidden; flex: 1; }
-.mini-fill { height: 100%; border-radius: 99px; transition: width 0.6s; }
-.fill-blue { background: var(--bar-blue); }
-.mini-pct { font-size: 13px; font-weight: 800; min-width: 38px; text-align: right; }
+.badge { padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.badge-n1 { background: var(--danger-light); color: var(--danger); }
+.badge-n2 { background: var(--warning-light); color: var(--warning); }
+.badge-n3 { background: var(--success-light); color: var(--success); }
 
-.btn-detail { padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line-2); background: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+/* Detail View */
+.detail-view { display: none; }
+.back-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; background: white; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; margin-bottom: 1.5rem; font-weight: 700; }
+.loja-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+.loja-title { font-family: 'DM Serif Display', serif; font-size: 2.5rem; }
 
-.home-screen, .detail-screen { display: none; }
-.home-screen.active, .detail-screen.active { display: block; }
+.areas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+.area-card { background: white; border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+.area-header { padding: 1.25rem; background: var(--paper-alt); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.area-name { font-weight: 700; font-size: 1rem; }
+.area-taxa { font-weight: 700; color: var(--accent); }
+.area-body { padding: 1.25rem; }
 
-.btn-back { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--line-2); background: var(--paper-3); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
-.loja-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
-.card-main { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 24px; margin-bottom: 24px; }
-.loja-nome { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1.2; }
-.loja-code { font-size: 14px; color: var(--ink-4); margin-top: 4px; }
+.subarea-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+.subarea-item:last-child { border-bottom: none; }
+.subarea-val { font-weight: 700; color: var(--ink-light); }
 
-.col-metrics { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.metric-group { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 16px; border-right: 1px solid var(--line); min-width: 100px; flex: 1; }
-.metric-group:last-child { border-right: none; }
-.metric-group.is-total { background: #f0f2fb; }
-.metric-group.is-total .mg-val { color: var(--bar-blue); }
-.mg-label { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
-.mg-val { font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1; }
-
-.sec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 24px; }
-.sec-card { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
-.sec-card-head { padding: 11px 14px; background: #f1f3f5; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; }
-.sec-card-body { padding: 12px 14px; }
-
-.bottom-bar { margin-top: 24px; display: flex; gap: 14px; flex-wrap: wrap; }
-.level-legend { flex: 1; min-width: 240px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
-.level-legend-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
-.level-items { display: flex; flex-direction: column; gap: 12px; }
-.level-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
-.level-dot { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
-.action-banner { flex: 2; min-width: 260px; background: #fff8f4; border: 1px solid #f0d8c8; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
-.action-icon { width: 38px; height: 38px; border-radius: 9px; background: #e8924a; display: flex; align-items: center; justify-content: center; font-size: 17px; }
-.action-title { font-size: 14px; font-weight: 700; }
-.action-desc { font-size: 13px; color: var(--ink-3); line-height: 1.4; font-weight: 600; }
+.loading { text-align: center; padding: 4rem; font-size: 1.2rem; color: var(--ink-light); }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
-    <div class="header-icon"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></div>
-    <div class="header-title">Análise Semanal IM</div>
-  </div>
-  <div class="header-badge" id="periodo">📅 Atualizado</div>
+  <div class="header-title">Análise Operacional IM</div>
+  <div id="periodo" class="update-badge">A carregar...</div>
 </div>
 
-<div class="main">
-  <div id="home-screen" class="home-screen active">
-    <div id="home-content"></div>
+<div class="container">
+  <!-- Home Screen -->
+  <div id="home-screen">
+    <div id="stats" class="stats-grid"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Loja</th>
+            <th>Conformidade</th>
+            <th>Tarefas</th>
+            <th>Nível</th>
+          </tr>
+        </thead>
+        <tbody id="lojas-list"></tbody>
+      </table>
+    </div>
   </div>
-  <div id="detail-screen" class="detail-screen">
-    <button class="btn-back" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Voltar</button>
+
+  <!-- Detail Screen -->
+  <div id="detail-screen" class="detail-view">
+    <button class="back-btn" onclick="showHome()">← Voltar</button>
     <div id="detail-content"></div>
   </div>
 </div>
 
 <script>
-// DADOS INTEGRADOS PARA GARANTIR FUNCIONAMENTO IMEDIATO
-const _data = {
-  "atualizadoEm": "2026-06-12T12:54:36.061Z",
-  "lojas": [
-    {
-      "nome": "COMA OU LEVE",
-      "taxa": 99,
-      "nivel": "N1",
-      "totais": { "fechadas": 1599, "porFechar": 19, "total": 1618 },
-      "areas": [
-        { "area": "Controlo da Qualidade do Óleo", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 112, "porFechar": 0, "total": 112 }] },
-        { "area": "Desinfeção de Frutas e Legumes", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 276, "porFechar": 5, "total": 281 }] },
-        { "area": "Higienização", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 84, "porFechar": 1, "total": 85 }, { "subarea": "Higienização Diárias", "fechadas": 89, "porFechar": 3, "total": 92 }] },
-        { "area": "Monitorização Temperaturas", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 393, "porFechar": 4, "total": 397 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 331, "porFechar": 3, "total": 334 }, { "subarea": "Equipamentos de Frio", "fechadas": 33, "porFechar": 1, "total": 34 }] },
-        { "area": "Pragas", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 266, "porFechar": 2, "total": 268 }] },
-        { "area": "Receção de Mercadorias", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 15, "porFechar": 0, "total": 15 }] }
-      ]
-    },
-    {
-      "nome": "NOVA CHURRASQUEIRA",
-      "taxa": 99,
-      "nivel": "N1",
-      "totais": { "fechadas": 1552, "porFechar": 21, "total": 1573 },
-      "areas": [
-        { "area": "Controlo da Qualidade do Óleo", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 309, "porFechar": 3, "total": 312 }] },
-        { "area": "Desinfeção de Frutas e Legumes", "taxa": 71, "nivel": "N3", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 10, "porFechar": 4, "total": 14 }] },
-        { "area": "Higienização", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 102, "porFechar": 2, "total": 104 }, { "subarea": "Higienização Diárias", "fechadas": 199, "porFechar": 5, "total": 204 }] },
-        { "area": "Monitorização Temperaturas", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 204, "porFechar": 0, "total": 204 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 270, "porFechar": 1, "total": 271 }, { "subarea": "Equipamentos de Frio", "fechadas": 60, "porFechar": 0, "total": 60 }] },
-        { "area": "Pragas", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 103, "porFechar": 2, "total": 105 }] },
-        { "area": "Receção de Mercadorias", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 295, "porFechar": 4, "total": 299 }] }
-      ]
-    },
-    {
-      "nome": "RIBEIRINHO RESTAURANTE",
-      "taxa": 98,
-      "nivel": "N1",
-      "totais": { "fechadas": 1479, "porFechar": 24, "total": 1503 },
-      "areas": [
-        { "area": "Controlo da Qualidade do Óleo", "taxa": 96, "nivel": "N1", "subareas": [{ "subarea": "Recolha do Óleo", "fechadas": 64, "porFechar": 3, "total": 67 }] },
-        { "area": "Desinfeção de Frutas e Legumes", "taxa": 99, "nivel": "N1", "subareas": [{ "subarea": "Desinfeção Frutas e Legumes", "fechadas": 361, "porFechar": 2, "total": 363 }] },
-        { "area": "Higienização", "taxa": 89, "nivel": "N2", "subareas": [{ "subarea": "Higienização Periódicas", "fechadas": 11, "porFechar": 3, "total": 14 }, { "subarea": "Higienização Diárias", "fechadas": 56, "porFechar": 5, "total": 61 }] },
-        { "area": "Monitorização Temperaturas", "taxa": 100, "nivel": "N1", "subareas": [{ "subarea": "Temperaturas da Confeção Alimentos", "fechadas": 136, "porFechar": 2, "total": 138 }, { "subarea": "Temperaturas Equipamentos quentes", "fechadas": 162, "porFechar": 0, "total": 162 }, { "subarea": "Equipamentos de Frio", "fechadas": 294, "porFechar": 0, "total": 294 }] },
-        { "area": "Pragas", "taxa": 97, "nivel": "N1", "subareas": [{ "subarea": "Controlo das ações realizadas", "fechadas": 118, "porFechar": 4, "total": 122 }] },
-        { "area": "Receção de Mercadorias", "taxa": 98, "nivel": "N1", "subareas": [{ "subarea": "Receção de Mercadoria", "fechadas": 277, "porFechar": 5, "total": 282 }] }
-      ]
-    }
-  ]
-};
+let _lojas = [];
 
-const _lojas = _data.lojas;
+async function loadData() {
+  try {
+    const r = await fetch('dados.json?t=' + Date.now());
+    if (!r.ok) throw new Error();
+    const data = await r.json();
+    _lojas = data.lojas || [];
+    document.getElementById('periodo').textContent = '📅 Atualizado em: ' + new Date(data.atualizadoEm).toLocaleDateString();
+    renderHome();
+  } catch (e) {
+    document.getElementById('home-screen').innerHTML = '<div class="loading">Erro: Ficheiro <b>dados.json</b> não encontrado no repositório.</div>';
+  }
+}
 
 function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
-function pillCls(n) { return n === 'N1' ? 'pill-n1' : n === 'N2' ? 'pill-n2' : 'pill-n3'; }
 
 function renderHome() {
   const n1 = _lojas.filter(l => l.nivel === 'N1').length;
   const n2 = _lojas.filter(l => l.nivel === 'N2').length;
   const n3 = _lojas.filter(l => l.nivel === 'N3').length;
 
-  let html = `
-    <div class="home-stats">
-      <div class="stat-card"><div class="stat-card-label">Total Lojas</div><div class="stat-card-val">${_lojas.length}</div><div class="stat-card-sub">Monitorizadas</div></div>
-      <div class="stat-card accent-red"><div class="stat-card-label">Nível 1</div><div class="stat-card-val">${n1}</div><div class="stat-card-sub">Crítico</div></div>
-      <div class="stat-card accent-amber"><div class="stat-card-label">Nível 2</div><div class="stat-card-val">${n2}</div><div class="stat-card-sub">Atenção</div></div>
-      <div class="stat-card accent-yellow"><div class="stat-card-label">Nível 3</div><div class="stat-card-val">${n3}</div><div class="stat-card-sub">Bom</div></div>
-    </div>
-    <div class="home-table">
-      <div class="ht-head">
-        <div class="ht-th">#</div><div class="ht-th left">Loja</div><div class="ht-th">Fechadas</div><div class="ht-th">Progresso</div><div class="ht-th">Estado</div><div class="ht-th">Ação</div>
-      </div>
-      <div>
-        ${_lojas.map((l, i) => `
-          <div class="ht-row" onclick="goDetail(${i})">
-            <div class="ht-td"><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-family:'DM Serif Display';font-size:24px">${i+1}</span><span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span></div></div>
-            <div class="ht-td left"><div style="font-weight:700;font-size:16px">${l.nome}</div></div>
-            <div class="ht-td"><div style="font-size:13px;font-weight:600">${fmt(l.totais.fechadas)} / ${fmt(l.totais.total)}</div></div>
-            <div class="ht-td"><div class="mini-prog"><div style="display:flex;align-items:center;gap:8px"><div class="mini-track"><div class="mini-fill fill-blue" style="width:${l.taxa}%"></div></div><span class="mini-pct">${l.taxa}%</span></div></div></div>
-            <div class="ht-td"><span class="rank-pill ${pillCls(l.nivel)}">${l.nivel === 'N1' ? 'CRÍTICO' : 'ATENÇÃO'}</span></div>
-            <div class="ht-td"><button class="btn-detail" onclick="event.stopPropagation();goDetail(${i})">Detalhe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button></div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-    <div class="bottom-bar">
-      <div class="level-legend"><div class="level-legend-title">Classificação</div><div class="level-items"><div class="level-item"><div class="level-dot pill-n1">N1</div><span>Crítico</span></div><div class="level-item"><div class="level-dot pill-n2">N2</div><span>Atenção</span></div></div></div>
-      <div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Recomendação</div><div class="action-desc">Contactar responsáveis N1. Ver secções no detalhe.</div></div></div>
-    </div>
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Lojas</div><div class="stat-value">${_lojas.length}</div></div>
+    <div class="stat-card" style="border-bottom: 4px solid var(--danger)"><div class="stat-label">Nível 1</div><div class="stat-value" style="color:var(--danger)">${n1}</div></div>
+    <div class="stat-card" style="border-bottom: 4px solid var(--warning)"><div class="stat-label">Nível 2</div><div class="stat-value" style="color:var(--warning)">${n2}</div></div>
+    <div class="stat-card" style="border-bottom: 4px solid var(--success)"><div class="stat-label">Nível 3</div><div class="stat-value" style="color:var(--success)">${n3}</div></div>
   `;
-  document.getElementById('home-content').innerHTML = html;
-}
 
-function goDetail(idx) {
-  const l = _lojas[idx];
-  let html = `
-    <div class="loja-card">
-      <div class="card-main">
-        <div><div class="loja-nome">${l.nome}</div><div class="loja-code">Nível: <span class="rank-pill ${pillCls(l.nivel)}">${l.nivel}</span></div></div>
-        <div class="col-metrics">
-          <div class="metric-group is-total"><div class="mg-label">Total</div><div class="mg-val">${fmt(l.totais.total)}</div></div>
-          <div class="metric-group"><div class="mg-label">Fechadas</div><div class="mg-val">${fmt(l.totais.fechadas)}</div></div>
-          <div class="metric-group"><div class="mg-label">Abertas</div><div class="mg-val">${fmt(l.totais.porFechar)}</div></div>
+  document.getElementById('lojas-list').innerHTML = _lojas.map((l, i) => `
+    <tr onclick="showDetail(${i})">
+      <td class="rank">${i + 1}</td>
+      <td><div class="loja-name">${l.nome}</div></td>
+      <td>
+        <div class="progress-container">
+          <div class="progress-bar"><div class="progress-fill" style="width: ${l.taxa}%"></div></div>
+          <span class="progress-text">${l.taxa}%</span>
         </div>
-        <div style="text-align:right"><div style="font-size:36px;font-weight:700;color:var(--bar-blue)">${l.taxa}%</div><div class="mg-label">Progresso</div></div>
+      </td>
+      <td style="font-size: 0.9rem; color: var(--ink-light)"><b>${fmt(l.totais.fechadas)}</b> / ${fmt(l.totais.total)}</td>
+      <td><span class="badge badge-${l.nivel.toLowerCase()}">${l.nivel}</span></td>
+    </tr>
+  `).join('');
+}
+
+function showDetail(idx) {
+  const l = _lojas[idx];
+  document.getElementById('detail-content').innerHTML = `
+    <div class="loja-header">
+      <div>
+        <div class="loja-title">${l.nome}</div>
+        <div style="margin-top:0.5rem"><span class="badge badge-${l.nivel.toLowerCase()}">Nível ${l.nivel}</span></div>
       </div>
-      <div class="sec-grid">
-        ${l.areas.map((a, ai) => `
-          <div class="sec-card">
-            <div class="sec-card-head"><span>${a.area}</span><span>${a.taxa}%</span></div>
-            <div class="sec-card-body">
-              <div style="height:80px;margin-bottom:12px"><canvas id="chart-${idx}-${ai}"></canvas></div>
-              ${a.subareas.map(s => `<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #eee"><span style="color:var(--ink-3)">${s.subarea}</span><span style="font-weight:700">${s.fechadas} / ${s.total}</span></div>`).join('')}
-            </div>
-          </div>
-        `).join('')}
+      <div style="text-align:right">
+        <div style="font-size:3rem; font-weight:700; color:var(--accent); line-height:1">${l.taxa}%</div>
+        <div class="stat-label">Taxa Global</div>
       </div>
     </div>
+
+    <div class="stats-grid" style="margin-bottom:3rem">
+      <div class="stat-card"><div class="stat-label">Total Tarefas</div><div class="stat-value">${fmt(l.totais.total)}</div></div>
+      <div class="stat-card"><div class="stat-label">Fechadas</div><div class="stat-value" style="color:var(--accent)">${fmt(l.totais.fechadas)}</div></div>
+      <div class="stat-card"><div class="stat-label">Por Fechar</div><div class="stat-value" style="color:var(--danger)">${fmt(l.totais.porFechar)}</div></div>
+    </div>
+
+    <h2 style="font-family:'DM Serif Display'; margin-bottom:1.5rem; font-size:1.8rem">Análise por Área</h2>
+    <div class="areas-grid">
+      ${l.areas.map(a => `
+        <div class="area-card">
+          <div class="area-header">
+            <span class="area-name">${a.area}</span>
+            <span class="area-taxa">${a.taxa}%</span>
+          </div>
+          <div class="area-body">
+            ${a.subareas.map(s => `
+              <div class="subarea-item">
+                <span>${s.subarea}</span>
+                <span class="subarea-val">${s.fechadas} / ${s.total}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
   `;
-  document.getElementById('detail-content').innerHTML = html;
-  document.getElementById('home-screen').classList.remove('active');
-  document.getElementById('detail-screen').classList.add('active');
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('detail-screen').style.display = 'block';
   window.scrollTo(0,0);
-
-  setTimeout(() => {
-    l.areas.forEach((a, ai) => {
-      const ctx = document.getElementById(`chart-${idx}-${ai}`).getContext('2d');
-      new Chart(ctx, {
-        type: 'bar', plugins: [ChartDataLabels],
-        data: { labels: [''], datasets: [{ data: [a.taxa], backgroundColor: 'rgba(43, 47, 216, 0.7)', borderRadius: 4 }] },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', formatter: v => v + '%', font: { weight: 'bold' } } }, scales: { x: { display: false, max: 100 }, y: { display: false } } }
-      });
-    });
-  }, 50);
 }
 
-function goHome() {
-  document.getElementById('detail-screen').classList.remove('active');
-  document.getElementById('home-screen').classList.add('active');
+function showHome() {
+  document.getElementById('detail-screen').style.display = 'none';
+  document.getElementById('home-screen').style.display = 'block';
 }
 
-window.onload = renderHome;
+window.onload = loadData;
 </script>
 </body>
 </html>
