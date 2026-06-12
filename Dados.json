@@ -1,5 +1,653 @@
 {
-  "fileName": "COMA_OU_LEVE_Controlo_da_Qualidade_do__leo_Recolha_do__leo.md",
-  "fileContent": "# COMA OU LEVE - Controlo da Qualidade do Óleo - Recolha do Óleo\n\n**Área:** Controlo da Qualidade do Óleo\n**Subárea:** Recolha do Óleo\n**Fechadas:** 112\n**Por fechar:** 0\n**Total:** 112\n",
-  "commitMessage": "Adicionar/Atualizar dados para COMA OU LEVE - Controlo da Qualidade do Óleo - Recolha do Óleo"
+  "atualizadoEm": "2026-06-12T12:54:36.061Z",
+  "lojas": [
+    {
+      "nome": "COMA OU LEVE",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 1599,
+        "porFechar": 19,
+        "total": 1618
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 112,
+              "porFechar": 0,
+              "total": 112
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 276,
+              "porFechar": 5,
+              "total": 281
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 84,
+              "porFechar": 1,
+              "total": 85
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 89,
+              "porFechar": 3,
+              "total": 92
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 393,
+              "porFechar": 4,
+              "total": 397
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 331,
+              "porFechar": 3,
+              "total": 334
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 33,
+              "porFechar": 1,
+              "total": 34
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 266,
+              "porFechar": 2,
+              "total": 268
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 15,
+              "porFechar": 0,
+              "total": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "NOVA CHURRASQUEIRA",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 1552,
+        "porFechar": 21,
+        "total": 1573
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 309,
+              "porFechar": 3,
+              "total": 312
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 71,
+          "nivel": "N3",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 10,
+              "porFechar": 4,
+              "total": 14
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 102,
+              "porFechar": 2,
+              "total": 104
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 199,
+              "porFechar": 5,
+              "total": 204
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 204,
+              "porFechar": 0,
+              "total": 204
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 270,
+              "porFechar": 1,
+              "total": 271
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 60,
+              "porFechar": 0,
+              "total": 60
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 103,
+              "porFechar": 2,
+              "total": 105
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 295,
+              "porFechar": 4,
+              "total": 299
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "RIBEIRINHO RESTAURANTE",
+      "taxa": 98,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 1479,
+        "porFechar": 24,
+        "total": 1503
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 96,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 64,
+              "porFechar": 3,
+              "total": 67
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 361,
+              "porFechar": 2,
+              "total": 363
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 89,
+          "nivel": "N2",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 11,
+              "porFechar": 3,
+              "total": 14
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 56,
+              "porFechar": 5,
+              "total": 61
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 136,
+              "porFechar": 2,
+              "total": 138
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 162,
+              "porFechar": 0,
+              "total": 162
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 294,
+              "porFechar": 0,
+              "total": 294
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 97,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 118,
+              "porFechar": 4,
+              "total": 122
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 277,
+              "porFechar": 5,
+              "total": 282
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "RESTAURANTE O CHEF",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 1745,
+        "porFechar": 25,
+        "total": 1770
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 86,
+          "nivel": "N2",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 32,
+              "porFechar": 5,
+              "total": 37
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 313,
+              "porFechar": 0,
+              "total": 313
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 300,
+              "porFechar": 3,
+              "total": 303
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 94,
+              "porFechar": 1,
+              "total": 95
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 334,
+              "porFechar": 0,
+              "total": 334
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 195,
+              "porFechar": 5,
+              "total": 200
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 280,
+              "porFechar": 5,
+              "total": 285
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 91,
+          "nivel": "N2",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 21,
+              "porFechar": 2,
+              "total": 23
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 176,
+              "porFechar": 4,
+              "total": 180
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "RESTAURANTE ESCONDIDINHO",
+      "taxa": 98,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 1826,
+        "porFechar": 28,
+        "total": 1854
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 149,
+              "porFechar": 1,
+              "total": 150
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 267,
+              "porFechar": 3,
+              "total": 270
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 97,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 157,
+              "porFechar": 5,
+              "total": 162
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 81,
+              "porFechar": 3,
+              "total": 84
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 302,
+              "porFechar": 3,
+              "total": 305
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 211,
+              "porFechar": 0,
+              "total": 211
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 306,
+              "porFechar": 5,
+              "total": 311
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 89,
+          "nivel": "N2",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 41,
+              "porFechar": 5,
+              "total": 46
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 312,
+              "porFechar": 3,
+              "total": 315
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "CASA DA LAGOINHA",
+      "taxa": 99,
+      "nivel": "N1",
+      "totais": {
+        "fechadas": 2042,
+        "porFechar": 21,
+        "total": 2063
+      },
+      "areas": [
+        {
+          "area": "Controlo da Qualidade do Óleo",
+          "taxa": 93,
+          "nivel": "N2",
+          "subareas": [
+            {
+              "subarea": "Recolha do Óleo",
+              "fechadas": 71,
+              "porFechar": 5,
+              "total": 76
+            }
+          ]
+        },
+        {
+          "area": "Desinfeção de Frutas e Legumes",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Desinfeção Frutas e Legumes",
+              "fechadas": 242,
+              "porFechar": 5,
+              "total": 247
+            }
+          ]
+        },
+        {
+          "area": "Higienização",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Higienização Periódicas",
+              "fechadas": 393,
+              "porFechar": 2,
+              "total": 395
+            },
+            {
+              "subarea": "Higienização Diárias",
+              "fechadas": 50,
+              "porFechar": 0,
+              "total": 50
+            }
+          ]
+        },
+        {
+          "area": "Monitorização Temperaturas",
+          "taxa": 99,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Temperaturas da Confeção Alimentos",
+              "fechadas": 340,
+              "porFechar": 0,
+              "total": 340
+            },
+            {
+              "subarea": "Temperaturas Equipamentos quentes",
+              "fechadas": 366,
+              "porFechar": 2,
+              "total": 368
+            },
+            {
+              "subarea": "Equipamentos de Frio",
+              "fechadas": 31,
+              "porFechar": 2,
+              "total": 33
+            }
+          ]
+        },
+        {
+          "area": "Pragas",
+          "taxa": 100,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Controlo das ações realizadas",
+              "fechadas": 336,
+              "porFechar": 1,
+              "total": 337
+            }
+          ]
+        },
+        {
+          "area": "Receção de Mercadorias",
+          "taxa": 98,
+          "nivel": "N1",
+          "subareas": [
+            {
+              "subarea": "Receção de Mercadoria",
+              "fechadas": 213,
+              "porFechar": 4,
+              "total": 217
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
