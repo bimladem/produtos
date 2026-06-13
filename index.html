@@ -3,536 +3,593 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard HACCP</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<title>Monitorização HACCP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink:    #111111;
-  --ink-2:  #2a2a2a;
-  --ink-3:  #4a4a4a;
-  --ink-4:  #888888;
-  --paper:  #fafaf8;
-  --card:   #ffffff;
-  --line:   #e4e2dc;
-  --line-2: #ccc9c0;
+  --ink:   #111;
+  --ink-2: #333;
+  --ink-3: #555;
+  --ink-4: #999;
+  --paper: #f9f8f5;
+  --card:  #ffffff;
+  --line:  #e5e2d9;
+  --line2: #ccc9be;
 
-  /* Níveis — invertidos para HACCP: alto % = bom */
-  --n1:    #16a34a; --n1-bg: #f0fdf4; /* Verde   ≥ 95% */
-  --n2:    #d97706; --n2-bg: #fffbeb; /* Âmbar   80–94% */
-  --n3:    #dc2626; --n3-bg: #fef2f2; /* Vermelho < 80% */
+  --ok:    #16a34a;  --ok-bg:  #f0fdf4;
+  --warn:  #ca8a04;  --warn-bg:#fefce8;
+  --crit:  #dc2626;  --crit-bg:#fef2f2;
 
-  --blue:   #2563eb;
-  --track:  #e8e6df;
-  --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.04);
-  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
+  --r: 14px;
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 15px;
-  -webkit-font-smoothing: antialiased;
+  font-family:'DM Sans', sans-serif;
+  background:var(--paper); color:var(--ink);
+  -webkit-font-smoothing:antialiased;
 }
 
 /* ── HEADER ── */
-.header {
-  position: sticky; top:0; z-index:200;
-  background: rgba(250,250,248,.97);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  padding: 0 32px; height: 60px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+.hdr {
+  position:sticky; top:0; z-index:100;
+  background:rgba(249,248,245,.96); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  height:58px; padding:0 28px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
 }
-.header-left { display:flex; align-items:center; gap:10px; }
-.header-icon {
-  width:34px; height:34px; border-radius:8px;
-  background:#1c1c2e;
-  display:flex; align-items:center; justify-content:center;
+.hdr-left { display:flex; align-items:center; gap:10px; }
+.hdr-icon {
+  width:32px; height:32px; border-radius:8px; background:#1c1c2e;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
-.header-icon svg { width:17px; height:17px; fill:#fff; }
-.header-title {
-  font-family:'DM Serif Display', serif;
-  font-size:18px; color:var(--ink); letter-spacing:-.2px;
-}
-.header-sub { font-size:12px; color:var(--ink-4); margin-top:1px; }
-.header-date {
-  padding:5px 14px; border-radius:99px;
-  background:#f1efe8; border:1px solid var(--line-2);
+.hdr-icon svg { width:16px; height:16px; fill:#fff; }
+.hdr-title { font-family:'DM Serif Display',serif; font-size:17px; letter-spacing:-.2px; }
+.hdr-sub   { font-size:11.5px; color:var(--ink-4); margin-top:1px; }
+.hdr-badge {
+  padding:4px 13px; border-radius:99px;
+  background:#f0ede4; border:1px solid var(--line2);
   font-size:12px; font-weight:600; color:var(--ink-3); white-space:nowrap;
 }
 .btn-back {
-  display:none; align-items:center; gap:6px;
+  display:none; align-items:center; gap:5px;
   padding:5px 12px; border-radius:7px;
-  border:1px solid var(--line-2); background:transparent;
+  border:1px solid var(--line2); background:transparent;
   font-size:13px; font-weight:600; color:var(--ink-3);
-  cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s;
+  cursor:pointer; font-family:inherit; transition:.15s;
 }
-.btn-back:hover { background:var(--line); color:var(--ink); }
-.btn-back.vis { display:flex; }
+.btn-back:hover { background:var(--line); }
+.btn-back.v { display:flex; }
 
-/* ── LAYOUT ── */
-.main { max-width:1280px; margin:0 auto; padding:28px 24px 80px; }
+/* ── MAIN ── */
+.main { max-width:1200px; margin:0 auto; padding:28px 20px 80px; }
 
-/* ── STATS ROW ── */
-.stats-row {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
-  gap:10px; margin-bottom:22px;
+/* ── KPI BAR ── */
+.kpi-bar {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:10px; margin-bottom:20px;
 }
-.stat {
+.kpi {
   background:var(--card); border:1px solid var(--line);
-  border-radius:var(--radius); padding:18px 16px;
+  border-radius:var(--r); padding:18px 16px;
   box-shadow:var(--shadow); text-align:center;
 }
-.stat-lbl { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-4); margin-bottom:6px; }
-.stat-val {
-  font-family:'DM Serif Display',serif;
-  font-size:38px; line-height:1; color:var(--ink);
-}
-.stat-sub { font-size:12px; color:var(--ink-4); margin-top:4px; font-weight:500; }
-.stat.c-green .stat-val { color:var(--n1); }
-.stat.c-amber  .stat-val { color:var(--n2); }
-.stat.c-red    .stat-val { color:var(--n3); }
-.stat.c-blue   .stat-val { color:var(--blue); }
+.kpi-lbl { font-size:10.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-4); margin-bottom:6px; }
+.kpi-val { font-family:'DM Serif Display',serif; font-size:36px; line-height:1; color:var(--ink); }
+.kpi-sub { font-size:11.5px; color:var(--ink-4); margin-top:5px; font-weight:500; }
+.kpi.ok   .kpi-val { color:var(--ok); }
+.kpi.warn .kpi-val { color:var(--warn); }
+.kpi.crit .kpi-val { color:var(--crit); }
 
-/* ── FILTER BAR ── */
-.fbar {
-  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  margin-bottom:16px;
-}
-.fbar-lbl { font-size:13px; font-weight:700; color:var(--ink-3); margin-right:4px; }
+/* ── FILTER ── */
+.fbar { display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:14px; }
+.flbl { font-size:13px; font-weight:700; color:var(--ink-3); margin-right:2px; }
 .fbtn {
-  padding:5px 15px; border-radius:99px;
-  border:1px solid var(--line-2); background:var(--card);
+  padding:5px 14px; border-radius:99px;
+  border:1px solid var(--line2); background:var(--card);
   font-size:12.5px; font-weight:600; color:var(--ink-4);
-  cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; white-space:nowrap;
+  cursor:pointer; font-family:inherit; transition:.15s; white-space:nowrap;
 }
 .fbtn:hover { border-color:var(--ink-3); color:var(--ink); }
 .fbtn.on { background:var(--ink); border-color:var(--ink); color:#fff; }
 
-/* ── TABLE SHELL ── */
-.htable {
+/* ── TABLE ── */
+.tbl-wrap {
   background:var(--card); border:1px solid var(--line);
-  border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+  border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow);
 }
-.ht-head {
+.tbl-head {
   display:grid;
-  grid-template-columns: 64px 1fr 140px 160px 100px 120px;
-  background:#f1efe8; border-bottom:1px solid var(--line);
+  grid-template-columns: 58px 1fr 120px 120px 160px 90px 110px;
+  background:#f0ede4; border-bottom:1px solid var(--line);
 }
-.ht-th {
-  padding:12px 14px; font-size:11.5px; font-weight:800;
-  letter-spacing:.5px; text-transform:uppercase; color:var(--ink-3);
+.th {
+  padding:11px 14px; font-size:11px; font-weight:800;
+  letter-spacing:.55px; text-transform:uppercase; color:var(--ink-3);
   text-align:center; border-right:1px solid var(--line);
 }
-.ht-th:last-child { border-right:none; }
-.ht-th.left { text-align:left; }
+.th:last-child { border-right:none; }
+.th.l { text-align:left; }
 
-.ht-row {
+.trow {
   display:grid;
-  grid-template-columns: 64px 1fr 140px 160px 100px 120px;
+  grid-template-columns: 58px 1fr 120px 120px 160px 90px 110px;
   border-bottom:1px solid var(--line);
-  cursor:pointer; transition:background .12s;
+  cursor:pointer; transition:background .1s;
 }
-.ht-row:last-child { border-bottom:none; }
-.ht-row:hover { background:#f5f3ec; }
+.trow:last-child { border-bottom:none; }
+.trow:hover { background:#f5f2ea; }
 
-.ht-td {
-  padding:16px 14px; display:flex; align-items:center; justify-content:center;
-  border-right:1px solid var(--line); font-size:14px; font-weight:500; color:var(--ink);
+.td {
+  padding:15px 14px; display:flex; align-items:center; justify-content:center;
+  border-right:1px solid var(--line); font-size:14px; color:var(--ink); font-weight:500;
 }
-.ht-td:last-child { border-right:none; }
-.ht-td.left { justify-content:flex-start; }
+.td:last-child { border-right:none; }
+.td.l { justify-content:flex-start; }
 
-.rank-td { background:#f1efe8; flex-direction:column; gap:5px; }
-.rank-n  { font-family:'DM Serif Display',serif; font-size:24px; color:var(--ink-2); line-height:1; }
-.npill   { padding:3px 9px; border-radius:99px; font-size:11px; font-weight:700; }
-.n1p { background:var(--n1-bg); color:var(--n1); }
-.n2p { background:var(--n2-bg); color:var(--n2); }
-.n3p { background:var(--n3-bg); color:var(--n3); }
+/* rank cell */
+.rank-cell {
+  background:#f0ede4; flex-direction:column; gap:5px;
+}
+.rank-n { font-family:'DM Serif Display',serif; font-size:22px; color:var(--ink-2); line-height:1; }
 
-.nome-td { flex-direction:column; align-items:flex-start; gap:2px; }
-.loja-nome { font-size:15px; font-weight:700; color:var(--ink); }
+/* pill */
+.pill {
+  padding:3px 10px; border-radius:99px;
+  font-size:11px; font-weight:700; letter-spacing:.2px;
+}
+.p-ok   { background:var(--ok-bg);   color:var(--ok); }
+.p-warn { background:var(--warn-bg); color:var(--warn); }
+.p-crit { background:var(--crit-bg); color:var(--crit); }
 
-/* progress mini */
-.mprog { display:flex; flex-direction:column; gap:3px; width:100%; }
-.mrow  { display:flex; align-items:center; gap:7px; }
-.mtrack { flex:1; height:6px; background:var(--track); border-radius:99px; overflow:hidden; }
-.mfill  { height:100%; border-radius:99px; transition:width .5s; }
-.fg     { background:var(--n1); }
-.fa     { background:var(--n2); }
-.fr     { background:var(--n3); }
-.mpct   { font-size:12px; font-weight:700; min-width:34px; text-align:right; }
+/* por fechar big number */
+.pf-num {
+  font-family:'DM Serif Display',serif;
+  font-size:28px; font-weight:400; line-height:1;
+}
+.pf-ok   { color:var(--ok); }
+.pf-warn { color:var(--warn); }
+.pf-crit { color:var(--crit); }
 
-.btn-det {
-  padding:6px 12px; border-radius:7px;
-  border:1px solid var(--line-2); background:transparent;
+/* progress bar */
+.bar-wrap { width:100%; display:flex; flex-direction:column; gap:4px; }
+.bar-lbl  { display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--ink-4); }
+.bar-pct  { font-size:13px; font-weight:800; color:var(--ink-2); }
+.bar-track { height:7px; border-radius:99px; background:#e8e5db; overflow:hidden; }
+.bar-fill  { height:100%; border-radius:99px; transition:width .5s; }
+.bf-ok   { background:var(--ok); }
+.bf-warn { background:var(--warn); }
+.bf-crit { background:var(--crit); }
+
+/* detail btn */
+.det-btn {
+  padding:6px 11px; border-radius:7px;
+  border:1px solid var(--line2); background:transparent;
   font-size:12px; font-weight:700; color:var(--ink-3);
-  cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:5px;
+  cursor:pointer; display:flex; align-items:center; gap:4px; transition:.15s;
 }
-.btn-det:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.det-btn:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.det-btn svg { width:11px; height:11px; }
 
-/* ── BOTTOM LEGEND ── */
-.legend-strip {
-  display:flex; gap:22px; flex-wrap:wrap; align-items:center;
-  margin-top:16px;
-  padding:10px 18px; background:var(--card);
-  border:1px solid var(--line); border-radius:var(--radius);
-  font-size:13px;
+/* ── LEGEND ── */
+.legend {
+  display:flex; gap:20px; flex-wrap:wrap; align-items:center;
+  margin-top:14px; padding:10px 16px;
+  background:var(--card); border:1px solid var(--line);
+  border-radius:10px; font-size:12.5px; color:var(--ink-3);
 }
-.li { display:flex; align-items:center; gap:7px; }
-.ld { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+.li { display:flex; align-items:center; gap:6px; }
+.ld { width:9px; height:9px; border-radius:3px; flex-shrink:0; }
 
 /* ── DETAIL SCREEN ── */
-#detail-screen { display:none; }
-#detail-screen.vis { display:block; }
+#det { display:none; }
+#det.v { display:block; }
 
-.d-card {
+.d-loja {
   background:var(--card); border:1px solid var(--line);
-  border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
-  margin-bottom:20px;
+  border-radius:var(--r); overflow:hidden;
+  box-shadow:var(--shadow); margin-bottom:20px;
 }
-.d-head {
-  display:grid; grid-template-columns:60px auto 1fr auto;
-  align-items:stretch; min-height:80px;
+.d-top {
+  display:grid;
+  grid-template-columns: 58px auto 1fr auto;
+  align-items:stretch; min-height:82px;
 }
 .d-rank {
-  background:#f1efe8; border-right:1px solid var(--line);
+  background:#f0ede4; border-right:1px solid var(--line);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:14px 8px; gap:6px; text-align:center;
+  padding:12px 6px; gap:5px;
 }
 .d-id {
   padding:16px 20px; border-right:1px solid var(--line);
-  display:flex; flex-direction:column; justify-content:center; gap:2px;
-}
-.d-nome { font-size:18px; font-weight:700; }
-.d-stats {
-  display:flex; align-items:center; padding:0 20px; gap:0;
-  border-right:1px solid var(--line); flex:1;
-}
-.dstat {
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:14px 18px; border-right:1px solid var(--line); flex:1;
-  gap:2px;
-}
-.dstat:last-child { border-right:none; }
-.dstat-lbl { font-size:10.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--ink-4); }
-.dstat-val { font-size:22px; font-weight:700; color:var(--ink); }
-.dstat.hl .dstat-val { color:var(--blue); }
-
-.d-right {
-  padding:14px 20px;
-  display:flex; flex-direction:column; justify-content:center; gap:10px;
+  display:flex; flex-direction:column; justify-content:center; gap:3px;
   min-width:200px;
 }
-.prog-row { display:flex; flex-direction:column; gap:3px; }
-.pr-lbl { display:flex; justify-content:space-between; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-4); }
-.pr-pct { font-size:13px; font-weight:800; color:var(--ink-2); }
-.pr-track { height:6px; border-radius:99px; background:var(--track); overflow:hidden; }
-.pr-fill { height:100%; border-radius:99px; transition:width .6s; }
+.d-loja-nome { font-size:18px; font-weight:700; }
+.d-loja-sub  { font-size:12px; color:var(--ink-4); }
 
-/* Areas grid */
-.area-grid {
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
-  gap:10px; padding:20px; background:#f8f7f3;
-  border-top:1px solid var(--line);
+.d-nums {
+  display:flex; border-right:1px solid var(--line);
 }
-.area-card {
+.d-num {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:14px 22px; border-right:1px solid var(--line);
+  gap:3px; flex:1; min-width:90px;
+}
+.d-num:last-child { border-right:none; }
+.d-num-lbl { font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--ink-4); }
+.d-num-val { font-size:26px; font-weight:700; color:var(--ink); }
+.d-num.hl .d-num-val { color:var(--ok); }
+
+.d-right {
+  padding:14px 20px; display:flex; flex-direction:column;
+  justify-content:center; gap:8px; min-width:190px;
+}
+.d-pf-hero { display:flex; align-items:baseline; gap:6px; }
+.d-pf-big  { font-family:'DM Serif Display',serif; font-size:36px; line-height:1; }
+.d-pf-lbl  { font-size:13px; font-weight:600; color:var(--ink-4); }
+
+/* areas */
+.d-areas {
+  padding:20px; background:#f5f2ea;
+  border-top:1px solid var(--line);
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:12px;
+}
+.a-card {
   background:var(--card); border:1px solid var(--line);
   border-radius:10px; overflow:hidden;
 }
-.area-head {
-  padding:10px 14px; background:#f1efe8;
+.a-head {
+  padding:10px 14px; background:#f0ede4;
   border-bottom:1px solid var(--line);
-  display:flex; justify-content:space-between; align-items:center;
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
 }
-.area-nome { font-size:13px; font-weight:700; color:var(--ink); }
-.area-body { padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
-.sub-row { display:flex; flex-direction:column; gap:3px; }
-.sub-nome { font-size:12px; color:var(--ink-3); font-weight:500; }
-.sub-bar { height:5px; border-radius:99px; background:var(--track); overflow:hidden; }
-.sub-fill { height:100%; border-radius:99px; }
-.sub-meta {
-  display:flex; justify-content:space-between;
-  font-size:11px; color:var(--ink-4); font-weight:600;
+.a-nome { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.a-pf   { font-size:12px; font-weight:700; }
+.a-body { padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+.sub {
+  display:flex; flex-direction:column; gap:4px;
 }
+.sub-top { display:flex; justify-content:space-between; align-items:baseline; }
+.sub-nome { font-size:12.5px; color:var(--ink-3); font-weight:500; }
+.sub-nums { font-size:11.5px; font-weight:700; }
+.sub-track { height:5px; border-radius:99px; background:#e8e5db; overflow:hidden; margin-top:2px; }
+.sub-fill  { height:100%; border-radius:99px; }
 
-.loading {
-  padding:60px; text-align:center;
-  font-size:15px; font-weight:600; color:var(--ink-4);
-}
+/* empty */
+.empty { padding:32px; text-align:center; color:var(--ink-4); font-size:14px; }
+.loading { padding:60px; text-align:center; color:var(--ink-4); font-size:15px; font-weight:600; }
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-left">
-    <button class="btn-back" id="btn-back" onclick="goHome()">
+<header class="hdr">
+  <div class="hdr-left">
+    <button class="btn-back" id="bbk" onclick="goHome()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Voltar
     </button>
-    <div class="header-icon">
-      <svg viewBox="0 0 24 24"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="5" width="4" height="16" rx="1"/></svg>
+    <div class="hdr-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     </div>
     <div>
-      <div class="header-title" id="h-title">Dashboard HACCP</div>
-      <div class="header-sub"  id="h-sub">A carregar…</div>
+      <div class="hdr-title" id="htitle">Monitorização HACCP</div>
+      <div class="hdr-sub"   id="hsub">A carregar…</div>
     </div>
   </div>
-  <div class="header-date" id="h-date">—</div>
+  <div class="hdr-badge" id="hdate">—</div>
 </header>
 
 <main class="main">
-  <div id="home-screen"><div class="loading">A carregar dados…</div></div>
-  <div id="detail-screen"></div>
+  <div id="home"><div class="loading">A carregar…</div></div>
+  <div id="det"></div>
 </main>
 
 <script>
 var _lojas = [];
-var _filter = 'all';
+var _filt  = 'all';
 
-/* ────────────────── helpers ────────────────── */
-function nc(n){ return n==='N1'?'n1p':n==='N2'?'n2p':'n3p'; }
-function fillCls(t){ return t>=95?'fg':t>=80?'fa':'fr'; }
-function fmt(n){ return Number(n).toLocaleString('pt-PT'); }
-function arrow(){
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+/* ── helpers ── */
+function nivelDe(pf, total) {
+  if (total === 0) return 'N1';
+  var pct = pf / total * 100;
+  if (pct === 0)  return 'N1';   // tudo fechado — excelente
+  if (pct <= 5)   return 'N2';   // até 5% por fechar — aceitável
+  return 'N3';                    // mais de 5% por fechar — crítico
+}
+function pCls(n) { return n==='N1'?'p-ok':n==='N2'?'p-warn':'p-crit'; }
+function fCls(n) { return n==='N1'?'pf-ok':n==='N2'?'pf-warn':'pf-crit'; }
+function bCls(n) { return n==='N1'?'bf-ok':n==='N2'?'bf-warn':'bf-crit'; }
+function fmt(n)  { return Number(n).toLocaleString('pt-PT'); }
+function pct(f,t){ return t>0 ? Math.round(f/t*100) : 0; }
+function arr(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
 }
 
-/* ────────────────── navigation ────────────────── */
-function goHome(){
-  document.getElementById('home-screen').style.display='';
-  document.getElementById('detail-screen').style.display='none';
-  document.getElementById('detail-screen').classList.remove('vis');
-  document.getElementById('btn-back').classList.remove('vis');
-  document.getElementById('h-title').textContent='Dashboard HACCP';
-  document.getElementById('h-sub').textContent=_lojas.length+' lojas monitorizadas';
+/* ── nav ── */
+function goHome() {
+  document.getElementById('home').style.display = '';
+  document.getElementById('det').style.display  = 'none';
+  document.getElementById('det').classList.remove('v');
+  document.getElementById('bbk').classList.remove('v');
+  document.getElementById('htitle').textContent = 'Monitorização HACCP';
+  document.getElementById('hsub').textContent   = _lojas.length + ' lojas';
 }
-
-function goDetail(idx){
-  document.getElementById('home-screen').style.display='none';
-  document.getElementById('detail-screen').style.display='block';
-  document.getElementById('detail-screen').classList.add('vis');
-  document.getElementById('btn-back').classList.add('vis');
-  var l=_lojas[idx];
-  document.getElementById('h-title').textContent=l.nome;
-  document.getElementById('h-sub').textContent='Taxa global: '+l.taxa+'%  ·  '+l.nivel;
-  renderDetail(l, idx);
+function goDetail(i) {
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('det').style.display  = 'block';
+  document.getElementById('det').classList.add('v');
+  document.getElementById('bbk').classList.add('v');
+  var l = _lojas[i];
+  document.getElementById('htitle').textContent = l.nome;
+  document.getElementById('hsub').textContent   = l.porFechar + ' tarefas por fechar  ·  ' + l.taxa + '% concluídas';
+  renderDetail(l, i);
   window.scrollTo(0,0);
 }
 
-/* ────────────────── filter ────────────────── */
-function setF(f){
-  _filter=f;
+/* ── filter ── */
+function setF(f) {
+  _filt = f;
   document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.toggle('on', b.dataset.f===f); });
   renderRows();
 }
 
-/* ────────────────── load data ────────────────── */
-fetch('Dados.json?t='+Date.now())
+/* ── load ── */
+fetch('Dados.json?t=' + Date.now())
   .then(function(r){ return r.json(); })
-  .then(function(json){
-    _lojas = (json.lojas||[]).slice().sort(function(a,b){
-      // N1 first, then by taxa desc
-      var order={'N1':0,'N2':1,'N3':2};
-      if(order[a.nivel]!==order[b.nivel]) return order[a.nivel]-order[b.nivel];
-      return b.taxa-a.taxa;
+  .then(function(json) {
+    var raw = json.lojas || [];
+
+    _lojas = raw.map(function(l) {
+      var pf    = l.totais.porFechar;
+      var total = l.totais.total;
+      var fech  = l.totais.fechadas;
+      var nivel = nivelDe(pf, total);
+      return {
+        nome:     l.nome,
+        fechadas: fech,
+        porFechar:pf,
+        total:    total,
+        taxa:     pct(fech, total),
+        nivel:    nivel,
+        areas:    l.areas
+      };
+    }).sort(function(a,b){
+      // ordena: mais tarefas por fechar primeiro (mais crítico no topo)
+      return b.porFechar - a.porFechar;
     });
 
     var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : null;
-    var dtStr = dt ? dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-    document.getElementById('h-date').textContent='📅 '+dtStr;
-    document.getElementById('h-sub').textContent=_lojas.length+' lojas monitorizadas';
+    var ds = dt ? dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+    document.getElementById('hdate').textContent  = '📅 ' + ds;
+    document.getElementById('hsub').textContent   = _lojas.length + ' lojas';
 
     renderHome();
   })
-  .catch(function(e){
-    document.getElementById('home-screen').innerHTML='<div class="loading" style="color:var(--n3)">Erro ao carregar Dados.json: '+e.message+'</div>';
+  .catch(function(e) {
+    document.getElementById('home').innerHTML =
+      '<div class="loading" style="color:var(--crit)">Erro ao carregar: ' + e.message + '</div>';
   });
 
-/* ────────────────── home ────────────────── */
-function renderHome(){
-  var n1=_lojas.filter(function(l){return l.nivel==='N1';}).length;
-  var n2=_lojas.filter(function(l){return l.nivel==='N2';}).length;
-  var n3=_lojas.filter(function(l){return l.nivel==='N3';}).length;
+/* ── home ── */
+function renderHome() {
+  var n1 = _lojas.filter(function(l){ return l.nivel==='N1'; }).length;
+  var n2 = _lojas.filter(function(l){ return l.nivel==='N2'; }).length;
+  var n3 = _lojas.filter(function(l){ return l.nivel==='N3'; }).length;
+  var totalPF = _lojas.reduce(function(s,l){ return s+l.porFechar; }, 0);
 
-  var totFech=_lojas.reduce(function(s,l){return s+l.totais.fechadas;},0);
-  var totTot =_lojas.reduce(function(s,l){return s+l.totais.total;},0);
-  var taxaG  = totTot>0?Math.round(totFech/totTot*100):0;
+  var h = '';
 
-  var html='';
+  /* KPIs */
+  h += '<div class="kpi-bar">';
+  h += kpi('Lojas', _lojas.length, 'monitorizadas', '');
+  h += kpi('Por Fechar', fmt(totalPF), 'tarefas em aberto', 'crit');
+  h += kpi('Sem falhas', n1, 'lojas em dia', 'ok');
+  h += kpi('Atenção', n2, 'até 5% por fechar', 'warn');
+  h += kpi('Crítico', n3, 'mais de 5% por fechar', 'crit');
+  h += '</div>';
 
-  /* stats */
-  html+='<div class="stats-row">';
-  html+=sc('Lojas', _lojas.length, 'monitorizadas', '');
-  html+=sc('Taxa Global', taxaG+'%', fmt(totFech)+' / '+fmt(totTot), 'c-blue');
-  html+=sc('N1 — Excelente', n1, '≥ 95% fechadas', 'c-green');
-  html+=sc('N2 — Suficiente', n2, '80–94% fechadas', 'c-amber');
-  html+=sc('N3 — Crítico', n3, '< 80% fechadas', 'c-red');
-  html+='</div>';
-
-  /* filter bar */
-  html+='<div class="fbar"><span class="fbar-lbl">Filtrar:</span>';
-  html+='<button class="fbtn on" data-f="all" onclick="setF(\'all\')">Todas ('+_lojas.length+')</button>';
-  html+='<button class="fbtn" data-f="N1" onclick="setF(\'N1\')">✅ N1 ('+n1+')</button>';
-  html+='<button class="fbtn" data-f="N2" onclick="setF(\'N2\')">⚠️ N2 ('+n2+')</button>';
-  html+='<button class="fbtn" data-f="N3" onclick="setF(\'N3\')">🔴 N3 ('+n3+')</button>';
-  html+='</div>';
+  /* filters */
+  h += '<div class="fbar"><span class="flbl">Ver:</span>';
+  h += fb('all',  'Todas ('+_lojas.length+')');
+  h += fb('N1',   '✅ Sem falhas ('+n1+')');
+  h += fb('N2',   '⚠️ Atenção ('+n2+')');
+  h += fb('N3',   '🔴 Crítico ('+n3+')');
+  h += '</div>';
 
   /* table */
-  html+='<div class="htable">';
-  html+='<div class="ht-head">';
-  html+='<div class="ht-th">#</div>';
-  html+='<div class="ht-th left">Loja</div>';
-  html+='<div class="ht-th">Fechadas</div>';
-  html+='<div class="ht-th">Progresso</div>';
-  html+='<div class="ht-th">Nível</div>';
-  html+='<div class="ht-th">Detalhe</div>';
-  html+='</div>';
-  html+='<div id="ht-body"></div>';
-  html+='</div>';
+  h += '<div class="tbl-wrap">';
+  h += '<div class="tbl-head">';
+  h += th('#','');
+  h += th('Loja','l');
+  h += th('Fechadas','');
+  h += th('Por Fechar','');
+  h += th('Taxa de Conclusão','');
+  h += th('Estado','');
+  h += th('Detalhe','');
+  h += '</div>';
+  h += '<div id="tbody"></div>';
+  h += '</div>';
 
   /* legend */
-  html+='<div class="legend-strip">';
-  html+='<span style="font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4)">Níveis:</span>';
-  html+='<div class="li"><div class="ld" style="background:var(--n1)"></div><strong style="color:var(--n1)">N1</strong> ≥ 95% tarefas fechadas</div>';
-  html+='<div class="li"><div class="ld" style="background:var(--n2)"></div><strong style="color:var(--n2)">N2</strong> 80–94% tarefas fechadas</div>';
-  html+='<div class="li"><div class="ld" style="background:var(--n3)"></div><strong style="color:var(--n3)">N3</strong> &lt; 80% tarefas fechadas</div>';
-  html+='</div>';
+  h += '<div class="legend">';
+  h += '<span style="font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4)">Classificação:</span>';
+  h += li('var(--ok)',   '✅ Sem falhas — 0% por fechar');
+  h += li('var(--warn)', '⚠️ Atenção — até 5% por fechar');
+  h += li('var(--crit)', '🔴 Crítico — mais de 5% por fechar');
+  h += '</div>';
 
-  document.getElementById('home-screen').innerHTML=html;
+  document.getElementById('home').innerHTML = h;
   renderRows();
 }
 
-function sc(lbl,val,sub,cls){
-  return '<div class="stat '+cls+'"><div class="stat-lbl">'+lbl+'</div><div class="stat-val">'+val+'</div><div class="stat-sub">'+sub+'</div></div>';
+function kpi(lbl, val, sub, cls) {
+  return '<div class="kpi '+cls+'"><div class="kpi-lbl">'+lbl+'</div><div class="kpi-val">'+val+'</div><div class="kpi-sub">'+sub+'</div></div>';
+}
+function fb(f, txt) {
+  return '<button class="fbtn'+(f===_filt?' on':'')+'" data-f="'+f+'" onclick="setF(\''+f+'\')">'+txt+'</button>';
+}
+function th(txt, cls) {
+  return '<div class="th '+cls+'">'+txt+'</div>';
+}
+function li(col, txt) {
+  return '<div class="li"><div class="ld" style="background:'+col+'"></div>'+txt+'</div>';
 }
 
-function renderRows(){
-  var filtered=_lojas.filter(function(l){
-    if(_filter==='all') return true;
-    return l.nivel===_filter;
+function renderRows() {
+  var list = _lojas.filter(function(l){
+    if (_filt==='all') return true;
+    return l.nivel === _filt;
   });
 
-  if(!filtered.length){
-    document.getElementById('ht-body').innerHTML='<div style="padding:32px;text-align:center;color:var(--ink-4)">Sem lojas para este filtro.</div>';
+  if (!list.length) {
+    document.getElementById('tbody').innerHTML = '<div class="empty">Sem lojas para este filtro.</div>';
     return;
   }
 
-  var html='';
-  filtered.forEach(function(l){
-    var idx=_lojas.indexOf(l);
-    var fc=fillCls(l.taxa);
-    html+='<div class="ht-row" onclick="goDetail('+idx+')">';
+  var h = '';
+  list.forEach(function(l) {
+    var i   = _lojas.indexOf(l);
+    var n   = l.nivel;
+    var pc  = pct(l.fechadas, l.total);
+    var pfC = fCls(n);
+    var bC  = bCls(n);
+
+    h += '<div class="trow" onclick="goDetail('+i+')">';
 
     /* rank */
-    html+='<div class="ht-td rank-td">';
-    html+='<span class="rank-n">'+(idx+1)+'</span>';
-    html+='<span class="npill '+nc(l.nivel)+'">'+l.nivel+'</span>';
-    html+='</div>';
+    h += '<div class="td rank-cell">';
+    h += '<span class="rank-n">'+(i+1)+'</span>';
+    h += '</div>';
 
     /* nome */
-    html+='<div class="ht-td left nome-td">';
-    html+='<span class="loja-nome">'+l.nome+'</span>';
-    html+='<span style="font-size:12px;color:var(--ink-4)">'+fmt(l.totais.total)+' tarefas no total</span>';
-    html+='</div>';
+    h += '<div class="td l" style="flex-direction:column;align-items:flex-start;gap:2px">';
+    h += '<span style="font-weight:700;font-size:15px">'+l.nome+'</span>';
+    h += '<span style="font-size:12px;color:var(--ink-4)">'+l.areas.length+' áreas HACCP</span>';
+    h += '</div>';
 
     /* fechadas */
-    html+='<div class="ht-td" style="flex-direction:column;gap:2px">';
-    html+='<span style="font-size:20px;font-weight:700;color:var(--ink)">'+fmt(l.totais.fechadas)+'</span>';
-    html+='<span style="font-size:12px;color:var(--ink-4)">'+fmt(l.totais.porFechar)+' por fechar</span>';
-    html+='</div>';
+    h += '<div class="td" style="flex-direction:column;gap:2px">';
+    h += '<span style="font-size:18px;font-weight:700;color:var(--ok)">'+fmt(l.fechadas)+'</span>';
+    h += '<span style="font-size:11px;color:var(--ink-4)">de '+fmt(l.total)+'</span>';
+    h += '</div>';
 
-    /* progress */
-    html+='<div class="ht-td"><div class="mprog">';
-    html+='<div class="mrow"><div class="mtrack"><div class="mfill '+fc+'" style="width:'+l.taxa+'%"></div></div><span class="mpct">'+l.taxa+'%</span></div>';
-    html+='</div></div>';
+    /* por fechar */
+    h += '<div class="td"><span class="pf-num '+pfC+'">'+l.porFechar+'</span></div>';
 
-    /* nivel badge */
-    html+='<div class="ht-td"><span class="npill '+nc(l.nivel)+'" style="padding:5px 14px;font-size:13px">'+l.nivel+'</span></div>';
+    /* barra */
+    h += '<div class="td"><div class="bar-wrap">';
+    h += '<div class="bar-lbl"><span>Concluído</span><span class="bar-pct">'+pc+'%</span></div>';
+    h += '<div class="bar-track"><div class="bar-fill '+bC+'" style="width:'+pc+'%"></div></div>';
+    h += '</div></div>';
+
+    /* estado */
+    h += '<div class="td"><span class="pill '+pCls(n)+'">'+
+      (n==='N1'?'✅ Em dia':n==='N2'?'⚠️ Atenção':'🔴 Crítico')+'</span></div>';
 
     /* btn */
-    html+='<div class="ht-td" onclick="event.stopPropagation()">';
-    html+='<button class="btn-det" onclick="goDetail('+idx+')">Detalhe '+arrow()+'</button>';
-    html+='</div>';
+    h += '<div class="td" onclick="event.stopPropagation()">';
+    h += '<button class="det-btn" onclick="goDetail('+i+')">Ver '+arr()+'</button>';
+    h += '</div>';
 
-    html+='</div>';
+    h += '</div>';
   });
 
-  document.getElementById('ht-body').innerHTML=html;
+  document.getElementById('tbody').innerHTML = h;
 }
 
-/* ────────────────── detail ────────────────── */
-function renderDetail(l, idx){
-  var pc=nc(l.nivel);
-  var fc=fillCls(l.taxa);
+/* ── detail ── */
+function renderDetail(l, idx) {
+  var n   = l.nivel;
+  var pc  = pct(l.fechadas, l.total);
+  var pfC = fCls(n);
+  var bC  = bCls(n);
 
-  var html='<div class="d-card">';
+  var h = '<div class="d-loja">';
 
-  /* head row */
-  html+='<div class="d-head">';
+  /* top bar */
+  h += '<div class="d-top">';
 
-  /* rank */
-  html+='<div class="d-rank">';
-  html+='<span class="rank-n">'+(idx+1)+'</span>';
-  html+='<span class="npill '+pc+'">'+l.nivel+'</span>';
-  html+='</div>';
+  h += '<div class="d-rank">';
+  h += '<span class="rank-n">'+(idx+1)+'</span>';
+  h += '<span class="pill '+pCls(n)+'" style="font-size:10px;padding:2px 8px">'+n+'</span>';
+  h += '</div>';
 
-  /* identity */
-  html+='<div class="d-id">';
-  html+='<div class="d-nome">'+l.nome+'</div>';
-  html+='<div style="font-size:12px;color:var(--ink-4);margin-top:3px">'+l.areas.length+' áreas HACCP</div>';
-  html+='</div>';
+  h += '<div class="d-id">';
+  h += '<div class="d-loja-nome">'+l.nome+'</div>';
+  h += '<div class="d-loja-sub">'+l.areas.length+' áreas HACCP monitorizadas</div>';
+  h += '</div>';
 
-  /* stats */
-  html+='<div class="d-stats">';
-  html+=dstat('Total',     fmt(l.totais.total),     '');
-  html+=dstat('Fechadas',  fmt(l.totais.fechadas),  'hl');
-  html+=dstat('Por fechar',fmt(l.totais.porFechar), '');
-  html+='</div>';
+  h += '<div class="d-nums">';
+  h += dn('Total', fmt(l.total), '');
+  h += dn('Fechadas', fmt(l.fechadas), 'hl');
+  h += dn('Por fechar', l.porFechar, '');
+  h += '</div>';
 
-  /* right: progress bar */
-  html+='<div class="d-right">';
-  html+='<div class="prog-row">';
-  html+='<div class="pr-lbl"><span>Taxa de conclusão</span><span class="pr-pct">'+l.taxa+'%</span></div>';
-  html+='<div class="pr-track"><div class="pr-fill '+fc+'" style="width:'+l.taxa+'%"></div></div>';
-  html+='</div>';
-  html+='</div>';
+  /* right: hero number */
+  h += '<div class="d-right">';
+  h += '<div class="d-pf-hero">';
+  h += '<span class="d-pf-big '+pfC+'">'+l.porFechar+'</span>';
+  h += '<span class="d-pf-lbl">tarefas<br>por fechar</span>';
+  h += '</div>';
+  h += '<div class="bar-wrap" style="max-width:180px">';
+  h += '<div class="bar-lbl"><span>Concluído</span><span class="bar-pct">'+pc+'%</span></div>';
+  h += '<div class="bar-track"><div class="bar-fill '+bC+'" style="width:'+pc+'%"></div></div>';
+  h += '</div>';
+  h += '</div>';
 
-  html+='</div>'; /* d-head */
+  h += '</div>'; /* d-top */
 
   /* areas grid */
-  html+='<div class="area-grid">';
-  l.areas.forEach(function(a){
-    var afc=fillCls(a.taxa);
-    html+='<div class="area-card">';
-    html+='<div class="area-head">';
-    html+='<span class="area-nome">'+a.area+'</span>';
-    html+='<span class="npill '+nc(a.nivel)+'">'+a.taxa+'%</span>';
-    html+='</div>';
-    html+='<div class="area-body">';
-    a.subareas.forEach(function(s){
-      var stc=fillCls(s.total>0?Math.round(s.fechadas/s.total*100):0);
-      var spct=s.total>0?Math.round(s.fechadas/s.total*100):0;
-      html+='<div class="sub-row">';
-      html+='<span class="sub-nome">'+s.subarea+'</span>';
-      html+='<div class="sub-bar"><div class="sub-fill '+stc+'" style="width:'+spct+'%"></div></div>';
-      html+='<div class="sub-meta"><span>'+fmt(s.fechadas)+' / '+fmt(s.total)+'</span><strong>'+spct+'%</strong></div>';
-      html+='</div>';
+  h += '<div class="d-areas">';
+  l.areas.forEach(function(a) {
+    var apf  = a.subareas.reduce(function(s,x){ return s+x.porFechar; }, 0);
+    var atot = a.subareas.reduce(function(s,x){ return s+x.total; }, 0);
+    var an   = nivelDe(apf, atot);
+    var apct = pct(atot - apf, atot);
+
+    h += '<div class="a-card">';
+    h += '<div class="a-head">';
+    h += '<span class="a-nome">'+a.area+'</span>';
+    h += '<span class="a-pf '+(apf>0?fCls(an):'pf-ok')+'">'+
+      (apf===0 ? '✅ Sem falhas' : apf+' por fechar')+'</span>';
+    h += '</div>';
+    h += '<div class="a-body">';
+
+    a.subareas.forEach(function(s) {
+      var spct = pct(s.fechadas, s.total);
+      var sn   = nivelDe(s.porFechar, s.total);
+      var sFill= bCls(sn);
+
+      h += '<div class="sub">';
+      h += '<div class="sub-top">';
+      h += '<span class="sub-nome">'+s.subarea+'</span>';
+      h += '<span class="sub-nums '+(s.porFechar>0?fCls(sn):'pf-ok')+'">'+
+        (s.porFechar===0 ? '✅' : s.porFechar+' em falta')+'</span>';
+      h += '</div>';
+      h += '<div class="sub-track"><div class="sub-fill '+sFill+'" style="width:'+spct+'%"></div></div>';
+      h += '<div style="font-size:11px;color:var(--ink-4);margin-top:2px">'+fmt(s.fechadas)+' fechadas de '+fmt(s.total)+'</div>';
+      h += '</div>';
     });
-    html+='</div>';
-    html+='</div>';
+
+    h += '</div></div>'; /* a-body, a-card */
   });
-  html+='</div>'; /* area-grid */
 
-  html+='</div>'; /* d-card */
+  h += '</div>'; /* d-areas */
+  h += '</div>'; /* d-loja */
 
-  document.getElementById('detail-screen').innerHTML=html;
+  document.getElementById('det').innerHTML = h;
 }
 
-function dstat(lbl,val,cls){
-  return '<div class="dstat '+cls+'"><div class="dstat-lbl">'+lbl+'</div><div class="dstat-val">'+val+'</div></div>';
+function dn(lbl, val, cls) {
+  return '<div class="d-num '+cls+'"><div class="d-num-lbl">'+lbl+'</div><div class="d-num-val">'+val+'</div></div>';
+}
+function nivelDe(pf, total) {
+  if (total === 0) return 'N1';
+  var p = pf / total * 100;
+  if (p === 0)  return 'N1';
+  if (p <= 5)   return 'N2';
+  return 'N3';
 }
 </script>
 </body>
