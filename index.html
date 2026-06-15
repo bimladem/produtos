@@ -258,7 +258,7 @@ body {
 <main class="main">
   <div id="stats-container"></div>
   <div id="app"><div class="loading">A carregar dados…</div></div>
-  <div id="notes-section"></div>
+<!-- Notas removidas -->
 </main>
 
 <script>
@@ -294,7 +294,7 @@ fetch('Dados.json?t=' + Date.now())
     document.getElementById('hdate').textContent = ds;
     document.getElementById('hsub').textContent  = _lojas.length + ' lojas · atualizado ' + ds;
     render();
-    renderNotes();
+/* renderNotes removido */
   })
   .catch(function(e) {
     document.getElementById('app').innerHTML =
@@ -446,18 +446,7 @@ function valuesHtml() {
   return h;
 }
 
-function renderNotes() {
-  var h = '';
-  h += '<div class="bottom-bar">';
-  h += '<div class="level-legend"><div class="level-legend-title">Classificação de Nível</div><div class="level-items">';
-  h += '<div class="level-item"><div class="level-dot p-n1">N1</div><span>0–20% prog. fechadas — Crítico</span></div>';
-  h += '<div class="level-item"><div class="level-dot p-n2">N2</div><span>21–40% prog. fechadas — Atenção</span></div>';
-  h += '<div class="level-item"><div class="level-dot p-n3">N3</div><span>41–50% prog. fechadas — Satisfatório</span></div>';
-  h += '</div></div>';
-  h += '<div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Ação Recomendada</div><div class="action-desc">Contactar urgentemente responsáveis das lojas N1. Verifique as subáreas em falta para regularizar o HACCP.</div></div></div>';
-  h += '</div>';
-  document.getElementById('notes-section').innerHTML = h;
-}
+/* Função renderNotes removida */
 
 /* ── partial renders ── */
 function renderCard() {
