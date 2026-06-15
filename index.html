@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Monitorização HACCP</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root {
   --ink:    #111111;
@@ -17,15 +15,9 @@
   --card:   #ffffff;
   --line:   #e5e2d9;
   --line2:  #ccc9be;
-
   --ok:     #16a34a;  --ok-bg:   #f0fdf4;
   --warn:   #ca8a04;  --warn-bg: #fefce8;
   --crit:   #dc2626;  --crit-bg: #fef2f2;
-
-  --bar-done:  #2563eb;
-  --bar-miss:  #dc2626;
-  --bar-track: #e8e5db;
-
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
   --r: 14px;
 }
@@ -58,591 +50,338 @@ body {
   background: #f0ede4; border: 1px solid var(--line2);
   font-size: 12px; font-weight: 600; color: var(--ink-3); white-space: nowrap;
 }
-.btn-back {
-  display: none; align-items: center; gap: 5px;
-  padding: 5px 12px; border-radius: 7px;
-  border: 1px solid var(--line2); background: transparent;
-  font-size: 13px; font-weight: 600; color: var(--ink-3);
-  cursor: pointer; font-family: inherit; transition: .15s;
-}
-.btn-back:hover { background: var(--line); }
-.btn-back.v { display: flex; }
-.btn-back svg { width: 13px; height: 13px; }
 
 /* ── MAIN ── */
 .main { max-width: 1260px; margin: 0 auto; padding: 28px 22px 80px; }
 
-/* ── KPI BAR ── */
-.kpi-bar {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 10px; margin-bottom: 22px;
+/* ── LOJA TABS ── */
+.loja-tabs {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.kpi {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r); padding: 18px 16px;
-  box-shadow: var(--shadow); text-align: center;
-}
-.kpi-lbl { font-size: 10.5px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); margin-bottom: 6px; }
-.kpi-val { font-family: 'DM Serif Display', serif; font-size: 36px; line-height: 1; color: var(--ink); }
-.kpi-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 5px; font-weight: 500; }
-.kpi.ok   .kpi-val { color: var(--ok); }
-.kpi.warn .kpi-val { color: var(--warn); }
-.kpi.crit .kpi-val { color: var(--crit); }
-
-/* ── FILTER ── */
-.fbar { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
-.flbl { font-size: 13px; font-weight: 700; color: var(--ink-3); margin-right: 2px; }
-.fbtn {
-  padding: 5px 14px; border-radius: 99px;
+.loja-tab {
+  padding: 8px 18px; border-radius: 99px;
   border: 1px solid var(--line2); background: var(--card);
-  font-size: 12.5px; font-weight: 600; color: var(--ink-4);
-  cursor: pointer; font-family: inherit; transition: .15s; white-space: nowrap;
+  font-size: 13px; font-weight: 600; color: var(--ink-3);
+  cursor: pointer; font-family: inherit; transition: all .15s;
+  white-space: nowrap;
 }
-.fbtn:hover { border-color: var(--ink-3); color: var(--ink); }
-.fbtn.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.loja-tab:hover { border-color: var(--ink-3); color: var(--ink); }
+.loja-tab.on {
+  background: #1c1c2e; border-color: #1c1c2e; color: #fff;
+}
 
-/* ── HOME TABLE ── */
-.tbl-wrap {
+/* ── MAIN CARD ── */
+.main-card {
   background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow);
 }
-.tbl-head {
-  display: grid;
-  grid-template-columns: 58px 1fr 130px 130px 200px 100px 110px;
-  background: #f0ede4; border-bottom: 1px solid var(--line);
-}
-.th {
-  padding: 11px 14px; font-size: 11px; font-weight: 800;
-  letter-spacing: .5px; text-transform: uppercase; color: var(--ink-3);
-  text-align: center; border-right: 1px solid var(--line);
-}
-.th:last-child { border-right: none; }
-.th.l { text-align: left; }
 
-.trow {
-  display: grid;
-  grid-template-columns: 58px 1fr 130px 130px 200px 100px 110px;
-  border-bottom: 1px solid var(--line);
-  cursor: pointer; transition: background .1s;
+/* loja header inside card */
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid var(--line);
+  background: #f5f2ea;
 }
-.trow:last-child { border-bottom: none; }
-.trow:hover { background: #f5f2ea; }
-
-.td {
-  padding: 15px 14px; display: flex; align-items: center; justify-content: center;
-  border-right: 1px solid var(--line); font-size: 14px; color: var(--ink); font-weight: 500;
+.card-loja-nome {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px; color: var(--ink); letter-spacing: -.2px;
 }
-.td:last-child { border-right: none; }
-.td.l { justify-content: flex-start; }
-
-.rank-cell { background: #f0ede4; flex-direction: column; gap: 4px; }
-.rank-n { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--ink-2); line-height: 1; }
-
-.pill { padding: 3px 11px; border-radius: 99px; font-size: 11.5px; font-weight: 700; }
+.card-loja-meta { font-size: 13px; color: var(--ink-4); margin-top: 3px; }
+.card-nivel { padding: 5px 14px; border-radius: 99px; font-size: 13px; font-weight: 700; }
 .p-ok   { background: var(--ok-bg);   color: var(--ok); }
 .p-warn { background: var(--warn-bg); color: var(--warn); }
 .p-crit { background: var(--crit-bg); color: var(--crit); }
 
-/* mini progress in home table */
-.mini-bar { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.mini-row { display: flex; align-items: center; gap: 8px; }
-.mini-track { flex: 1; height: 8px; border-radius: 99px; background: var(--bar-track); overflow: hidden; }
-.mini-fill-done { height: 100%; border-radius: 99px; background: var(--bar-done); }
-.mini-pct { font-size: 12.5px; font-weight: 700; min-width: 38px; text-align: right; color: var(--ink-2); }
-
-.det-btn {
-  padding: 6px 12px; border-radius: 7px;
-  border: 1px solid var(--line2); background: transparent;
-  font-size: 12px; font-weight: 700; color: var(--ink-3);
-  cursor: pointer; display: flex; align-items: center; gap: 4px; transition: .15s;
+/* ── AREA BUTTONS ── */
+.area-section {
+  padding: 18px 24px; border-bottom: 1px solid var(--line);
+  background: var(--card);
 }
-.det-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
-.det-btn svg { width: 11px; height: 11px; }
-
-/* ── LEGEND ── */
-.legend {
-  display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
-  margin-top: 14px; padding: 10px 18px;
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: 10px; font-size: 12.5px; color: var(--ink-3);
+.section-lbl {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px;
 }
-.leg-item { display: flex; align-items: center; gap: 7px; }
-.leg-dot  { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
-
-/* ── DETAIL SCREEN ── */
-#det { display: none; }
-#det.v { display: block; }
-
-/* detail top card */
-.d-card {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r); overflow: hidden;
-  box-shadow: var(--shadow); margin-bottom: 24px;
+.area-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.area-btn {
+  padding: 7px 16px; border-radius: 8px;
+  border: 1px solid var(--line2); background: var(--paper);
+  font-size: 13px; font-weight: 600; color: var(--ink-3);
+  cursor: pointer; font-family: inherit; transition: all .15s;
+  white-space: nowrap;
 }
-.d-top {
+.area-btn:hover { border-color: var(--ink-3); color: var(--ink); background: var(--card); }
+.area-btn.on {
+  background: #1c1c2e; border-color: #1c1c2e; color: #fff;
+}
+
+/* ── SUBAREA SECTION ── */
+.subarea-section {
+  padding: 18px 24px; border-bottom: 1px solid var(--line);
+  background: var(--card);
+  display: flex; align-items: center; gap: 14px;
+}
+.subarea-lbl {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--ink-4); white-space: nowrap;
+}
+.subarea-select {
+  padding: 8px 14px; border-radius: 8px;
+  border: 1px solid var(--line2); background: var(--paper);
+  font-size: 13px; font-weight: 600; color: var(--ink-2);
+  font-family: inherit; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  min-width: 260px;
+  transition: border-color .15s;
+}
+.subarea-select:focus { outline: none; border-color: var(--ink-3); }
+
+/* ── VALUES ── */
+.values-section {
+  padding: 28px 24px;
   display: grid;
-  grid-template-columns: 58px auto 1fr auto;
-  align-items: stretch; min-height: 86px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
 }
-.d-rank {
-  background: #f0ede4; border-right: 1px solid var(--line);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 12px 6px; gap: 5px;
+.val-block {
+  background: var(--card);
+  padding: 28px 24px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; text-align: center;
 }
-.d-id {
-  padding: 18px 22px; border-right: 1px solid var(--line);
-  display: flex; flex-direction: column; justify-content: center; gap: 3px;
-  min-width: 210px;
+.val-lbl {
+  font-size: 11px; font-weight: 800; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--ink-4);
 }
-.d-loja-nome { font-size: 19px; font-weight: 700; }
-.d-loja-sub  { font-size: 12px; color: var(--ink-4); margin-top: 2px; }
-
-.d-nums { display: flex; border-right: 1px solid var(--line); }
-.d-num  {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 14px 24px; border-right: 1px solid var(--line); gap: 3px;
+.val-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px; line-height: 1; color: var(--ink);
 }
-.d-num:last-child { border-right: none; }
-.d-num-lbl { font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; color: var(--ink-4); }
-.d-num-val { font-family: 'DM Serif Display', serif; font-size: 28px; line-height: 1; color: var(--ink); }
-.d-num.ok   .d-num-val { color: var(--ok); }
-.d-num.crit .d-num-val { color: var(--crit); }
-
-.d-right {
-  padding: 16px 22px; display: flex; flex-direction: column;
-  justify-content: center; gap: 6px; min-width: 200px;
-}
-.d-taxa-row  { display: flex; justify-content: space-between; align-items: baseline; }
-.d-taxa-lbl  { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--ink-4); }
-.d-taxa-pct  { font-size: 16px; font-weight: 800; color: var(--ink-2); }
-.d-bar-track { height: 8px; border-radius: 99px; background: var(--bar-track); overflow: hidden; }
-.d-bar-fill  { height: 100%; border-radius: 99px; background: var(--bar-done); transition: width .5s; }
-
-/* ── AREAS SECTION ── */
-.areas-wrap {
-  padding: 20px; background: #f5f2ea;
-  border-top: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 16px;
-}
-.area-block {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: 12px; overflow: hidden;
-}
-.area-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 18px; background: #f0ede4;
-  border-bottom: 1px solid var(--line);
-}
-.area-nome { font-size: 14px; font-weight: 700; color: var(--ink); }
-.area-resumo { font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
-.area-resumo.crit { color: var(--crit); font-weight: 700; }
-.area-resumo.ok   { color: var(--ok); }
-
-/* chart inside area */
-.area-chart-wrap {
-  padding: 16px 20px;
-  position: relative;
+.val-block.feitas  .val-num { color: var(--ok); }
+.val-block.pfechar .val-num { color: var(--crit); }
+.val-block.pfechar.zero .val-num { color: var(--ink-4); }
+.val-sub {
+  font-size: 12px; color: var(--ink-4); font-weight: 500;
 }
 
-/* legend bar for chart */
-.chart-legend {
-  display: flex; gap: 18px; padding: 0 20px 14px;
-  font-size: 12px; font-weight: 600; color: var(--ink-3);
+/* progress bar at bottom of values */
+.bar-section {
+  padding: 0 24px 24px;
+  display: flex; flex-direction: column; gap: 6px;
 }
-.chart-legend-item { display: flex; align-items: center; gap: 6px; }
-.chart-legend-dot  { width: 12px; height: 12px; border-radius: 3px; }
+.bar-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.bar-lbl { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
+.bar-pct { font-size: 15px; font-weight: 800; color: var(--ink-2); }
+.bar-track {
+  height: 10px; border-radius: 99px;
+  background: #e8e5db; overflow: hidden;
+}
+.bar-fill {
+  height: 100%; border-radius: 99px;
+  background: var(--ok); transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.bar-fill.warn { background: var(--warn); }
+.bar-fill.crit { background: var(--crit); }
 
 .loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 15px; font-weight: 600; }
-.empty   { padding: 32px; text-align: center; color: var(--ink-4); font-size: 14px; }
 </style>
 </head>
 <body>
 
 <header class="hdr">
   <div class="hdr-left">
-    <button class="btn-back" id="bbk" onclick="goHome()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Voltar
-    </button>
     <div class="hdr-icon">
       <svg viewBox="0 0 24 24"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="5" width="4" height="16" rx="1"/></svg>
     </div>
     <div>
-      <div class="hdr-title" id="htitle">Monitorização HACCP</div>
-      <div class="hdr-sub"   id="hsub">A carregar…</div>
+      <div class="hdr-title">Monitorização HACCP</div>
+      <div class="hdr-sub" id="hsub">A carregar…</div>
     </div>
   </div>
   <div class="hdr-badge" id="hdate">—</div>
 </header>
 
 <main class="main">
-  <div id="home"><div class="loading">A carregar dados…</div></div>
-  <div id="det"></div>
+  <div id="app"><div class="loading">A carregar dados…</div></div>
 </main>
 
 <script>
-var _lojas  = [];
-var _filt   = 'all';
-var _charts = {};
+var _lojas     = [];
+var _lojaIdx   = 0;
+var _areaIdx   = 0;
+var _subareaIdx= 0;
 
 /* ── helpers ── */
-function pct(f, t)  { return t > 0 ? Math.round(f / t * 100) : 0; }
-function fmt(n)     { return Number(n).toLocaleString('pt-PT'); }
+function pct(f, t) { return t > 0 ? Math.round(f / t * 100) : 0; }
+function fmt(n)    { return Number(n).toLocaleString('pt-PT'); }
 function nivel(pf, total) {
-  if (total === 0) return 'N1';
+  if (total === 0 || pf === 0) return 'N1';
   var p = pf / total * 100;
-  if (p === 0)  return 'N1';
-  if (p <= 5)   return 'N2';
+  if (p <= 5) return 'N2';
   return 'N3';
 }
-function pCls(n)  { return n==='N1' ? 'p-ok' : n==='N2' ? 'p-warn' : 'p-crit'; }
-function nlabel(n){ return n==='N1' ? 'Em dia' : n==='N2' ? 'Atenção' : 'Crítico'; }
-
-function arrowSvg() {
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-}
-
-/* ── navigation ── */
-function goHome() {
-  document.getElementById('home').style.display = '';
-  document.getElementById('det').style.display  = 'none';
-  document.getElementById('det').classList.remove('v');
-  document.getElementById('bbk').classList.remove('v');
-  document.getElementById('htitle').textContent = 'Monitorização HACCP';
-  document.getElementById('hsub').textContent   = _lojas.length + ' lojas';
-  // destroy charts to free memory
-  Object.keys(_charts).forEach(function(k){ if(_charts[k]) _charts[k].destroy(); });
-  _charts = {};
-}
-
-function goDetail(i) {
-  document.getElementById('home').style.display = 'none';
-  document.getElementById('det').style.display  = 'block';
-  document.getElementById('det').classList.add('v');
-  document.getElementById('bbk').classList.add('v');
-  var l = _lojas[i];
-  document.getElementById('htitle').textContent = l.nome;
-  document.getElementById('hsub').textContent   = l.totais.porFechar + ' tarefas por fechar · ' + pct(l.totais.fechadas, l.totais.total) + '% concluídas';
-  renderDetail(l, i);
-  window.scrollTo(0, 0);
-}
-
-/* ── filter ── */
-function setF(f) {
-  _filt = f;
-  document.querySelectorAll('.fbtn').forEach(function(b){ b.classList.toggle('on', b.dataset.f === f); });
-  renderRows();
-}
+function pCls(n) { return n==='N1' ? 'p-ok' : n==='N2' ? 'p-warn' : 'p-crit'; }
+function nlabel(n){ return n==='N1' ? 'Em Dia' : n==='N2' ? 'Atenção' : 'Crítico'; }
+function bCls(p)  { return p >= 95 ? '' : p >= 80 ? 'warn' : 'crit'; }
 
 /* ── load ── */
 fetch('Dados.json?t=' + Date.now())
   .then(function(r){ return r.json(); })
   .then(function(json) {
-    _lojas = (json.lojas || []).map(function(l) {
-      l._nivel = nivel(l.totais.porFechar, l.totais.total);
-      return l;
-    }).sort(function(a, b) {
-      var ord = { N3:0, N2:1, N1:2 };
-      if (ord[a._nivel] !== ord[b._nivel]) return ord[a._nivel] - ord[b._nivel];
-      return b.totais.porFechar - a.totais.porFechar;
-    });
-
+    _lojas = json.lojas || [];
     var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : null;
     var ds = dt ? dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'}) : '—';
     document.getElementById('hdate').textContent = ds;
-    document.getElementById('hsub').textContent  = _lojas.length + ' lojas';
-    renderHome();
+    document.getElementById('hsub').textContent  = _lojas.length + ' lojas · atualizado ' + ds;
+    render();
   })
   .catch(function(e) {
-    document.getElementById('home').innerHTML =
-      '<div class="loading" style="color:var(--crit)">Erro ao carregar Dados.json: ' + e.message + '</div>';
+    document.getElementById('app').innerHTML =
+      '<div class="loading" style="color:#dc2626">Erro ao carregar Dados.json: ' + e.message + '</div>';
   });
 
-/* ── HOME ── */
-function renderHome() {
-  var n1  = _lojas.filter(function(l){ return l._nivel==='N1'; }).length;
-  var n2  = _lojas.filter(function(l){ return l._nivel==='N2'; }).length;
-  var n3  = _lojas.filter(function(l){ return l._nivel==='N3'; }).length;
-  var tpf = _lojas.reduce(function(s,l){ return s + l.totais.porFechar; }, 0);
+/* ── select handlers ── */
+function selectLoja(i) {
+  _lojaIdx    = i;
+  _areaIdx    = 0;
+  _subareaIdx = 0;
+  render();
+}
+function selectArea(i) {
+  _areaIdx    = i;
+  _subareaIdx = 0;
+  renderCard();
+}
+function selectSubarea(i) {
+  _subareaIdx = i;
+  renderValues();
+}
 
+/* ── full render ── */
+function render() {
   var h = '';
 
-  /* KPIs */
-  h += '<div class="kpi-bar">';
-  h += kpi('Lojas',       _lojas.length, 'monitorizadas',       '');
-  h += kpi('Por Fechar',  fmt(tpf),      'tarefas em aberto',   'crit');
-  h += kpi('Em Dia',      n1,            '0% de falhas',        'ok');
-  h += kpi('Atenção',     n2,            'até 5% por fechar',   'warn');
-  h += kpi('Crítico',     n3,            'mais de 5% por fechar','crit');
-  h += '</div>';
-
-  /* filters */
-  h += '<div class="fbar"><span class="flbl">Filtrar:</span>';
-  h += fbtn('all', 'Todas (' + _lojas.length + ')');
-  h += fbtn('N1',  'Em Dia ('  + n1 + ')');
-  h += fbtn('N2',  'Atenção (' + n2 + ')');
-  h += fbtn('N3',  'Crítico (' + n3 + ')');
-  h += '</div>';
-
-  /* table */
-  h += '<div class="tbl-wrap">';
-  h += '<div class="tbl-head">';
-  h += '<div class="th">#</div>';
-  h += '<div class="th l">Loja</div>';
-  h += '<div class="th">Tarefas Feitas</div>';
-  h += '<div class="th">Por Fechar</div>';
-  h += '<div class="th">Taxa de Conclusão</div>';
-  h += '<div class="th">Estado</div>';
-  h += '<div class="th">Detalhe</div>';
-  h += '</div>';
-  h += '<div id="tbody"></div>';
-  h += '</div>';
-
-  /* legend */
-  h += '<div class="legend">';
-  h += '<span style="font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4)">Classificação:</span>';
-  h += legItem('var(--ok)',   'Em Dia — 0% de tarefas por fechar');
-  h += legItem('var(--warn)', 'Atenção — até 5% por fechar');
-  h += legItem('var(--crit)', 'Crítico — mais de 5% por fechar');
-  h += '</div>';
-
-  document.getElementById('home').innerHTML = h;
-  renderRows();
-}
-
-function kpi(lbl, val, sub, cls) {
-  return '<div class="kpi ' + cls + '"><div class="kpi-lbl">' + lbl + '</div><div class="kpi-val">' + val + '</div><div class="kpi-sub">' + sub + '</div></div>';
-}
-function fbtn(f, txt) {
-  return '<button class="fbtn' + (f===_filt?' on':'') + '" data-f="' + f + '" onclick="setF(\'' + f + '\')">' + txt + '</button>';
-}
-function legItem(col, txt) {
-  return '<div class="leg-item"><div class="leg-dot" style="background:' + col + '"></div>' + txt + '</div>';
-}
-
-function renderRows() {
-  var list = _lojas.filter(function(l) {
-    if (_filt === 'all') return true;
-    return l._nivel === _filt;
+  /* loja tabs */
+  h += '<div class="loja-tabs">';
+  _lojas.forEach(function(l, i) {
+    h += '<button class="loja-tab' + (i===_lojaIdx?' on':'') + '" onclick="selectLoja(' + i + ')">' + l.nome + '</button>';
   });
+  h += '</div>';
 
-  if (!list.length) {
-    document.getElementById('tbody').innerHTML = '<div class="empty">Sem lojas para este filtro.</div>';
-    return;
-  }
+  /* main card shell */
+  h += '<div class="main-card" id="main-card">';
+  h += cardHtml();
+  h += '</div>';
 
-  var h = '';
-  list.forEach(function(l) {
-    var i   = _lojas.indexOf(l);
-    var n   = l._nivel;
-    var p   = pct(l.totais.fechadas, l.totais.total);
-    var pfC = n==='N1'?'var(--ok)':n==='N2'?'var(--warn)':'var(--crit)';
-
-    h += '<div class="trow" onclick="goDetail(' + i + ')">';
-
-    /* rank */
-    h += '<div class="td rank-cell"><span class="rank-n">' + (i+1) + '</span></div>';
-
-    /* nome */
-    h += '<div class="td l" style="flex-direction:column;align-items:flex-start;gap:2px">';
-    h += '<span style="font-weight:700;font-size:15px">' + l.nome + '</span>';
-    h += '<span style="font-size:12px;color:var(--ink-4)">' + l.areas.length + ' áreas · ' + fmt(l.totais.total) + ' tarefas</span>';
-    h += '</div>';
-
-    /* feitas */
-    h += '<div class="td" style="flex-direction:column;gap:2px">';
-    h += '<span style="font-size:19px;font-weight:700;color:var(--ok)">' + fmt(l.totais.fechadas) + '</span>';
-    h += '<span style="font-size:11.5px;color:var(--ink-4)">de ' + fmt(l.totais.total) + '</span>';
-    h += '</div>';
-
-    /* por fechar */
-    h += '<div class="td"><span style="font-family:\'DM Serif Display\',serif;font-size:28px;color:' + pfC + '">' + l.totais.porFechar + '</span></div>';
-
-    /* barra */
-    h += '<div class="td"><div class="mini-bar"><div class="mini-row">';
-    h += '<div class="mini-track"><div class="mini-fill-done" style="width:' + p + '%"></div></div>';
-    h += '<span class="mini-pct">' + p + '%</span>';
-    h += '</div></div></div>';
-
-    /* estado */
-    h += '<div class="td"><span class="pill ' + pCls(n) + '">' + nlabel(n) + '</span></div>';
-
-    /* btn */
-    h += '<div class="td" onclick="event.stopPropagation()">';
-    h += '<button class="det-btn" onclick="goDetail(' + i + ')">Detalhe ' + arrowSvg() + '</button>';
-    h += '</div>';
-
-    h += '</div>';
-  });
-
-  document.getElementById('tbody').innerHTML = h;
+  document.getElementById('app').innerHTML = h;
 }
 
-/* ── DETAIL ── */
-function renderDetail(l, idx) {
-  var n   = l._nivel;
+/* ── card html ── */
+function cardHtml() {
+  var l   = _lojas[_lojaIdx];
+  var n   = nivel(l.totais.porFechar, l.totais.total);
   var p   = pct(l.totais.fechadas, l.totais.total);
+  var h   = '';
 
-  var h = '<div class="d-card">';
-
-  /* top */
-  h += '<div class="d-top">';
-
-  h += '<div class="d-rank">';
-  h += '<span class="rank-n">' + (idx+1) + '</span>';
-  h += '<span class="pill ' + pCls(n) + '" style="font-size:10px;padding:2px 8px">' + n + '</span>';
+  /* card header */
+  h += '<div class="card-header">';
+  h += '<div>';
+  h += '<div class="card-loja-nome">' + l.nome + '</div>';
+  h += '<div class="card-loja-meta">' + fmt(l.totais.total) + ' tarefas · ' + fmt(l.totais.porFechar) + ' por fechar no total</div>';
+  h += '</div>';
+  h += '<span class="card-nivel ' + pCls(n) + '">' + nlabel(n) + '</span>';
   h += '</div>';
 
-  h += '<div class="d-id">';
-  h += '<div class="d-loja-nome">' + l.nome + '</div>';
-  h += '<div class="d-loja-sub">' + l.areas.length + ' áreas HACCP</div>';
-  h += '</div>';
-
-  h += '<div class="d-nums">';
-  h += dnum('Total',      fmt(l.totais.total),     '');
-  h += dnum('Feitas',     fmt(l.totais.fechadas),  'ok');
-  h += dnum('Por Fechar', l.totais.porFechar,      l.totais.porFechar > 0 ? 'crit' : '');
-  h += '</div>';
-
-  h += '<div class="d-right">';
-  h += '<div class="d-taxa-row"><span class="d-taxa-lbl">Taxa de conclusão</span><span class="d-taxa-pct">' + p + '%</span></div>';
-  h += '<div class="d-bar-track"><div class="d-bar-fill" style="width:' + p + '%"></div></div>';
-  h += '</div>';
-
-  h += '</div>'; /* d-top */
-
-  /* areas */
-  h += '<div class="areas-wrap">';
-
-  l.areas.forEach(function(a, ai) {
-    var apf  = a.subareas.reduce(function(s,x){ return s + x.porFechar; }, 0);
-    var atot = a.subareas.reduce(function(s,x){ return s + x.total; }, 0);
-    var an   = nivel(apf, atot);
-    var chartId = 'chart-' + idx + '-' + ai;
-
-    h += '<div class="area-block">';
-    h += '<div class="area-head">';
-    h += '<span class="area-nome">' + a.area + '</span>';
-    h += '<span class="area-resumo ' + (apf > 0 ? 'crit' : 'ok') + '">';
-    h += apf > 0 ? (apf + ' por fechar') : 'Sem falhas';
-    h += '</span>';
-    h += '</div>';
-
-    /* chart legend */
-    h += '<div class="chart-legend">';
-    h += '<div class="chart-legend-item"><div class="chart-legend-dot" style="background:#2563eb"></div>Feitas</div>';
-    h += '<div class="chart-legend-item"><div class="chart-legend-dot" style="background:#dc2626"></div>Por fechar</div>';
-    h += '</div>';
-
-    /* chart */
-    var chartH = Math.max(80, a.subareas.length * 64 + 20);
-    h += '<div class="area-chart-wrap" style="height:' + chartH + 'px">';
-    h += '<canvas id="' + chartId + '"></canvas>';
-    h += '</div>';
-
-    h += '</div>'; /* area-block */
+  /* area buttons */
+  h += '<div class="area-section">';
+  h += '<div class="section-lbl">Área</div>';
+  h += '<div class="area-btns">';
+  l.areas.forEach(function(a, i) {
+    h += '<button class="area-btn' + (i===_areaIdx?' on':'') + '" onclick="selectArea(' + i + ')">' + a.area + '</button>';
   });
+  h += '</div>';
+  h += '</div>';
 
-  h += '</div>'; /* areas-wrap */
-  h += '</div>'; /* d-card */
-
-  document.getElementById('det').innerHTML = h;
-
-  /* draw charts after DOM is painted */
-  requestAnimationFrame(function() {
-    l.areas.forEach(function(a, ai) {
-      var chartId = 'chart-' + idx + '-' + ai;
-      var canvas  = document.getElementById(chartId);
-      if (!canvas) return;
-
-      var labels   = a.subareas.map(function(s){ return s.subarea; });
-      var feitas   = a.subareas.map(function(s){ return s.fechadas; });
-      var porFech  = a.subareas.map(function(s){ return s.porFechar; });
-
-      if (_charts[chartId]) _charts[chartId].destroy();
-
-      _charts[chartId] = new Chart(canvas.getContext('2d'), {
-        type: 'bar',
-        plugins: [ChartDataLabels],
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Feitas',
-              data: feitas,
-              backgroundColor: 'rgba(37,99,235,0.82)',
-              borderRadius: 4,
-              borderWidth: 0
-            },
-            {
-              label: 'Por fechar',
-              data: porFech,
-              backgroundColor: 'rgba(220,38,38,0.82)',
-              borderRadius: 4,
-              borderWidth: 0
-            }
-          ]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          layout: { padding: { right: 16, left: 4, top: 4, bottom: 4 } },
-          plugins: {
-            legend: { display: false },
-            datalabels: {
-              anchor: 'end',
-              align: 'right',
-              formatter: function(v) { return v === 0 ? '' : fmt(v); },
-              font: { size: 13, weight: '700', family: 'DM Sans' },
-              color: '#2a2a2a'
-            },
-            tooltip: {
-              callbacks: {
-                title: function(items) { return items[0].label; },
-                label: function(c) {
-                  return ' ' + c.dataset.label + ': ' + fmt(c.parsed.x);
-                }
-              },
-              titleFont: { size: 13, weight: '700' },
-              bodyFont:  { size: 13 },
-              padding: 10
-            }
-          },
-          scales: {
-            x: {
-              stacked: false,
-              beginAtZero: true,
-              grid: { color: 'rgba(0,0,0,.05)' },
-              ticks: {
-                font: { size: 12, weight: '600' },
-                color: '#888',
-                callback: function(v) { return fmt(v); }
-              },
-              title: {
-                display: true,
-                text: 'Número de tarefas',
-                color: '#888',
-                font: { size: 12, weight: '600' }
-              }
-            },
-            y: {
-              stacked: false,
-              grid: { display: false },
-              ticks: {
-                font: { size: 13, weight: '600' },
-                color: '#2a2a2a'
-              }
-            }
-          }
-        }
-      });
-    });
+  /* subarea select */
+  var area = l.areas[_areaIdx];
+  h += '<div class="subarea-section">';
+  h += '<span class="subarea-lbl">Subárea</span>';
+  h += '<select class="subarea-select" onchange="selectSubarea(this.value)">';
+  area.subareas.forEach(function(s, i) {
+    h += '<option value="' + i + '"' + (i===_subareaIdx?' selected':'') + '>' + s.subarea + '</option>';
   });
+  h += '</select>';
+  h += '</div>';
+
+  h += valuesHtml();
+
+  return h;
 }
 
-function dnum(lbl, val, cls) {
-  return '<div class="d-num ' + cls + '"><div class="d-num-lbl">' + lbl + '</div><div class="d-num-val">' + val + '</div></div>';
+/* ── values html ── */
+function valuesHtml() {
+  var l  = _lojas[_lojaIdx];
+  var s  = l.areas[_areaIdx].subareas[_subareaIdx];
+  var p  = pct(s.fechadas, s.total);
+  var bc = bCls(p);
+  var pfZero = s.porFechar === 0;
+  var h  = '';
+
+  h += '<div class="values-section">';
+  h += '<div class="val-block feitas">';
+  h += '<div class="val-lbl">Feitas</div>';
+  h += '<div class="val-num">' + fmt(s.fechadas) + '</div>';
+  h += '<div class="val-sub">tarefas concluídas</div>';
+  h += '</div>';
+
+  h += '<div class="val-block pfechar' + (pfZero?' zero':'') + '">';
+  h += '<div class="val-lbl">Por Fechar</div>';
+  h += '<div class="val-num">' + s.porFechar + '</div>';
+  h += '<div class="val-sub">' + (pfZero ? 'nenhuma em falta' : 'tarefas em falta') + '</div>';
+  h += '</div>';
+
+  h += '<div class="val-block">';
+  h += '<div class="val-lbl">Total</div>';
+  h += '<div class="val-num">' + fmt(s.total) + '</div>';
+  h += '<div class="val-sub">tarefas previstas</div>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '<div class="bar-section">';
+  h += '<div class="bar-top">';
+  h += '<span class="bar-lbl">Taxa de conclusão</span>';
+  h += '<span class="bar-pct">' + p + '%</span>';
+  h += '</div>';
+  h += '<div class="bar-track"><div class="bar-fill ' + bc + '" style="width:' + p + '%"></div></div>';
+  h += '</div>';
+
+  return h;
+}
+
+/* ── partial renders ── */
+function renderCard() {
+  document.getElementById('main-card').innerHTML = cardHtml();
+}
+function renderValues() {
+  /* just swap the values + bar sections without redrawing area buttons */
+  var card = document.getElementById('main-card');
+  /* remove old values-section and bar-section, replace */
+  var valOld = card.querySelector('.values-section');
+  var barOld = card.querySelector('.bar-section');
+  if (valOld) valOld.remove();
+  if (barOld) barOld.remove();
+
+  var tmp = document.createElement('div');
+  tmp.innerHTML = valuesHtml();
+  while (tmp.firstChild) card.appendChild(tmp.firstChild);
 }
 </script>
 </body>
