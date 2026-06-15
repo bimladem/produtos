@@ -15,9 +15,9 @@
   --card:   #ffffff;
   --line:   #e5e2d9;
   --line2:  #ccc9be;
-  --ok:     #16a34a;  --ok-bg:   #f0fdf4;
-  --warn:   #ca8a04;  --warn-bg: #fefce8;
-  --crit:   #dc2626;  --crit-bg: #fef2f2;
+  --n1:     #dc2626;  --n1-bg:   #fef2f2; /* Vermelho */
+  --n2:     #ca8a04;  --n2-bg:   #fefce8; /* Laranja */
+  --n3:     #eab308;  --n3-bg:   #fffbeb; /* Amarelo */
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
   --r: 14px;
 }
@@ -90,9 +90,9 @@ body {
 }
 .card-loja-meta { font-size: 13px; color: var(--ink-4); margin-top: 3px; }
 .card-nivel { padding: 5px 14px; border-radius: 99px; font-size: 13px; font-weight: 700; }
-.p-ok   { background: var(--ok-bg);   color: var(--ok); }
-.p-warn { background: var(--warn-bg); color: var(--warn); }
-.p-crit { background: var(--crit-bg); color: var(--crit); }
+.p-n1 { background: var(--n1-bg); color: var(--n1); }
+.p-n2 { background: var(--n2-bg); color: var(--n2); }
+.p-n3 { background: var(--n3-bg); color: var(--n3); }
 
 /* ── AREA BUTTONS ── */
 .area-section {
@@ -164,7 +164,7 @@ body {
   font-size: 52px; line-height: 1; color: var(--ink);
 }
 .val-block.fechadas .val-num { color: var(--ink); }
-.val-block.pfechar .val-num { color: var(--crit); }
+.val-block.pfechar .val-num { color: var(--n1); }
 .val-block.pfechar.zero .val-num { color: var(--ink-4); }
 .val-sub {
   font-size: 12px; color: var(--ink-4); font-weight: 500;
@@ -186,10 +186,28 @@ body {
 }
 .bar-fill {
   height: 100%; border-radius: 99px;
-  background: var(--ok); transition: width .5s cubic-bezier(.4,0,.2,1);
+  background: var(--n1); transition: width .5s cubic-bezier(.4,0,.2,1);
 }
-.bar-fill.warn { background: var(--warn); }
-.bar-fill.crit { background: var(--crit); }
+.bar-fill.fill-n2 { background: var(--n2); }
+.bar-fill.fill-n3 { background: var(--n3); }
+
+/* ── BOTTOM NOTES ── */
+.bottom-bar { margin-top: 24px; display: flex; gap: 14px; flex-wrap: wrap; }
+.level-legend {
+  flex: 1; min-width: 280px; background: #fff;
+  border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow);
+}
+.level-legend-title { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
+.level-items { display: flex; flex-direction: column; gap: 10px; }
+.level-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.level-dot { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+.action-banner {
+  flex: 1.5; min-width: 280px; background: #fff8f4; border: 1px solid #f0d8c8;
+  border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 14px;
+}
+.action-icon { width: 38px; height: 38px; border-radius: 9px; background: #e8924a; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.action-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.action-desc { font-size: 13px; color: var(--ink-3); line-height: 1.4; font-weight: 600; }
 
 .loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 15px; font-weight: 600; }
 </style>
@@ -211,6 +229,7 @@ body {
 
 <main class="main">
   <div id="app"><div class="loading">A carregar dados…</div></div>
+  <div id="notes-section"></div>
 </main>
 
 <script>
@@ -223,14 +242,18 @@ var _subareaIdx= 0;
 function pct(f, t) { return t > 0 ? Math.round(f / t * 100) : 0; }
 function fmt(n)    { return Number(n).toLocaleString('pt-PT'); }
 function nivel(pf, total) {
-  if (total === 0 || pf === 0) return 'N1';
-  var p = pf / total * 100;
-  if (p <= 5) return 'N2';
-  return 'N3';
+  var p = total > 0 ? (pf / total * 100) : 0;
+  if (p >= 41) return 'N3';
+  if (p >= 21) return 'N2';
+  return 'N1';
 }
-function pCls(n) { return n==='N1' ? 'p-ok' : n==='N2' ? 'p-warn' : 'p-crit'; }
-function nlabel(n){ return n==='N1' ? 'Em Dia' : n==='N2' ? 'Atenção' : 'Crítico'; }
-function bCls(p)  { return p >= 95 ? '' : p >= 80 ? 'warn' : 'crit'; }
+function pCls(n) { return n==='N1' ? 'p-n1' : n==='N2' ? 'p-n2' : 'p-n3'; }
+function nlabel(n){ return n==='N1' ? 'Nível 1' : n==='N2' ? 'Nível 2' : 'Nível 3'; }
+function bCls(p)  { 
+  if (p >= 41) return 'fill-n3';
+  if (p >= 21) return 'fill-n2';
+  return ''; 
+}
 
 /* ── load ── */
 fetch('Dados.json?t=' + Date.now())
@@ -242,6 +265,7 @@ fetch('Dados.json?t=' + Date.now())
     document.getElementById('hdate').textContent = ds;
     document.getElementById('hsub').textContent  = _lojas.length + ' lojas · atualizado ' + ds;
     render();
+    renderNotes();
   })
   .catch(function(e) {
     document.getElementById('app').innerHTML =
@@ -287,7 +311,7 @@ function render() {
 /* ── card html ── */
 function cardHtml() {
   var l   = _lojas[_lojaIdx];
-  var n   = nivel(l.totais.porFechar, l.totais.total);
+  var n   = nivel(l.totais.fechadas, l.totais.total);
   var p   = pct(l.totais.fechadas, l.totais.total);
   var h   = '';
 
@@ -366,14 +390,25 @@ function valuesHtml() {
   return h;
 }
 
+function renderNotes() {
+  var h = '';
+  h += '<div class="bottom-bar">';
+  h += '<div class="level-legend"><div class="level-legend-title">Classificação de Nível</div><div class="level-items">';
+  h += '<div class="level-item"><div class="level-dot p-n1">N1</div><span>0–20% prog. fechadas — Crítico</span></div>';
+  h += '<div class="level-item"><div class="level-dot p-n2">N2</div><span>21–40% prog. fechadas — Atenção</span></div>';
+  h += '<div class="level-item"><div class="level-dot p-n3">N3</div><span>41–50% prog. fechadas — Satisfatório</span></div>';
+  h += '</div></div>';
+  h += '<div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Ação Recomendada</div><div class="action-desc">Contactar urgentemente responsáveis das lojas N1. Verifique as subáreas em falta para regularizar o HACCP.</div></div></div>';
+  h += '</div>';
+  document.getElementById('notes-section').innerHTML = h;
+}
+
 /* ── partial renders ── */
 function renderCard() {
   document.getElementById('main-card').innerHTML = cardHtml();
 }
 function renderValues() {
-  /* just swap the values + bar sections without redrawing area buttons */
   var card = document.getElementById('main-card');
-  /* remove old values-section and bar-section, replace */
   var valOld = card.querySelector('.values-section');
   var barOld = card.querySelector('.bar-section');
   if (valOld) valOld.remove();
