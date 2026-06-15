@@ -18,6 +18,7 @@
   --n1:     #dc2626;  --n1-bg:   #fef2f2; /* Vermelho */
   --n2:     #ca8a04;  --n2-bg:   #fefce8; /* Laranja */
   --n3:     #eab308;  --n3-bg:   #fffbeb; /* Amarelo */
+  --blue:   #2b2fd8;
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
   --r: 14px;
 }
@@ -53,6 +54,33 @@ body {
 
 /* ── MAIN ── */
 .main { max-width: 1260px; margin: 0 auto; padding: 28px 22px 80px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 20px 16px;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
+}
+.stat-lbl {
+  font-size: 10px; font-weight: 800; letter-spacing: .7px;
+  text-transform: uppercase; color: var(--ink-4);
+}
+.stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px; line-height: 1; color: var(--ink);
+}
+.stat-sub { font-size: 11px; color: var(--ink-4); font-weight: 600; }
+.stat-card.accent-red   .stat-val { color: var(--n1); }
+.stat-card.accent-orange .stat-val { color: var(--n2); }
+.stat-card.accent-yellow .stat-val { color: var(--n3); }
+.stat-card.accent-blue  .stat-val { color: var(--blue); }
 
 /* ── LOJA TABS ── */
 .loja-tabs {
@@ -228,6 +256,7 @@ body {
 </header>
 
 <main class="main">
+  <div id="stats-container"></div>
   <div id="app"><div class="loading">A carregar dados…</div></div>
   <div id="notes-section"></div>
 </main>
@@ -291,6 +320,7 @@ function selectSubarea(i) {
 
 /* ── full render ── */
 function render() {
+  renderStats();
   var h = '';
 
   /* loja tabs */
@@ -306,6 +336,32 @@ function render() {
   h += '</div>';
 
   document.getElementById('app').innerHTML = h;
+}
+
+function renderStats() {
+  var n1 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N1'; }).length;
+  var n2 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N2'; }).length;
+  var n3 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N3'; }).length;
+  var totalFechadas = _lojas.reduce(function(acc, l){ return acc + l.totais.fechadas; }, 0);
+  var totalAbertas = _lojas.reduce(function(acc, l){ return acc + l.totais.porFechar; }, 0);
+
+  var h = '<div class="stats-row">';
+  h += statCard('Total de Lojas', _lojas.length, 'Esta semana', '');
+  h += statCard('Nível 1', n1, '0–20% prog. fechadas', 'accent-red');
+  h += statCard('Nível 2', n2, '21–40% prog. fechadas', 'accent-orange');
+  h += statCard('Nível 3', n3, '41–50% prog. fechadas', 'accent-yellow');
+  h += statCard('Tarefas Fechadas', fmt(totalFechadas), 'Total acumulado', 'accent-blue');
+  h += statCard('Tarefas em Aberto', fmt(totalAbertas), 'Pendente total', 'accent-red');
+  h += '</div>';
+  document.getElementById('stats-container').innerHTML = h;
+}
+
+function statCard(lbl, val, sub, cls) {
+  return '<div class="stat-card ' + cls + '">'
+    + '<div class="stat-lbl">' + lbl + '</div>'
+    + '<div class="stat-val">' + val + '</div>'
+    + '<div class="stat-sub">' + sub + '</div>'
+    + '</div>';
 }
 
 /* ── card html ── */
