@@ -163,7 +163,7 @@ body {
   font-family: 'DM Serif Display', serif;
   font-size: 52px; line-height: 1; color: var(--ink);
 }
-.val-block.feitas  .val-num { color: var(--ok); }
+.val-block.fechadas .val-num { color: var(--ink); }
 .val-block.pfechar .val-num { color: var(--crit); }
 .val-block.pfechar.zero .val-num { color: var(--ink-4); }
 .val-sub {
@@ -336,8 +336,8 @@ function valuesHtml() {
   var h  = '';
 
   h += '<div class="values-section">';
-  h += '<div class="val-block feitas">';
-  h += '<div class="val-lbl">Feitas</div>';
+  h += '<div class="val-block fechadas">';
+  h += '<div class="val-lbl">Fechadas</div>';
   h += '<div class="val-num">' + fmt(s.fechadas) + '</div>';
   h += '<div class="val-sub">tarefas concluídas</div>';
   h += '</div>';
