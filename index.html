@@ -129,6 +129,7 @@ tr:hover td { background: #f8f9fa; }
 }
 .subarea-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .sub-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); }
+.sub-name-static { font-size: 16px; font-weight: 700; color: var(--ink-2); }
 .sub-select {
   padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-2);
   background: #fff; font-size: 14px; font-weight: 600; color: var(--ink-2);
@@ -227,7 +228,6 @@ function processData(json) {
   var processedLojas = json.lojas;
 
   if (rawData && rawData.length > 0) {
-    // --- CASO 1: DADOS BRUTOS (FORMATO FLAT) ---
     var semanas = [];
     rawData.forEach(function(i) { 
       var s = String(i.Semana||'').trim(); 
@@ -239,21 +239,16 @@ function processData(json) {
     var dataSemana = rawData.filter(function(i) { return String(i.Semana||'').trim() === ultima; });
     var lojasMap = {};
 
-    // 1. Identificar todas as lojas únicas primeiro
     dataSemana.forEach(function(i) {
       var lojaId = String(i.Loja || '').trim();
       if (!lojaId) return;
-
       if (!lojasMap[lojaId]) {
         lojasMap[lojaId] = {
-          id: lojaId,
-          nome: lojaId,
+          id: lojaId, nome: lojaId,
           totais: { total: 0, fechadas: 0, porFechar: 0 },
           areas: []
         };
       }
-
-      // Se for linha mestra da loja (sem secção), define nome e totais
       if (!i.Secção) {
         var pT = Number(i['P Total'] || i['Total'] || 0);
         var pF = Number(i['P Fechado'] || i['Fechadas'] || 0);
@@ -263,19 +258,14 @@ function processData(json) {
       }
     });
 
-    // 2. Processar secções e agrupar em áreas/subáreas
     dataSemana.forEach(function(i) {
       if (!i.Secção) return;
       var secStr = String(i.Secção).trim();
-      
-      // Encontrar a loja correspondente (match mais longo primeiro para evitar erros)
       var loja = null;
       var areaFull = "";
       var ids = Object.keys(lojasMap).sort((a,b) => b.length - a.length);
-      
       for (var j=0; j<ids.length; j++) {
         var id = ids[j];
-        // Verifica se a secção começa com o ID da loja seguido de espaço ou se é exatamente o ID
         if (secStr === id || secStr.startsWith(id + ' ')) {
           loja = lojasMap[id];
           areaFull = secStr.substring(id.length).trim();
@@ -286,80 +276,48 @@ function processData(json) {
       if (loja && areaFull && areaFull.toLowerCase() !== 'admin') {
         var pT = Number(i['Programadas Total'] || i['Total'] || 0);
         var pF = Number(i['Programadas Fechadas'] || i['Fechadas'] || 0);
-
-        // Separar Área e Subárea por hífen
         var partes = areaFull.split(/\s*-\s*/);
         var areaNome = partes[0].trim();
-        var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : "Geral";
+        var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : areaNome;
 
         var areaObj = loja.areas.find(a => a.area === areaNome);
         if (!areaObj) {
           areaObj = { area: areaNome, subareas: [] };
           loja.areas.push(areaObj);
         }
-
         var subareaObj = areaObj.subareas.find(s => s.subarea === subareaNome);
         if (subareaObj) {
-          subareaObj.total += pT;
-          subareaObj.fechadas += pF;
-          subareaObj.porFechar += (pT - pF);
+          subareaObj.total += pT; subareaObj.fechadas += pF; subareaObj.porFechar += (pT - pF);
         } else {
-          areaObj.subareas.push({
-            subarea: subareaNome,
-            total: pT,
-            fechadas: pF,
-            porFechar: pT - pF
-          });
+          areaObj.subareas.push({ subarea: subareaNome, total: pT, fechadas: pF, porFechar: pT - pF });
         }
       }
     });
-
     _lojas = Object.values(lojasMap);
-    document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
-
   } else if (processedLojas) {
-    // --- CASO 2: DADOS JÁ ESTRUTURADOS ---
     _lojas = processedLojas;
     var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : new Date();
     document.getElementById('hdate').textContent = dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'});
-    document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
   }
-  
+  document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
   renderHome();
 }
 
 function renderHome() {
-  var totalFechadas = _lojas.reduce((sum, l) => sum + l.totais.fechadas, 0);
-  var totalPorFechar = _lojas.reduce((sum, l) => sum + l.totais.porFechar, 0);
-
+  var totalFechadas = _lojas.reduce((sum, l) => sum + (l.totais.fechadas||0), 0);
+  var totalPorFechar = _lojas.reduce((sum, l) => sum + (l.totais.porFechar||0), 0);
   document.getElementById('kpi-total').textContent = _lojas.length;
   document.getElementById('kpi-fechadas').textContent = fmt(totalFechadas);
   document.getElementById('kpi-por-fechar').textContent = fmt(totalPorFechar);
-
   var html = '';
   _lojas.forEach((l, i) => {
-    html += `
-      <tr>
-        <td class="col-center"><span class="rank-num">${i + 1}</span></td>
-        <td>
-          <span class="loja-nome">${l.nome}</span>
-        </td>
-        <td class="col-center">${fmt(l.totais.total)}</td>
-        <td class="col-center">${fmt(l.totais.fechadas)}</td>
-        <td class="col-center" style="color:var(--n1)">${fmt(l.totais.porFechar)}</td>
-        <td class="col-center">
-          <button class="btn-detalhe" onclick="showDetail(${i})">Detalhe &rarr;</button>
-        </td>
-      </tr>
-    `;
+    html += `<tr><td class="col-center"><span class="rank-num">${i + 1}</span></td><td><span class="loja-nome">${l.nome}</span></td><td class="col-center">${fmt(l.totais.total)}</td><td class="col-center">${fmt(l.totais.fechadas)}</td><td class="col-center" style="color:var(--n1)">${fmt(l.totais.porFechar)}</td><td class="col-center"><button class="btn-detalhe" onclick="showDetail(${i})">Detalhe &rarr;</button></td></tr>`;
   });
   document.getElementById('tbl-body').innerHTML = html || '<tr><td colspan="6" class="loading">Sem dados disponíveis.</td></tr>';
 }
 
 function showDetail(idx) {
-  _currentLojaIdx = idx;
-  _currentAreaIdx = 0;
-  _currentSubareaIdx = 0;
+  _currentLojaIdx = idx; _currentAreaIdx = 0; _currentSubareaIdx = 0;
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-detail').classList.add('active');
   document.getElementById('btn-back').classList.add('visible');
@@ -375,73 +333,39 @@ function goHome() {
 function renderDetail() {
   var l = _lojas[_currentLojaIdx];
   if (!l) return;
-  var h = '';
-  h += `<div class="loja-header">
-          <div>
-            <div class="lh-title">${l.nome}</div>
-            <div class="lh-meta">${fmt(l.totais.total)} tarefas totais</div>
-          </div>
-        </div>`;
-
+  var h = `<div class="loja-header"><div><div class="lh-title">${l.nome}</div><div class="lh-meta">${fmt(l.totais.total)} tarefas totais</div></div></div>`;
   if (l.areas && l.areas.length > 0) {
     h += `<div class="area-tabs">`;
-    l.areas.forEach((a, i) => {
-      h += `<button class="area-tab ${i === _currentAreaIdx ? 'on' : ''}" onclick="selectArea(${i})">${a.area}</button>`;
-    });
-    h += `</div>`;
-    h += `<div class="subarea-section" id="subarea-content">${renderSubarea()}</div>`;
+    l.areas.forEach((a, i) => { h += `<button class="area-tab ${i === _currentAreaIdx ? 'on' : ''}" onclick="selectArea(${i})">${a.area}</button>`; });
+    h += `</div><div class="subarea-section" id="subarea-content">${renderSubarea()}</div>`;
   } else {
     h += `<div class="loading">Sem detalhes de áreas disponíveis para esta loja.</div>`;
   }
   document.getElementById('detail-content').innerHTML = h;
 }
 
-function selectArea(idx) {
-  _currentAreaIdx = idx;
-  _currentSubareaIdx = 0;
-  renderDetail();
-}
-
-function selectSubarea(idx) {
-  _currentSubareaIdx = Number(idx);
-  document.getElementById('subarea-content').innerHTML = renderSubarea();
-}
+function selectArea(idx) { _currentAreaIdx = idx; _currentSubareaIdx = 0; renderDetail(); }
+function selectSubarea(idx) { _currentSubareaIdx = Number(idx); document.getElementById('subarea-content').innerHTML = renderSubarea(); }
 
 function renderSubarea() {
   var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
   if (!area || !area.subareas || area.subareas.length === 0) return '<div class="loading">Sem dados nesta área.</div>';
-  
   var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
-  var h = '';
+  var h = `<div class="subarea-row"><span class="sub-lbl">Subárea:</span>`;
   if (area.subareas.length > 1) {
-    h += `<div class="subarea-row">
-            <span class="sub-lbl">Subárea:</span>
-            <select class="sub-select" onchange="selectSubarea(this.value)">`;
-    area.subareas.forEach((s, i) => {
-      h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`;
-    });
-    h += `</select></div>`;
+    h += `<select class="sub-select" onchange="selectSubarea(this.value)">`;
+    area.subareas.forEach((s, i) => { h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`; });
+    h += `</select>`;
+  } else {
+    h += `<span class="sub-name-static">${sub.subarea}</span>`;
   }
-  h += `<div class="vals-grid">
-          <div class="val-card">
-            <div class="val-lbl">FECHADAS</div>
-            <div class="val-num">${fmt(sub.fechadas)}</div>
-            <div class="val-sub">tarefas concluídas</div>
-          </div>
-          <div class="val-card">
-            <div class="val-lbl">POR FECHAR</div>
-            <div class="val-num" style="color:var(--n1)">${fmt(sub.porFechar)}</div>
-            <div class="val-sub">tarefas pendentes</div>
-          </div>
-          <div class="val-card">
-            <div class="val-lbl">TOTAL</div>
-            <div class="val-num">${fmt(sub.total)}</div>
-            <div class="val-sub">tarefas previstas</div>
-          </div>
+  h += `</div><div class="vals-grid">
+          <div class="val-card"><div class="val-lbl">FECHADAS</div><div class="val-num">${fmt(sub.fechadas)}</div><div class="val-sub">tarefas concluídas</div></div>
+          <div class="val-card"><div class="val-lbl">POR FECHAR</div><div class="val-num" style="color:var(--n1)">${fmt(sub.porFechar)}</div><div class="val-sub">tarefas pendentes</div></div>
+          <div class="val-card"><div class="val-lbl">TOTAL</div><div class="val-num">${fmt(sub.total)}</div><div class="val-sub">tarefas previstas</div></div>
         </div>`;
   return h;
 }
-
 loadData();
 </script>
 </body>
