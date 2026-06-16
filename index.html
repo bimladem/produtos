@@ -15,10 +15,9 @@
   --card:   #ffffff;
   --line:   #e5e2d9;
   --line2:  #ccc9be;
-  --n1:     #dc2626;  --n1-bg:   #fef2f2; /* Vermelho */
-  --n2:     #ca8a04;  --n2-bg:   #fefce8; /* Laranja */
-  --n3:     #eab308;  --n3-bg:   #fffbeb; /* Amarelo */
-  --blue:   #2b2fd8;
+  --ok:     #16a34a; --ok-bg:   #f0fdf4;
+  --warn:   #ca8a04; --warn-bg: #fefce8;
+  --crit:   #dc2626; --crit-bg: #fef2f2;
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
   --r: 14px;
 }
@@ -26,8 +25,7 @@
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--paper); color: var(--ink);
-  font-size: 15px;
-  -webkit-font-smoothing: antialiased;
+  font-size: 15px; -webkit-font-smoothing: antialiased;
 }
 
 /* ── HEADER ── */
@@ -55,187 +53,154 @@ body {
 /* ── MAIN ── */
 .main { max-width: 1260px; margin: 0 auto; padding: 28px 22px 80px; }
 
-/* ── STATS ROW ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
+/* ── KPI BAR ── */
+.kpi-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+  gap: 10px; margin-bottom: 28px;
 }
-.stat-card {
+.kpi {
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--r); padding: 20px 16px;
-  box-shadow: var(--shadow);
-  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
+  box-shadow: var(--shadow); text-align: center;
 }
-.stat-lbl {
-  font-size: 10px; font-weight: 800; letter-spacing: .7px;
-  text-transform: uppercase; color: var(--ink-4);
-}
-.stat-val {
-  font-family: 'DM Serif Display', serif;
-  font-size: 38px; line-height: 1; color: var(--ink);
-}
-.stat-sub { font-size: 11px; color: var(--ink-4); font-weight: 600; }
-.stat-card.accent-red   .stat-val { color: var(--n1); }
-.stat-card.accent-orange .stat-val { color: var(--n2); }
-.stat-card.accent-yellow .stat-val { color: var(--n3); }
-.stat-card.accent-blue  .stat-val { color: var(--blue); }
+.kpi-lbl { font-size: 10px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
+.kpi-val { font-family: 'DM Serif Display', serif; font-size: 40px; line-height: 1; color: var(--ink); }
+.kpi-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 6px; font-weight: 500; }
 
-/* ── LOJA TABS ── */
-.loja-tabs {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.loja-tab {
-  padding: 8px 18px; border-radius: 99px;
-  border: 1px solid var(--line2); background: var(--card);
-  font-size: 13px; font-weight: 600; color: var(--ink-3);
-  cursor: pointer; font-family: inherit; transition: all .15s;
-  white-space: nowrap;
-}
-.loja-tab:hover { border-color: var(--ink-3); color: var(--ink); }
-.loja-tab.on {
-  background: #1c1c2e; border-color: #1c1c2e; color: #fff;
-}
-
-/* ── MAIN CARD ── */
-.main-card {
+/* ── TABLE ── */
+.tbl-wrap {
   background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r); overflow: hidden;
-  box-shadow: var(--shadow);
+  border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow);
 }
+.tbl-head {
+  display: grid;
+  grid-template-columns: 1fr 140px 160px 160px 130px;
+  background: #f0ede4; border-bottom: 2px solid var(--line);
+}
+.th {
+  padding: 13px 20px; font-size: 11px; font-weight: 800;
+  letter-spacing: .55px; text-transform: uppercase; color: var(--ink-3);
+  border-right: 1px solid var(--line);
+}
+.th:last-child { border-right: none; }
+.th.c { text-align: center; }
 
-/* loja header inside card */
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 24px; border-bottom: 1px solid var(--line);
-  background: #f5f2ea;
+/* row */
+.trow {
+  display: grid;
+  grid-template-columns: 1fr 140px 160px 160px 130px;
+  border-bottom: 1px solid var(--line);
+  transition: background .1s;
 }
-.card-loja-nome {
+.trow:last-child { border-bottom: none; }
+.trow:hover { background: #f8f6f0; }
+
+/* expanded panel row */
+.trow-panel {
+  border-bottom: 1px solid var(--line);
+  display: none;
+}
+.trow-panel.open { display: block; }
+
+.td {
+  padding: 18px 20px; display: flex; align-items: center;
+  border-right: 1px solid var(--line); color: var(--ink);
+}
+.td:last-child { border-right: none; }
+.td.c { justify-content: center; }
+
+/* loja name cell */
+.td-nome { flex-direction: column; align-items: flex-start; gap: 3px; }
+.loja-nome { font-size: 15px; font-weight: 700; color: var(--ink); }
+.loja-meta { font-size: 12px; color: var(--ink-4); }
+
+/* number cells */
+.num-big {
   font-family: 'DM Serif Display', serif;
-  font-size: 24px; color: var(--ink); letter-spacing: -.2px;
+  font-size: 28px; line-height: 1; color: var(--ink);
 }
-.card-loja-meta { font-size: 13px; color: var(--ink-4); margin-top: 3px; }
-.card-nivel { padding: 5px 14px; border-radius: 99px; font-size: 13px; font-weight: 700; }
-.p-n1 { background: var(--n1-bg); color: var(--n1); }
-.p-n2 { background: var(--n2-bg); color: var(--n2); }
-.p-n3 { background: var(--n3-bg); color: var(--n3); }
 
-/* ── AREA BUTTONS ── */
-.area-section {
-  padding: 18px 24px; border-bottom: 1px solid var(--line);
-  background: var(--card);
-}
-.section-lbl {
-  font-size: 10.5px; font-weight: 800; letter-spacing: .6px;
-  text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px;
-}
-.area-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.area-btn {
-  padding: 7px 16px; border-radius: 8px;
-  border: 1px solid var(--line2); background: var(--paper);
-  font-size: 13px; font-weight: 600; color: var(--ink-3);
+/* pill */
+.pill { padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; }
+.p-ok   { background: var(--ok-bg);   color: var(--ok); }
+.p-warn { background: var(--warn-bg); color: var(--warn); }
+.p-crit { background: var(--crit-bg); color: var(--crit); }
+
+/* areas button */
+.btn-areas {
+  padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--line2); background: transparent;
+  font-size: 12.5px; font-weight: 700; color: var(--ink-3);
   cursor: pointer; font-family: inherit; transition: all .15s;
-  white-space: nowrap;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
 }
-.area-btn:hover { border-color: var(--ink-3); color: var(--ink); background: var(--card); }
-.area-btn.on {
-  background: #1c1c2e; border-color: #1c1c2e; color: #fff;
+.btn-areas:hover { border-color: var(--ink-3); color: var(--ink); }
+.btn-areas.open  { background: #1c1c2e; border-color: #1c1c2e; color: #fff; }
+.btn-areas svg   { width: 12px; height: 12px; transition: transform .2s; }
+.btn-areas.open svg { transform: rotate(180deg); }
+
+/* ── PANEL ── */
+.panel {
+  background: #f5f2ea;
+  border-top: 1px solid var(--line);
+  padding: 20px 24px;
 }
 
-/* ── SUBAREA SECTION ── */
-.subarea-section {
-  padding: 18px 24px; border-bottom: 1px solid var(--line);
-  background: var(--card);
-  display: flex; align-items: center; gap: 14px;
+/* area tabs inside panel */
+.panel-area-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.area-tab {
+  padding: 6px 14px; border-radius: 8px;
+  border: 1px solid var(--line2); background: var(--card);
+  font-size: 12.5px; font-weight: 600; color: var(--ink-3);
+  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
 }
-.subarea-lbl {
-  font-size: 10.5px; font-weight: 800; letter-spacing: .6px;
+.area-tab:hover { border-color: var(--ink-3); color: var(--ink); }
+.area-tab.on { background: #1c1c2e; border-color: #1c1c2e; color: #fff; }
+
+/* subarea select */
+.panel-sub-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.sub-lbl {
+  font-size: 10px; font-weight: 800; letter-spacing: .6px;
   text-transform: uppercase; color: var(--ink-4); white-space: nowrap;
 }
-.subarea-select {
-  padding: 8px 14px; border-radius: 8px;
-  border: 1px solid var(--line2); background: var(--paper);
+.sub-select {
+  padding: 7px 12px; border-radius: 8px;
+  border: 1px solid var(--line2); background: var(--card);
   font-size: 13px; font-weight: 600; color: var(--ink-2);
   font-family: inherit; cursor: pointer;
   appearance: none; -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 34px;
-  min-width: 260px;
-  transition: border-color .15s;
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 30px; min-width: 240px;
 }
-.subarea-select:focus { outline: none; border-color: var(--ink-3); }
+.sub-select:focus { outline: none; border-color: var(--ink-3); }
 
-/* ── VALUES ── */
-.values-section {
-  padding: 28px 24px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
+/* detail values */
+.det-vals {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
-.val-block {
-  background: var(--card);
-  padding: 28px 24px;
+.det-val {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 10px; padding: 20px 16px;
   display: flex; flex-direction: column; align-items: center;
-  gap: 6px; text-align: center;
+  gap: 5px; text-align: center;
 }
-.val-lbl {
-  font-size: 11px; font-weight: 800; letter-spacing: .6px;
-  text-transform: uppercase; color: var(--ink-4);
-}
-.val-num {
-  font-family: 'DM Serif Display', serif;
-  font-size: 52px; line-height: 1; color: var(--ink);
-}
-.val-block.fechadas .val-num { color: var(--ink); }
-.val-block.pfechar .val-num { color: var(--n1); }
-.val-block.pfechar.zero .val-num { color: var(--ink-4); }
-.val-sub {
-  font-size: 12px; color: var(--ink-4); font-weight: 500;
-}
+.det-val-lbl { font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
+.det-val-num { font-family: 'DM Serif Display', serif; font-size: 44px; line-height: 1; color: var(--ink); }
+.det-val-sub { font-size: 11.5px; color: var(--ink-4); font-weight: 500; }
 
-/* progress bar at bottom of values */
-.bar-section {
-  padding: 0 24px 24px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.bar-top {
-  display: flex; justify-content: space-between; align-items: baseline;
-}
-.bar-lbl { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
-.bar-pct { font-size: 15px; font-weight: 800; color: var(--ink-2); }
-.bar-track {
-  height: 10px; border-radius: 99px;
-  background: #e8e5db; overflow: hidden;
-}
-.bar-fill {
-  height: 100%; border-radius: 99px;
-  background: var(--n1); transition: width .5s cubic-bezier(.4,0,.2,1);
-}
-.bar-fill.fill-n2 { background: var(--n2); }
-.bar-fill.fill-n3 { background: var(--n3); }
-
-/* ── BOTTOM NOTES ── */
-.bottom-bar { margin-top: 24px; display: flex; gap: 14px; flex-wrap: wrap; }
-.level-legend {
-  flex: 1; min-width: 280px; background: #fff;
-  border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow);
-}
-.level-legend-title { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
-.level-items { display: flex; flex-direction: column; gap: 10px; }
-.level-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
-.level-dot { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
-.action-banner {
-  flex: 1.5; min-width: 280px; background: #fff8f4; border: 1px solid #f0d8c8;
-  border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 14px;
-}
-.action-icon { width: 38px; height: 38px; border-radius: 9px; background: #e8924a; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-.action-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-.action-desc { font-size: 13px; color: var(--ink-3); line-height: 1.4; font-weight: 600; }
+/* progress bar */
+.bar-wrap { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.bar-top  { display: flex; justify-content: space-between; align-items: baseline; }
+.bar-lbl  { font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
+.bar-pct  { font-size: 14px; font-weight: 800; color: var(--ink-2); }
+.bar-track { height: 8px; border-radius: 99px; background: #e0ddd4; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 99px; background: var(--ok); transition: width .5s cubic-bezier(.4,0,.2,1); }
+.bar-fill.warn { background: var(--warn); }
+.bar-fill.crit { background: var(--crit); }
 
 .loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 15px; font-weight: 600; }
 </style>
@@ -256,32 +221,26 @@ body {
 </header>
 
 <main class="main">
-  <div id="stats-container"></div>
   <div id="app"><div class="loading">A carregar dados…</div></div>
-<!-- Notas removidas -->
 </main>
 
 <script>
-var _lojas     = [];
-var _lojaIdx   = 0;
-var _areaIdx   = 0;
-var _subareaIdx= 0;
+var _lojas = [];
+// panel state per loja: { open, areaIdx, subareaIdx }
+var _state = {};
 
-/* ── helpers ── */
 function pct(f, t) { return t > 0 ? Math.round(f / t * 100) : 0; }
 function fmt(n)    { return Number(n).toLocaleString('pt-PT'); }
 function nivel(pf, total) {
-  var p = total > 0 ? (pf / total * 100) : 0;
-  if (p >= 41) return 'N3';
-  if (p >= 21) return 'N2';
-  return 'N1';
+  if (total === 0 || pf === 0) return 'N1';
+  var p = pf / total * 100;
+  return p <= 5 ? 'N2' : 'N3';
 }
-function pCls(n) { return n==='N1' ? 'p-n1' : n==='N2' ? 'p-n2' : 'p-n3'; }
-function nlabel(n){ return n==='N1' ? 'Nível 1' : n==='N2' ? 'Nível 2' : 'Nível 3'; }
-function bCls(p)  { 
-  if (p >= 41) return 'fill-n3';
-  if (p >= 21) return 'fill-n2';
-  return ''; 
+function pCls(n)  { return n==='N1'?'p-ok':n==='N2'?'p-warn':'p-crit'; }
+function nlabel(n){ return n==='N1'?'Em Dia':n==='N2'?'Atenção':'Crítico'; }
+function bCls(p)  { return p>=95?'':p>=80?'warn':'crit'; }
+function chevron() {
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 }
 
 /* ── load ── */
@@ -289,173 +248,216 @@ fetch('Dados.json?t=' + Date.now())
   .then(function(r){ return r.json(); })
   .then(function(json) {
     _lojas = json.lojas || [];
+    _lojas.forEach(function(l, i) {
+      _state[i] = { open: false, areaIdx: 0, subareaIdx: 0 };
+    });
     var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : null;
-    var ds = dt ? dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+    var ds = dt ? dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'}) : '—';
     document.getElementById('hdate').textContent = ds;
     document.getElementById('hsub').textContent  = _lojas.length + ' lojas · atualizado ' + ds;
     render();
-/* renderNotes removido */
   })
   .catch(function(e) {
     document.getElementById('app').innerHTML =
       '<div class="loading" style="color:#dc2626">Erro ao carregar Dados.json: ' + e.message + '</div>';
   });
 
-/* ── select handlers ── */
-function selectLoja(i) {
-  _lojaIdx    = i;
-  _areaIdx    = 0;
-  _subareaIdx = 0;
-  render();
+/* ── toggle panel ── */
+function togglePanel(i) {
+  _state[i].open = !_state[i].open;
+  refreshRow(i);
 }
-function selectArea(i) {
-  _areaIdx    = i;
-  _subareaIdx = 0;
-  renderCard();
+function selectArea(i, ai) {
+  _state[i].areaIdx   = ai;
+  _state[i].subareaIdx = 0;
+  refreshPanel(i);
 }
-function selectSubarea(i) {
-  _subareaIdx = i;
-  renderValues();
+function selectSubarea(i, val) {
+  _state[i].subareaIdx = Number(val);
+  refreshValues(i);
 }
 
 /* ── full render ── */
 function render() {
-  renderStats();
+  var totalFech = _lojas.reduce(function(s,l){ return s+l.totais.fechadas; },0);
+  var totalPF   = _lojas.reduce(function(s,l){ return s+l.totais.porFechar; },0);
+  var totalTot  = _lojas.reduce(function(s,l){ return s+l.totais.total; },0);
+  var n1 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N1'; }).length;
+  var n2 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N2'; }).length;
+  var n3 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N3'; }).length;
+
   var h = '';
 
-  /* loja tabs */
-  h += '<div class="loja-tabs">';
-  _lojas.forEach(function(l, i) {
-    h += '<button class="loja-tab' + (i===_lojaIdx?' on':'') + '" onclick="selectLoja(' + i + ')">' + l.nome + '</button>';
-  });
+  /* KPIs */
+  h += '<div class="kpi-bar">';
+  h += kpi('Total de Lojas', _lojas.length,  'monitorizadas');
+  h += kpi('Fechadas',       fmt(totalFech), fmt(totalTot)+' no total');
+  h += kpi('Por Fechar',     fmt(totalPF),   'tarefas em aberto');
+  h += kpi('Em Dia',         n1,             '0% de falhas');
+  h += kpi('Atenção',        n2,             'até 5% por fechar');
+  h += kpi('Crítico',        n3,             'mais de 5% por fechar');
   h += '</div>';
 
-  /* main card shell */
-  h += '<div class="main-card" id="main-card">';
-  h += cardHtml();
+  /* table */
+  h += '<div class="tbl-wrap">';
+  h += '<div class="tbl-head">';
+  h += '<div class="th">Loja</div>';
+  h += '<div class="th c">Total</div>';
+  h += '<div class="th c">Fechadas</div>';
+  h += '<div class="th c">Por Fechar</div>';
+  h += '<div class="th c">Áreas</div>';
+  h += '</div>';
+  h += '<div id="tbl-body">';
+  _lojas.forEach(function(l, i) { h += rowHtml(l, i); });
+  h += '</div>';
   h += '</div>';
 
   document.getElementById('app').innerHTML = h;
 }
 
-function renderStats() {
-  var totalFechadas = _lojas.reduce(function(acc, l){ return acc + l.totais.fechadas; }, 0);
-  var totalAbertas = _lojas.reduce(function(acc, l){ return acc + l.totais.porFechar; }, 0);
-
-  var h = '<div class="stats-row">';
-  h += statCard('Total de Lojas', _lojas.length, 'Esta semana', '');
-  h += statCard('Tarefas Fechadas', fmt(totalFechadas), 'Total acumulado', 'accent-blue');
-  h += statCard('Tarefas em Aberto', fmt(totalAbertas), 'Pendente total', 'accent-red');
-  h += '</div>';
-  document.getElementById('stats-container').innerHTML = h;
+function kpi(lbl, val, sub) {
+  return '<div class="kpi"><div class="kpi-lbl">'+lbl+'</div><div class="kpi-val">'+val+'</div><div class="kpi-sub">'+sub+'</div></div>';
 }
 
-function statCard(lbl, val, sub, cls) {
-  return '<div class="stat-card ' + cls + '">'
-    + '<div class="stat-lbl">' + lbl + '</div>'
-    + '<div class="stat-val">' + val + '</div>'
-    + '<div class="stat-sub">' + sub + '</div>'
-    + '</div>';
-}
-
-/* ── card html ── */
-function cardHtml() {
-  var l   = _lojas[_lojaIdx];
-  var n   = nivel(l.totais.fechadas, l.totais.total);
-  var p   = pct(l.totais.fechadas, l.totais.total);
+/* ── row html ── */
+function rowHtml(l, i) {
+  var n   = nivel(l.totais.porFechar, l.totais.total);
+  var st  = _state[i];
   var h   = '';
 
-  /* card header */
-  h += '<div class="card-header">';
-  h += '<div>';
-  h += '<div class="card-loja-nome">' + l.nome + '</div>';
-  h += '<div class="card-loja-meta">' + fmt(l.totais.total) + ' tarefas · ' + fmt(l.totais.porFechar) + ' por fechar no total</div>';
-  h += '</div>';
-  h += '<span class="card-nivel ' + pCls(n) + '">' + nlabel(n) + '</span>';
+  h += '<div class="trow" id="trow-'+i+'">';
+
+  /* nome */
+  h += '<div class="td td-nome">';
+  h += '<span class="loja-nome">'+l.nome+'</span>';
+  h += '<span class="loja-meta">'+l.areas.length+' áreas HACCP</span>';
   h += '</div>';
 
-  /* area buttons */
-  h += '<div class="area-section">';
-  h += '<div class="section-lbl">Área</div>';
-  h += '<div class="area-btns">';
-  l.areas.forEach(function(a, i) {
-    h += '<button class="area-btn' + (i===_areaIdx?' on':'') + '" onclick="selectArea(' + i + ')">' + a.area + '</button>';
-  });
+  /* total */
+  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.total)+'</span></div>';
+
+  /* fechadas */
+  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.fechadas)+'</span></div>';
+
+  /* por fechar */
+  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.porFechar)+'</span></div>';
+
+  /* áreas btn + estado */
+  h += '<div class="td c" style="gap:8px;flex-direction:column;">';
+  h += '<span class="pill '+pCls(n)+'">'+nlabel(n)+'</span>';
+  h += '<button class="btn-areas'+(st.open?' open':'')+'" onclick="togglePanel('+i+')">Áreas '+chevron()+'</button>';
   h += '</div>';
+
+  h += '</div>';
+
+  /* panel row */
+  h += '<div class="trow-panel'+(st.open?' open':'')+'" id="tpanel-'+i+'">';
+  if (st.open) h += panelHtml(l, i);
+  h += '</div>';
+
+  return h;
+}
+
+/* ── panel html ── */
+function panelHtml(l, i) {
+  var st  = _state[i];
+  var ai  = st.areaIdx;
+  var si  = st.subareaIdx;
+  var area = l.areas[ai];
+  var sub  = area.subareas[si];
+  var p    = pct(sub.fechadas, sub.total);
+  var h    = '';
+
+  h += '<div class="panel">';
+
+  /* area tabs */
+  h += '<div class="panel-area-tabs">';
+  l.areas.forEach(function(a, idx) {
+    h += '<button class="area-tab'+(idx===ai?' on':'')+'" onclick="selectArea('+i+','+idx+')">'+a.area+'</button>';
+  });
   h += '</div>';
 
   /* subarea select */
-  var area = l.areas[_areaIdx];
-  h += '<div class="subarea-section">';
-  h += '<span class="subarea-lbl">Subárea</span>';
-  h += '<select class="subarea-select" onchange="selectSubarea(this.value)">';
-  area.subareas.forEach(function(s, i) {
-    h += '<option value="' + i + '"' + (i===_subareaIdx?' selected':'') + '>' + s.subarea + '</option>';
+  h += '<div class="panel-sub-row">';
+  h += '<span class="sub-lbl">Subárea</span>';
+  h += '<select class="sub-select" onchange="selectSubarea('+i+',this.value)" id="subsel-'+i+'">';
+  area.subareas.forEach(function(s, idx) {
+    h += '<option value="'+idx+'"'+(idx===si?' selected':'')+'>'+s.subarea+'</option>';
   });
   h += '</select>';
   h += '</div>';
 
-  h += valuesHtml();
+  /* values */
+  h += '<div class="det-vals" id="detvals-'+i+'">';
+  h += detVal('Fechadas',  fmt(sub.fechadas),  'tarefas concluídas');
+  h += detVal('Por Fechar',fmt(sub.porFechar), sub.porFechar===0?'nenhuma em falta':'tarefas em falta');
+  h += detVal('Total',     fmt(sub.total),     'tarefas previstas');
+  h += '</div>';
 
+  /* bar */
+  h += '<div class="bar-wrap" id="detbar-'+i+'">';
+  h += '<div class="bar-top"><span class="bar-lbl">Taxa de conclusão</span><span class="bar-pct">'+p+'%</span></div>';
+  h += '<div class="bar-track"><div class="bar-fill '+bCls(p)+'" style="width:'+p+'%"></div></div>';
+  h += '</div>';
+
+  h += '</div>';
   return h;
 }
 
-/* ── values html ── */
-function valuesHtml() {
-  var l  = _lojas[_lojaIdx];
-  var s  = l.areas[_areaIdx].subareas[_subareaIdx];
-  var p  = pct(s.fechadas, s.total);
-  var bc = bCls(p);
-  var pfZero = s.porFechar === 0;
-  var h  = '';
-
-  h += '<div class="values-section">';
-  h += '<div class="val-block fechadas">';
-  h += '<div class="val-lbl">Fechadas</div>';
-  h += '<div class="val-num">' + fmt(s.fechadas) + '</div>';
-  h += '<div class="val-sub">tarefas concluídas</div>';
-  h += '</div>';
-
-  h += '<div class="val-block pfechar' + (pfZero?' zero':'') + '">';
-  h += '<div class="val-lbl">Por Fechar</div>';
-  h += '<div class="val-num">' + s.porFechar + '</div>';
-  h += '<div class="val-sub">' + (pfZero ? 'nenhuma em falta' : 'tarefas em falta') + '</div>';
-  h += '</div>';
-
-  h += '<div class="val-block">';
-  h += '<div class="val-lbl">Total</div>';
-  h += '<div class="val-num">' + fmt(s.total) + '</div>';
-  h += '<div class="val-sub">tarefas previstas</div>';
-  h += '</div>';
-  h += '</div>';
-
-  h += '<div class="bar-section">';
-  h += '<div class="bar-top">';
-  h += '<span class="bar-lbl">Taxa de conclusão</span>';
-  h += '<span class="bar-pct">' + p + '%</span>';
-  h += '</div>';
-  h += '<div class="bar-track"><div class="bar-fill ' + bc + '" style="width:' + p + '%"></div></div>';
-  h += '</div>';
-
-  return h;
+function detVal(lbl, val, sub) {
+  return '<div class="det-val"><div class="det-val-lbl">'+lbl+'</div><div class="det-val-num">'+val+'</div><div class="det-val-sub">'+sub+'</div></div>';
 }
 
-/* Função renderNotes removida */
+/* ── partial refresh ── */
+function refreshRow(i) {
+  var l   = _lojas[i];
+  var st  = _state[i];
 
-/* ── partial renders ── */
-function renderCard() {
-  document.getElementById('main-card').innerHTML = cardHtml();
+  /* update button */
+  var btn = document.querySelector('#trow-'+i+' .btn-areas');
+  if (btn) {
+    btn.className = 'btn-areas'+(st.open?' open':'');
+    btn.innerHTML = 'Áreas '+chevron();
+  }
+
+  /* update panel */
+  var panel = document.getElementById('tpanel-'+i);
+  if (panel) {
+    if (st.open) {
+      panel.classList.add('open');
+      panel.innerHTML = panelHtml(l, i);
+    } else {
+      panel.classList.remove('open');
+      panel.innerHTML = '';
+    }
+  }
 }
-function renderValues() {
-  var card = document.getElementById('main-card');
-  var valOld = card.querySelector('.values-section');
-  var barOld = card.querySelector('.bar-section');
-  if (valOld) valOld.remove();
-  if (barOld) barOld.remove();
 
-  var tmp = document.createElement('div');
-  tmp.innerHTML = valuesHtml();
-  while (tmp.firstChild) card.appendChild(tmp.firstChild);
+function refreshPanel(i) {
+  var panel = document.getElementById('tpanel-'+i);
+  if (panel) panel.innerHTML = panelHtml(_lojas[i], i);
+}
+
+function refreshValues(i) {
+  var l   = _lojas[i];
+  var st  = _state[i];
+  var sub = l.areas[st.areaIdx].subareas[st.subareaIdx];
+  var p   = pct(sub.fechadas, sub.total);
+
+  var dv = document.getElementById('detvals-'+i);
+  if (dv) {
+    dv.innerHTML =
+      detVal('Fechadas',   fmt(sub.fechadas),  'tarefas concluídas') +
+      detVal('Por Fechar', fmt(sub.porFechar), sub.porFechar===0?'nenhuma em falta':'tarefas em falta') +
+      detVal('Total',      fmt(sub.total),     'tarefas previstas');
+  }
+
+  var db = document.getElementById('detbar-'+i);
+  if (db) {
+    db.innerHTML =
+      '<div class="bar-top"><span class="bar-lbl">Taxa de conclusão</span><span class="bar-pct">'+p+'%</span></div>' +
+      '<div class="bar-track"><div class="bar-fill '+bCls(p)+'" style="width:'+p+'%"></div></div>';
+  }
 }
 </script>
 </body>
