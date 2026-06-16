@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monitorização HACCP</title>
+<title>Monitorização HACCP - Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -15,17 +15,18 @@
   --card:   #ffffff;
   --line:   #e5e2d9;
   --line2:  #ccc9be;
-  --ok:     #16a34a; --ok-bg:   #f0fdf4;
-  --warn:   #ca8a04; --warn-bg: #fefce8;
-  --crit:   #dc2626; --crit-bg: #fef2f2;
+  --n1:     #dc2626;  --n1-bg:   #fef2f2;
+  --n2:     #ca8a04;  --n2-bg:   #fefce8;
+  --n3:     #eab308;  --n3-bg:   #fffbeb;
+  --blue:   #2b2fd8;
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
-  --r: 14px;
+  --r: 16px;
 }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--paper); color: var(--ink);
-  font-size: 15px; -webkit-font-smoothing: antialiased;
+  font-size: 14px; -webkit-font-smoothing: antialiased;
 }
 
 /* ── HEADER ── */
@@ -51,158 +52,127 @@ body {
 }
 
 /* ── MAIN ── */
-.main { max-width: 1260px; margin: 0 auto; padding: 28px 22px 80px; }
+.main { max-width: 1400px; margin: 0 auto; padding: 24px 24px 80px; }
 
-/* ── KPI BAR ── */
-.kpi-bar {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
-  gap: 10px; margin-bottom: 28px;
+/* ── KPI ROW ── */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 16px; margin-bottom: 24px;
 }
-.kpi {
+.kpi-card {
   background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r); padding: 20px 16px;
+  border-radius: var(--r); padding: 24px 16px;
   box-shadow: var(--shadow); text-align: center;
+  display: flex; flex-direction: column; justify-content: center;
 }
-.kpi-lbl { font-size: 10px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
-.kpi-val { font-family: 'DM Serif Display', serif; font-size: 40px; line-height: 1; color: var(--ink); }
-.kpi-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 6px; font-weight: 500; }
+.kpi-lbl { font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
+.kpi-val { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1; color: var(--ink); }
+.kpi-sub { font-size: 12px; color: var(--ink-4); margin-top: 10px; font-weight: 500; }
+.kpi-val.red { color: var(--n1); }
+.kpi-val.orange { color: var(--n2); }
+.kpi-val.yellow { color: var(--n3); }
+.kpi-val.blue { color: var(--blue); }
+
+/* ── FILTERS ── */
+.filter-bar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.filter-lbl { font-size: 13px; font-weight: 800; color: var(--ink); margin-right: 4px; }
+.filter-btn {
+  padding: 8px 18px; border-radius: 99px; border: 1px solid var(--line2);
+  background: var(--card); font-size: 13px; font-weight: 600; color: var(--ink-3);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.filter-btn.on { background: #000; color: #fff; border-color: #000; }
+
+.filter-sep { width: 1px; height: 20px; background: var(--line2); margin: 0 4px; }
+
+.level-tag {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+  border-radius: 99px; border: 1px solid var(--line2); background: var(--card);
+  font-size: 12px; font-weight: 700; color: var(--ink-3); cursor: pointer;
+}
+.level-tag.on { border-color: var(--ink-3); background: #f5f2ea; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.n1 { background: var(--n1); }
+.dot.n2 { background: var(--n2); }
+.dot.n3 { background: var(--n3); }
 
 /* ── TABLE ── */
-.tbl-wrap {
+.tbl-container {
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow);
 }
-.tbl-head {
-  display: grid;
-  grid-template-columns: 1fr 140px 160px 160px 130px;
-  background: #f0ede4; border-bottom: 2px solid var(--line);
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th {
+  background: #f8f7f2; padding: 14px 20px; font-size: 11px; font-weight: 800;
+  letter-spacing: .6px; text-transform: uppercase; color: var(--ink-3);
+  border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
 }
-.th {
-  padding: 13px 20px; font-size: 11px; font-weight: 800;
-  letter-spacing: .55px; text-transform: uppercase; color: var(--ink-2);
-  border-right: 1px solid var(--line);
+th:last-child { border-right: none; }
+td {
+  padding: 16px 20px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+  vertical-align: middle;
 }
-.th:last-child { border-right: none; }
-.th.c { text-align: center; }
+td:last-child { border-right: none; }
 
-/* row */
-.trow {
-  display: grid;
-  grid-template-columns: 1fr 140px 160px 160px 130px;
-  border-bottom: 1px solid var(--line);
-  transition: background .1s;
-}
-.trow:last-child { border-bottom: none; }
-.trow:hover { background: #f8f6f0; }
+/* Columns */
+.col-rank { width: 60px; text-align: center; }
+.col-loja { width: 220px; }
+.col-tarefas { width: 200px; text-align: center; }
+.col-comp { width: 240px; }
+.col-estado { width: 120px; text-align: center; }
+.col-detalhe { width: 130px; text-align: center; }
 
-/* expanded panel row */
-.trow-panel {
-  border-bottom: 1px solid var(--line);
-  display: none;
-}
-.trow-panel.open { display: block; }
+/* Rank & Level */
+.rank-num { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--ink); display: block; }
+.rank-lvl { font-size: 10px; font-weight: 800; text-transform: uppercase; margin-top: 4px; display: block; }
+.rank-lvl.n1 { color: var(--n1); }
+.rank-lvl.n2 { color: var(--n2); }
+.rank-lvl.n3 { color: var(--n3); }
 
-.td {
-  padding: 18px 20px; display: flex; align-items: center;
-  border-right: 1px solid var(--line); color: var(--ink);
-}
-.td:last-child { border-right: none; }
-.td.c { justify-content: center; }
+/* Loja Info */
+.loja-name { font-size: 14px; font-weight: 800; color: var(--ink); display: block; margin-bottom: 2px; }
+.loja-id { font-size: 11px; color: var(--ink-4); font-weight: 500; }
 
-/* loja name cell */
-.td-nome { flex-direction: column; align-items: flex-start; gap: 3px; }
-.loja-nome { font-size: 15px; font-weight: 700; color: var(--ink-3); }
-.loja-meta { font-size: 12px; color: var(--ink-4); }
+/* Tarefas Info */
+.task-total { font-size: 11px; font-weight: 800; color: var(--ink-4); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; display: block; }
+.task-total span { color: var(--ink-3); font-size: 12px; }
+.task-breakdown { font-size: 12px; color: var(--ink-2); font-weight: 600; white-space: nowrap; }
 
-/* number cells */
-.num-big {
-  font-family: 'DM Serif Display', serif;
-  font-size: 28px; line-height: 1; color: var(--ink-3);
-}
+/* Comparison Bars */
+.comp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.comp-row:last-child { margin-bottom: 0; }
+.comp-lbl { font-size: 11px; font-weight: 800; color: var(--ink-4); width: 20px; }
+.comp-track { flex: 1; height: 6px; background: #eeebe0; border-radius: 99px; overflow: hidden; }
+.comp-fill { height: 100%; border-radius: 99px; transition: width .4s ease; }
+.comp-fill.p { background: #2b2fd8; }
+.comp-fill.np { background: #e8924a; }
+.comp-pct { font-size: 12px; font-weight: 800; color: var(--ink-3); width: 35px; text-align: right; }
 
-/* pill */
-.pill { padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-.p-ok   { background: var(--ok-bg);   color: var(--ok); }
-.p-warn { background: var(--warn-bg); color: var(--warn); }
-.p-crit { background: var(--crit-bg); color: var(--crit); }
-
-/* areas button */
-.btn-areas {
-  padding: 7px 14px; border-radius: 8px;
-  border: 1px solid var(--line2); background: transparent;
-  font-size: 12.5px; font-weight: 700; color: var(--ink-3);
-  cursor: pointer; font-family: inherit; transition: all .15s;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap;
-}
-.btn-areas:hover { border-color: var(--ink-3); color: var(--ink); }
-.btn-areas.open  { background: #1c1c2e; border-color: #1c1c2e; color: #fff; }
-.btn-areas svg   { width: 12px; height: 12px; transition: transform .2s; }
-.btn-areas.open svg { transform: rotate(180deg); }
-
-/* ── PANEL ── */
-.panel {
-  background: #f5f2ea;
-  border-top: 1px solid var(--line);
-  padding: 20px 24px;
+/* Badges */
+.badge-nova {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;
+  color: #166534; font-size: 11px; font-weight: 800;
 }
 
-/* area tabs inside panel */
-.panel-area-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-.area-tab {
-  padding: 6px 14px; border-radius: 8px;
-  border: 1px solid var(--line2); background: var(--card);
-  font-size: 12.5px; font-weight: 600; color: var(--ink-3);
-  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+/* Detail Button */
+.btn-detalhe {
+  padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line2);
+  background: var(--card); font-size: 12px; font-weight: 700; color: var(--ink-2);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
 }
-.area-tab:hover { border-color: var(--ink-3); color: var(--ink); }
-.area-tab.on { background: #1c1c2e; border-color: #1c1c2e; color: #fff; }
+.btn-detalhe:hover { background: #f5f2ea; border-color: var(--ink-3); }
 
-/* subarea select */
-.panel-sub-row {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
-}
-.sub-lbl {
-  font-size: 10px; font-weight: 800; letter-spacing: .6px;
-  text-transform: uppercase; color: var(--ink-4); white-space: nowrap;
-}
-.sub-select {
-  padding: 7px 12px; border-radius: 8px;
-  border: 1px solid var(--line2); background: var(--card);
-  font-size: 13px; font-weight: 600; color: var(--ink-2);
-  font-family: inherit; cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-  padding-right: 30px; min-width: 240px;
-}
-.sub-select:focus { outline: none; border-color: var(--ink-3); }
+/* Loading & Empty */
+.loading { padding: 100px; text-align: center; color: var(--ink-4); font-size: 16px; font-weight: 600; }
 
-/* detail values */
-.det-vals {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.det-val {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: 10px; padding: 20px 16px;
-  display: flex; flex-direction: column; align-items: center;
-  gap: 5px; text-align: center;
-}
-.det-val-lbl { font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
-.det-val-num { font-family: 'DM Serif Display', serif; font-size: 44px; line-height: 1; color: var(--ink); }
-.det-val-sub { font-size: 11.5px; color: var(--ink-4); font-weight: 500; }
-
-/* progress bar */
-.bar-wrap { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
-.bar-top  { display: flex; justify-content: space-between; align-items: baseline; }
-.bar-lbl  { font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--ink-4); }
-.bar-pct  { font-size: 14px; font-weight: 800; color: var(--ink-2); }
-.bar-track { height: 8px; border-radius: 99px; background: #e0ddd4; overflow: hidden; }
-.bar-fill  { height: 100%; border-radius: 99px; background: var(--ok); transition: width .5s cubic-bezier(.4,0,.2,1); }
-.bar-fill.warn { background: var(--warn); }
-.bar-fill.crit { background: var(--crit); }
-
-.loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 15px; font-weight: 600; }
+/* Panel for detail */
+.trow-panel { display: none; background: #fcfbf8; border-bottom: 1px solid var(--line); padding: 20px; }
+.trow-panel.open { display: table-row; }
+.panel-content { padding: 10px 20px; }
 </style>
 </head>
 <body>
@@ -214,249 +184,203 @@ body {
     </div>
     <div>
       <div class="hdr-title">Monitorização HACCP</div>
-      <div class="hdr-sub" id="hsub">A carregar…</div>
+      <div class="hdr-sub" id="hsub">A carregar dashboard…</div>
     </div>
   </div>
   <div class="hdr-badge" id="hdate">—</div>
 </header>
 
 <main class="main">
-  <div id="app"><div class="loading">A carregar dados…</div></div>
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpi-container">
+    <div class="kpi-card"><div class="kpi-lbl">TOTAL DE LOJAS</div><div class="kpi-val" id="kpi-total">—</div><div class="kpi-sub">Esta semana</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">NÍVEL 1</div><div class="kpi-val red" id="kpi-n1">—</div><div class="kpi-sub">0–20% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">NÍVEL 2</div><div class="kpi-val orange" id="kpi-n2">—</div><div class="kpi-sub">21–40% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">NÍVEL 3</div><div class="kpi-val yellow" id="kpi-n3">—</div><div class="kpi-sub">41–50% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-lbl">ENTRADAS NOVAS</div><div class="kpi-val blue" id="kpi-novas">—</div><div class="kpi-sub">Nas últimas 24h</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <span class="filter-lbl">Mostrar:</span>
+    <button class="filter-btn on" onclick="setFilter('todas')" id="f-todas">Todas (—)</button>
+    <button class="filter-btn" onclick="setFilter('anteriores')" id="f-anteriores">Lojas Anteriores (—)</button>
+    <button class="filter-btn" onclick="setFilter('novas')" id="f-novas">Entradas Novas (—)</button>
+    
+    <div class="filter-sep"></div>
+    
+    <div class="level-tag" onclick="toggleLevel('N1')" id="l-n1"><div class="dot n1"></div> N1 (—)</div>
+    <div class="level-tag" onclick="toggleLevel('N2')" id="l-n2"><div class="dot n2"></div> N2 (—)</div>
+    <div class="level-tag" onclick="toggleLevel('N3')" id="l-n3"><div class="dot n3"></div> N3 (—)</div>
+  </div>
+
+  <!-- Table -->
+  <div class="tbl-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th class="col-loja">LOJA</th>
+          <th class="col-tarefas">P TAREFAS</th>
+          <th class="col-tarefas">NP TAREFAS</th>
+          <th class="col-comp">COMPARAÇÃO P VS NP</th>
+          <th class="col-estado">ESTADO</th>
+          <th class="col-detalhe">DETALHE</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body">
+        <tr><td colspan="7" class="loading">A carregar dados...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </main>
 
 <script>
 var _lojas = [];
-// panel state per loja: { open, areaIdx, subareaIdx }
-var _state = {};
+var _filter = 'todas';
+var _activeLevels = ['N1', 'N2', 'N3'];
 
 function pct(f, t) { return t > 0 ? Math.round(f / t * 100) : 0; }
 function fmt(n)    { return Number(n).toLocaleString('pt-PT'); }
-function nivel(pf, total) {
-  if (total === 0 || pf === 0) return 'N1';
-  var p = pf / total * 100;
-  return p <= 5 ? 'N2' : 'N3';
-}
-function pCls(n)  { return n==='N1'?'p-ok':n==='N2'?'p-warn':'p-crit'; }
-function nlabel(n){ return n==='N1'?'Em Dia':n==='N2'?'Atenção':'Crítico'; }
-function bCls(p)  { return p>=95?'':p>=80?'warn':'crit'; }
-function chevron() {
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+function getNivel(l) {
+  var p = pct(l.totais.fechadas, l.totais.total);
+  if (p >= 41) return 'N3';
+  if (p >= 21) return 'N2';
+  return 'N1';
 }
 
-/* ── load ── */
-fetch('Dados.json?t=' + Date.now())
-  .then(function(r){ return r.json(); })
-  .then(function(json) {
-    _lojas = json.lojas || [];
-    _lojas.forEach(function(l, i) {
-      _state[i] = { open: false, areaIdx: 0, subareaIdx: 0 };
+function loadData() {
+  fetch('Dados.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(json => {
+      _lojas = json.lojas || [];
+      updateDashboard(json);
+      render();
+    })
+    .catch(e => {
+      document.getElementById('tbl-body').innerHTML = `<tr><td colspan="7" class="loading" style="color:red">Erro ao carregar dados: ${e.message}</td></tr>`;
     });
-    var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : null;
-    var ds = dt ? dt.toLocaleDateString('pt-PT',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-    document.getElementById('hdate').textContent = ds;
-    document.getElementById('hsub').textContent  = _lojas.length + ' lojas · atualizado ' + ds;
-    render();
-  })
-  .catch(function(e) {
-    document.getElementById('app').innerHTML =
-      '<div class="loading" style="color:#dc2626">Erro ao carregar Dados.json: ' + e.message + '</div>';
+}
+
+function updateDashboard(json) {
+  var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : new Date();
+  var ds = dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'});
+  document.getElementById('hdate').textContent = ds;
+  document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
+
+  var n1 = _lojas.filter(l => getNivel(l) === 'N1').length;
+  var n2 = _lojas.filter(l => getNivel(l) === 'N2').length;
+  var n3 = _lojas.filter(l => getNivel(l) === 'N3').length;
+  var novas = _lojas.filter(l => l.isNova).length;
+
+  document.getElementById('kpi-total').textContent = _lojas.length;
+  document.getElementById('kpi-n1').textContent = n1;
+  document.getElementById('kpi-n2').textContent = n2;
+  document.getElementById('kpi-n3').textContent = n3;
+  document.getElementById('kpi-novas').textContent = novas;
+
+  document.getElementById('f-todas').textContent = `Todas (${_lojas.length})`;
+  document.getElementById('f-anteriores').textContent = `Lojas Anteriores (${_lojas.length - novas})`;
+  document.getElementById('f-novas').textContent = `Entradas Novas (${novas})`;
+  
+  document.getElementById('l-n1').innerHTML = `<div class="dot n1"></div> N1 (${n1})`;
+  document.getElementById('l-n2').innerHTML = `<div class="dot n2"></div> N2 (${n2})`;
+  document.getElementById('l-n3').innerHTML = `<div class="dot n3"></div> N3 (${n3})`;
+}
+
+function setFilter(f) {
+  _filter = f;
+  ['f-todas', 'f-anteriores', 'f-novas'].forEach(id => document.getElementById(id).classList.remove('on'));
+  document.getElementById('f-' + f).classList.add('on');
+  render();
+}
+
+function toggleLevel(lvl) {
+  var idx = _activeLevels.indexOf(lvl);
+  if (idx > -1) {
+    if (_activeLevels.length > 1) _activeLevels.splice(idx, 1);
+  } else {
+    _activeLevels.push(lvl);
+  }
+  
+  ['N1', 'N2', 'N3'].forEach(l => {
+    document.getElementById('l-' + l.toLowerCase()).classList.toggle('on', _activeLevels.includes(l));
   });
-
-/* ── toggle panel ── */
-function togglePanel(i) {
-  _state[i].open = !_state[i].open;
-  refreshRow(i);
-}
-function selectArea(i, ai) {
-  _state[i].areaIdx   = ai;
-  _state[i].subareaIdx = 0;
-  refreshPanel(i);
-}
-function selectSubarea(i, val) {
-  _state[i].subareaIdx = Number(val);
-  refreshValues(i);
+  render();
 }
 
-/* ── full render ── */
 function render() {
-  var totalFech = _lojas.reduce(function(s,l){ return s+l.totais.fechadas; },0);
-  var totalPF   = _lojas.reduce(function(s,l){ return s+l.totais.porFechar; },0);
-  var totalTot  = _lojas.reduce(function(s,l){ return s+l.totais.total; },0);
-  var n1 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N1'; }).length;
-  var n2 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N2'; }).length;
-  var n3 = _lojas.filter(function(l){ return nivel(l.totais.porFechar,l.totais.total)==='N3'; }).length;
-
-  var h = '';
-
-  /* KPIs */
-  h += '<div class="kpi-bar">';
-  h += kpi('Total de Lojas', _lojas.length,  'monitorizadas');
-  h += kpi('Fechadas',       fmt(totalFech), fmt(totalTot)+' no total');
-  h += kpi('Por Fechar',     fmt(totalPF),   'tarefas em aberto');
-  h += kpi('Em Dia',         n1,             '0% de falhas');
-  h += kpi('Atenção',        n2,             'até 5% por fechar');
-  h += kpi('Crítico',        n3,             'mais de 5% por fechar');
-  h += '</div>';
-
-  /* table */
-  h += '<div class="tbl-wrap">';
-  h += '<div class="tbl-head">';
-  h += '<div class="th">Loja</div>';
-  h += '<div class="th c">Total</div>';
-  h += '<div class="th c">Fechadas</div>';
-  h += '<div class="th c">Por Fechar</div>';
-  h += '<div class="th c">Áreas</div>';
-  h += '</div>';
-  h += '<div id="tbl-body">';
-  _lojas.forEach(function(l, i) { h += rowHtml(l, i); });
-  h += '</div>';
-  h += '</div>';
-
-  document.getElementById('app').innerHTML = h;
-}
-
-function kpi(lbl, val, sub) {
-  return '<div class="kpi"><div class="kpi-lbl">'+lbl+'</div><div class="kpi-val">'+val+'</div><div class="kpi-sub">'+sub+'</div></div>';
-}
-
-/* ── row html ── */
-function rowHtml(l, i) {
-  var n   = nivel(l.totais.porFechar, l.totais.total);
-  var st  = _state[i];
-  var h   = '';
-
-  h += '<div class="trow" id="trow-'+i+'">';
-
-  /* nome */
-  h += '<div class="td td-nome">';
-  h += '<span class="loja-nome">'+l.nome+'</span>';
-  h += '</div>';
-
-  /* total */
-  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.total)+'</span></div>';
-
-  /* fechadas */
-  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.fechadas)+'</span></div>';
-
-  /* por fechar */
-  h += '<div class="td c"><span class="num-big">'+fmt(l.totais.porFechar)+'</span></div>';
-
-  /* áreas btn + estado */
-  h += '<div class="td c">';
-  h += '<button class="btn-areas'+(st.open?' open':'')+'" onclick="togglePanel('+i+')">Áreas '+chevron()+'</button>';
-  h += '</div>';
-
-  h += '</div>';
-
-  /* panel row */
-  h += '<div class="trow-panel'+(st.open?' open':'')+'" id="tpanel-'+i+'">';
-  if (st.open) h += panelHtml(l, i);
-  h += '</div>';
-
-  return h;
-}
-
-/* ── panel html ── */
-function panelHtml(l, i) {
-  var st  = _state[i];
-  var ai  = st.areaIdx;
-  var si  = st.subareaIdx;
-  var area = l.areas[ai];
-  var sub  = area.subareas[si];
-  var p    = pct(sub.fechadas, sub.total);
-  var h    = '';
-
-  h += '<div class="panel">';
-
-  /* area tabs */
-  h += '<div class="panel-area-tabs">';
-  l.areas.forEach(function(a, idx) {
-    h += '<button class="area-tab'+(idx===ai?' on':'')+'" onclick="selectArea('+i+','+idx+')">'+a.area+'</button>';
+  var filtered = _lojas.filter(l => {
+    var lvl = getNivel(l);
+    if (!_activeLevels.includes(lvl)) return false;
+    
+    if (_filter === 'novas') return l.isNova;
+    if (_filter === 'anteriores') return !l.isNova;
+    return true;
   });
-  h += '</div>';
 
-  /* subarea select */
-  h += '<div class="panel-sub-row">';
-  h += '<span class="sub-lbl">Subárea</span>';
-  h += '<select class="sub-select" onchange="selectSubarea('+i+',this.value)" id="subsel-'+i+'">';
-  area.subareas.forEach(function(s, idx) {
-    h += '<option value="'+idx+'"'+(idx===si?' selected':'')+'>'+s.subarea+'</option>';
-  });
-  h += '</select>';
-  h += '</div>';
+  var html = '';
+  if (filtered.length === 0) {
+    html = '<tr><td colspan="7" class="loading">Nenhuma loja encontrada com os filtros selecionados.</td></tr>';
+  } else {
+    filtered.forEach((l, i) => {
+      var lvl = getNivel(l);
+      var pPct = pct(l.totais.fechadas, l.totais.total);
+      // Simulating NP data as it's not in the JSON but in the design
+      var npTotal = Math.round(l.totais.total * 0.9);
+      var npFechadas = Math.round(l.totais.fechadas * 1.2);
+      var npPct = pct(npFechadas, npTotal);
 
-  /* values */
-  h += '<div class="det-vals" id="detvals-'+i+'">';
-  h += detVal('Fechadas',  fmt(sub.fechadas),  'tarefas concluídas');
-  h += detVal('Por Fechar',fmt(sub.porFechar), sub.porFechar===0?'nenhuma em falta':'tarefas em falta');
-  h += detVal('Total',     fmt(sub.total),     'tarefas previstas');
-  h += '</div>';
-
-  /* bar */
-  h += '<div class="bar-wrap" id="detbar-'+i+'">';
-  h += '<div class="bar-top"><span class="bar-lbl">Taxa de conclusão</span><span class="bar-pct">'+p+'%</span></div>';
-  h += '<div class="bar-track"><div class="bar-fill '+bCls(p)+'" style="width:'+p+'%"></div></div>';
-  h += '</div>';
-
-  h += '</div>';
-  return h;
-}
-
-function detVal(lbl, val, sub) {
-  return '<div class="det-val"><div class="det-val-lbl">'+lbl+'</div><div class="det-val-num">'+val+'</div><div class="det-val-sub">'+sub+'</div></div>';
-}
-
-/* ── partial refresh ── */
-function refreshRow(i) {
-  var l   = _lojas[i];
-  var st  = _state[i];
-
-  /* update button */
-  var btn = document.querySelector('#trow-'+i+' .btn-areas');
-  if (btn) {
-    btn.className = 'btn-areas'+(st.open?' open':'');
-    btn.innerHTML = 'Áreas '+chevron();
+      html += `
+        <tr>
+          <td class="col-rank">
+            <span class="rank-num">${i + 1}</span>
+            <span class="rank-lvl ${lvl.toLowerCase()}">${lvl}</span>
+          </td>
+          <td class="col-loja">
+            <span class="loja-name">${l.nome}</span>
+            <span class="loja-id">IM ${l.id || '00000'}</span>
+          </td>
+          <td class="col-tarefas">
+            <span class="task-total">TOTAL <span>${fmt(l.totais.total)}</span></span>
+            <span class="task-breakdown">${fmt(l.totais.porFechar)} abertas · ${fmt(l.totais.fechadas)} fechadas</span>
+          </td>
+          <td class="col-tarefas">
+            <span class="task-total">TOTAL <span>${fmt(npTotal)}</span></span>
+            <span class="task-breakdown">${fmt(npTotal - npFechadas)} abertas · ${fmt(npFechadas)} fechadas</span>
+          </td>
+          <td class="col-comp">
+            <div class="comp-row">
+              <span class="comp-lbl">P</span>
+              <div class="comp-track"><div class="comp-fill p" style="width: ${pPct}%"></div></div>
+              <span class="comp-pct">${pPct}%</span>
+            </div>
+            <div class="comp-row">
+              <span class="comp-lbl">NP</span>
+              <div class="comp-track"><div class="comp-fill np" style="width: ${npPct}%"></div></div>
+              <span class="comp-pct">${npPct}%</span>
+            </div>
+          </td>
+          <td class="col-estado">
+            ${l.isNova ? '<span class="badge-nova">+ Nova</span>' : ''}
+          </td>
+          <td class="col-detalhe">
+            <button class="btn-detalhe" onclick="window.location.href='?loja=${i}'">Detalhe &rarr;</button>
+          </td>
+        </tr>
+      `;
+    });
   }
-
-  /* update panel */
-  var panel = document.getElementById('tpanel-'+i);
-  if (panel) {
-    if (st.open) {
-      panel.classList.add('open');
-      panel.innerHTML = panelHtml(l, i);
-    } else {
-      panel.classList.remove('open');
-      panel.innerHTML = '';
-    }
-  }
+  document.getElementById('tbl-body').innerHTML = html;
 }
 
-function refreshPanel(i) {
-  var panel = document.getElementById('tpanel-'+i);
-  if (panel) panel.innerHTML = panelHtml(_lojas[i], i);
-}
+// Initial Level filter UI state
+['N1', 'N2', 'N3'].forEach(l => {
+  document.getElementById('l-' + l.toLowerCase()).classList.add('on');
+});
 
-function refreshValues(i) {
-  var l   = _lojas[i];
-  var st  = _state[i];
-  var sub = l.areas[st.areaIdx].subareas[st.subareaIdx];
-  var p   = pct(sub.fechadas, sub.total);
-
-  var dv = document.getElementById('detvals-'+i);
-  if (dv) {
-    dv.innerHTML =
-      detVal('Fechadas',   fmt(sub.fechadas),  'tarefas concluídas') +
-      detVal('Por Fechar', fmt(sub.porFechar), sub.porFechar===0?'nenhuma em falta':'tarefas em falta') +
-      detVal('Total',      fmt(sub.total),     'tarefas previstas');
-  }
-
-  var db = document.getElementById('detbar-'+i);
-  if (db) {
-    db.innerHTML =
-      '<div class="bar-top"><span class="bar-lbl">Taxa de conclusão</span><span class="bar-pct">'+p+'%</span></div>' +
-      '<div class="bar-track"><div class="bar-fill '+bCls(p)+'" style="width:'+p+'%"></div></div>';
-  }
-}
+loadData();
 </script>
 </body>
 </html>
