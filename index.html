@@ -223,64 +223,103 @@ function loadData() {
 }
 
 function processData(json) {
-  var data = json.data || json.lojas || [];
-  if (json.data) {
-    var semanas = [];
-    data.forEach(function(i) { var s = String(i.Semana||'').trim(); if (s && semanas.indexOf(s)===-1) semanas.push(s); });
-    var ultima = semanas[semanas.length - 1] || '';
-    
-    var lojas = data.filter(function(i) { return i.Loja && !i.Secção && String(i.Semana||'').trim() === ultima; })
-      .map(function(i) {
-        var pT=Number(i['P Total'])||0, pF=Number(i['P Fechado'])||0;
-        var loc=String(i['Resumo contactos.Localidade']||i['IM.Localidade']||'').trim();
-        var lojaId = String(i.Loja).trim();
-        return { 
-          id: lojaId, 
-          nome: loc || lojaId, 
-          totais: { total: pT, fechadas: pF, porFechar: pT - pF },
-          areas: [] 
-        };
-      });
+  var rawData = json.data;
+  var processedLojas = json.lojas;
 
-    data.forEach(function(i) {
+  if (rawData && rawData.length > 0) {
+    // --- CASO 1: DADOS BRUTOS (FORMATO FLAT) ---
+    var semanas = [];
+    rawData.forEach(function(i) { 
+      var s = String(i.Semana||'').trim(); 
+      if (s && semanas.indexOf(s)===-1) semanas.push(s); 
+    });
+    var ultima = semanas[semanas.length - 1] || '';
+    document.getElementById('hdate').textContent = ultima;
+
+    var dataSemana = rawData.filter(function(i) { return String(i.Semana||'').trim() === ultima; });
+    var lojasMap = {};
+
+    // 1. Identificar todas as lojas únicas primeiro
+    dataSemana.forEach(function(i) {
+      var lojaId = String(i.Loja || '').trim();
+      if (!lojaId) return;
+
+      if (!lojasMap[lojaId]) {
+        lojasMap[lojaId] = {
+          id: lojaId,
+          nome: lojaId,
+          totais: { total: 0, fechadas: 0, porFechar: 0 },
+          areas: []
+        };
+      }
+
+      // Se for linha mestra da loja (sem secção), define nome e totais
+      if (!i.Secção) {
+        var pT = Number(i['P Total'] || i['Total'] || 0);
+        var pF = Number(i['P Fechado'] || i['Fechadas'] || 0);
+        var loc = String(i['Resumo contactos.Localidade'] || i['IM.Localidade'] || '').trim();
+        if (loc) lojasMap[lojaId].nome = loc;
+        lojasMap[lojaId].totais = { total: pT, fechadas: pF, porFechar: pT - pF };
+      }
+    });
+
+    // 2. Processar secções e agrupar em áreas/subáreas
+    dataSemana.forEach(function(i) {
       if (!i.Secção) return;
-      var m=String(i.Secção).trim().match(/^(IM \d+)\s+(.+)$/);
-      if (!m) return;
-      var lojaId = m[1].trim();
-      var fullSecName = m[2].trim();
-      if (fullSecName.toLowerCase()==='admin') return;
+      var secStr = String(i.Secção).trim();
       
-      // Tentar separar Área e Subárea (ex: "COZINHA - LIMPEZA")
-      var partes = fullSecName.split(/\s*-\s*/);
-      var areaNome = partes[0].trim();
-      var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : "Geral";
+      // Encontrar a loja correspondente (match mais longo primeiro para evitar erros)
+      var loja = null;
+      var areaFull = "";
+      var ids = Object.keys(lojasMap).sort((a,b) => b.length - a.length);
       
-      var loja = lojas.find(l => l.id === lojaId);
-      if (loja) {
-        var pT=Number(i['Programadas Total'])||0, pF=Number(i['Programadas Fechadas'])||0;
-        
-        // Verificar se a área já existe na loja
+      for (var j=0; j<ids.length; j++) {
+        var id = ids[j];
+        // Verifica se a secção começa com o ID da loja seguido de espaço ou se é exatamente o ID
+        if (secStr === id || secStr.startsWith(id + ' ')) {
+          loja = lojasMap[id];
+          areaFull = secStr.substring(id.length).trim();
+          break;
+        }
+      }
+
+      if (loja && areaFull && areaFull.toLowerCase() !== 'admin') {
+        var pT = Number(i['Programadas Total'] || i['Total'] || 0);
+        var pF = Number(i['Programadas Fechadas'] || i['Fechadas'] || 0);
+
+        // Separar Área e Subárea por hífen
+        var partes = areaFull.split(/\s*-\s*/);
+        var areaNome = partes[0].trim();
+        var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : "Geral";
+
         var areaObj = loja.areas.find(a => a.area === areaNome);
         if (!areaObj) {
           areaObj = { area: areaNome, subareas: [] };
           loja.areas.push(areaObj);
         }
-        
-        // Adicionar a subárea
-        areaObj.subareas.push({
-          subarea: subareaNome,
-          total: pT,
-          fechadas: pF,
-          porFechar: pT - pF
-        });
+
+        var subareaObj = areaObj.subareas.find(s => s.subarea === subareaNome);
+        if (subareaObj) {
+          subareaObj.total += pT;
+          subareaObj.fechadas += pF;
+          subareaObj.porFechar += (pT - pF);
+        } else {
+          areaObj.subareas.push({
+            subarea: subareaNome,
+            total: pT,
+            fechadas: pF,
+            porFechar: pT - pF
+          });
+        }
       }
     });
 
-    _lojas = lojas;
-    document.getElementById('hdate').textContent = ultima;
+    _lojas = Object.values(lojasMap);
     document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
-  } else {
-    _lojas = data;
+
+  } else if (processedLojas) {
+    // --- CASO 2: DADOS JÁ ESTRUTURADOS ---
+    _lojas = processedLojas;
     var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : new Date();
     document.getElementById('hdate').textContent = dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'});
     document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
@@ -335,6 +374,7 @@ function goHome() {
 
 function renderDetail() {
   var l = _lojas[_currentLojaIdx];
+  if (!l) return;
   var h = '';
   h += `<div class="loja-header">
           <div>
