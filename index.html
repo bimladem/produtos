@@ -129,7 +129,6 @@ tr:hover td { background: #f8f9fa; }
 }
 .subarea-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .sub-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); }
-.sub-name-static { font-size: 16px; font-weight: 700; color: var(--ink-2); }
 .sub-select {
   padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-2);
   background: #fff; font-size: 14px; font-weight: 600; color: var(--ink-2);
@@ -351,15 +350,17 @@ function renderSubarea() {
   var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
   if (!area || !area.subareas || area.subareas.length === 0) return '<div class="loading">Sem dados nesta área.</div>';
   var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
-  var h = `<div class="subarea-row"><span class="sub-lbl">Subárea:</span>`;
-  if (area.subareas.length > 1) {
-    h += `<select class="sub-select" onchange="selectSubarea(this.value)">`;
-    area.subareas.forEach((s, i) => { h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`; });
-    h += `</select>`;
-  } else {
-    h += `<span class="sub-name-static">${sub.subarea}</span>`;
-  }
-  h += `</div><div class="vals-grid">
+  
+  // O menu de seleção (select) aparece SEMPRE, mesmo com apenas 1 opção
+  var h = `<div class="subarea-row">
+            <span class="sub-lbl">Subárea:</span>
+            <select class="sub-select" onchange="selectSubarea(this.value)">`;
+  area.subareas.forEach((s, i) => { 
+    h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`; 
+  });
+  h += `</select></div>`;
+
+  h += `<div class="vals-grid">
           <div class="val-card"><div class="val-lbl">FECHADAS</div><div class="val-num">${fmt(sub.fechadas)}</div><div class="val-sub">tarefas concluídas</div></div>
           <div class="val-card"><div class="val-lbl">POR FECHAR</div><div class="val-num" style="color:var(--n1)">${fmt(sub.porFechar)}</div><div class="val-sub">tarefas pendentes</div></div>
           <div class="val-card"><div class="val-lbl">TOTAL</div><div class="val-num">${fmt(sub.total)}</div><div class="val-sub">tarefas previstas</div></div>
