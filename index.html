@@ -339,17 +339,11 @@ function render() {
 }
 
 function renderStats() {
-  var n1 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N1'; }).length;
-  var n2 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N2'; }).length;
-  var n3 = _lojas.filter(function(l){ return nivel(l.totais.fechadas, l.totais.total)==='N3'; }).length;
   var totalFechadas = _lojas.reduce(function(acc, l){ return acc + l.totais.fechadas; }, 0);
   var totalAbertas = _lojas.reduce(function(acc, l){ return acc + l.totais.porFechar; }, 0);
 
   var h = '<div class="stats-row">';
   h += statCard('Total de Lojas', _lojas.length, 'Esta semana', '');
-  h += statCard('Nível 1', n1, '0–20% prog. fechadas', 'accent-red');
-  h += statCard('Nível 2', n2, '21–40% prog. fechadas', 'accent-orange');
-  h += statCard('Nível 3', n3, '41–50% prog. fechadas', 'accent-yellow');
   h += statCard('Tarefas Fechadas', fmt(totalFechadas), 'Total acumulado', 'accent-blue');
   h += statCard('Tarefas em Aberto', fmt(totalAbertas), 'Pendente total', 'accent-red');
   h += '</div>';
