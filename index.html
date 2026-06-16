@@ -79,7 +79,7 @@ body {
 }
 .th {
   padding: 13px 20px; font-size: 11px; font-weight: 800;
-  letter-spacing: .55px; text-transform: uppercase; color: var(--ink-3);
+  letter-spacing: .55px; text-transform: uppercase; color: var(--ink-2);
   border-right: 1px solid var(--line);
 }
 .th:last-child { border-right: none; }
@@ -111,13 +111,13 @@ body {
 
 /* loja name cell */
 .td-nome { flex-direction: column; align-items: flex-start; gap: 3px; }
-.loja-nome { font-size: 15px; font-weight: 700; color: var(--ink); }
+.loja-nome { font-size: 15px; font-weight: 700; color: var(--ink-3); }
 .loja-meta { font-size: 12px; color: var(--ink-4); }
 
 /* number cells */
 .num-big {
   font-family: 'DM Serif Display', serif;
-  font-size: 28px; line-height: 1; color: var(--ink);
+  font-size: 28px; line-height: 1; color: var(--ink-3);
 }
 
 /* pill */
@@ -330,7 +330,6 @@ function rowHtml(l, i) {
   /* nome */
   h += '<div class="td td-nome">';
   h += '<span class="loja-nome">'+l.nome+'</span>';
-  h += '<span class="loja-meta">'+l.areas.length+' áreas HACCP</span>';
   h += '</div>';
 
   /* total */
@@ -343,8 +342,7 @@ function rowHtml(l, i) {
   h += '<div class="td c"><span class="num-big">'+fmt(l.totais.porFechar)+'</span></div>';
 
   /* áreas btn + estado */
-  h += '<div class="td c" style="gap:8px;flex-direction:column;">';
-  h += '<span class="pill '+pCls(n)+'">'+nlabel(n)+'</span>';
+  h += '<div class="td c">';
   h += '<button class="btn-areas'+(st.open?' open':'')+'" onclick="togglePanel('+i+')">Áreas '+chevron()+'</button>';
   h += '</div>';
 
