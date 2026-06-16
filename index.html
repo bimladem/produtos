@@ -247,15 +247,31 @@ function processData(json) {
       var m=String(i.Secção).trim().match(/^(IM \d+)\s+(.+)$/);
       if (!m) return;
       var lojaId = m[1].trim();
-      var areaNome = m[2].trim();
-      if (areaNome.toLowerCase()==='admin') return;
+      var fullSecName = m[2].trim();
+      if (fullSecName.toLowerCase()==='admin') return;
+      
+      // Tentar separar Área e Subárea (ex: "COZINHA - LIMPEZA")
+      var partes = fullSecName.split(/\s*-\s*/);
+      var areaNome = partes[0].trim();
+      var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : "Geral";
       
       var loja = lojas.find(l => l.id === lojaId);
       if (loja) {
         var pT=Number(i['Programadas Total'])||0, pF=Number(i['Programadas Fechadas'])||0;
-        loja.areas.push({
-          area: areaNome,
-          subareas: [{ subarea: "Geral", total: pT, fechadas: pF, porFechar: pT - pF }]
+        
+        // Verificar se a área já existe na loja
+        var areaObj = loja.areas.find(a => a.area === areaNome);
+        if (!areaObj) {
+          areaObj = { area: areaNome, subareas: [] };
+          loja.areas.push(areaObj);
+        }
+        
+        // Adicionar a subárea
+        areaObj.subareas.push({
+          subarea: subareaNome,
+          total: pT,
+          fechadas: pF,
+          porFechar: pT - pF
         });
       }
     });
@@ -353,7 +369,9 @@ function selectSubarea(idx) {
 
 function renderSubarea() {
   var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
-  var sub = area.subareas[_currentSubareaIdx];
+  if (!area || !area.subareas || area.subareas.length === 0) return '<div class="loading">Sem dados nesta área.</div>';
+  
+  var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
   var h = '';
   if (area.subareas.length > 1) {
     h += `<div class="subarea-row">
