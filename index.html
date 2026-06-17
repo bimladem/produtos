@@ -346,14 +346,15 @@ var _currentAreaIdx = 0;
 var _currentSubareaIdx = 0;
 var _nivelFiltro = null;
 
-function fmt(n) { return Number(n).toLocaleString('pt-PT'); }
+function fmt(n) { return Number(n || 0).toLocaleString('pt-PT'); }
 
 function loadData() {
   fetch('dados.json?t=' + Date.now())
     .then(r => r.json())
     .then(json => processData(json))
     .catch(err => {
-      document.getElementById('table-body').innerHTML = `<tr><td colspan="6" class="loading" style="color:red">Erro: ${err.message}</td></tr>`;
+      console.error(err);
+      document.getElementById('table-body').innerHTML = `<tr><td colspan="6" class="loading" style="color:red">Erro ao carregar dados. Verifique se o ficheiro dados.json existe.</td></tr>`;
     });
 }
 
@@ -368,7 +369,7 @@ function renderKPIs() {
   document.getElementById('kpi-n1').textContent = _lojas.filter(l => l.nivel === 'N1').length;
   document.getElementById('kpi-n2').textContent = _lojas.filter(l => l.nivel === 'N2').length;
   document.getElementById('kpi-n3').textContent = _lojas.filter(l => l.nivel === 'N3').length;
-  document.getElementById('kpi-novas').textContent = 0; // Exemplo
+  document.getElementById('kpi-novas').textContent = _lojas.filter(l => l.isNova).length;
   
   document.getElementById('count-all').textContent = _lojas.length;
   document.getElementById('count-n1').textContent = _lojas.filter(l => l.nivel === 'N1').length;
@@ -379,8 +380,11 @@ function renderKPIs() {
 function filterByNivel(nivel) {
   _nivelFiltro = _nivelFiltro === nivel ? null : nivel;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  if (!_nivelFiltro) document.querySelector('[onclick="filterByType(\'all\')"]').classList.add('active');
-  else document.querySelector(`[onclick="filterByNivel('${nivel}')"]`).classList.add('active');
+  if (!_nivelFiltro) {
+    document.querySelector('[onclick="filterByType(\'all\')"]').classList.add('active');
+  } else {
+    document.querySelector(`[onclick="filterByNivel('${nivel}')"]`).classList.add('active');
+  }
   renderTable();
 }
 
@@ -399,8 +403,8 @@ function renderTable() {
     html += `<tr>
       <td style="text-align: center;"><div class="rank-num">${i+1}</div><div class="nivel-badge ${l.nivel.toLowerCase()}">${l.nivel}</div></td>
       <td><div class="loja-nome">${l.nome}</div></td>
-      <td><div class="tarefas-total">TOTAL ${fmt(p.pTotal||0)}</div><div class="tarefas-detalhe">${fmt(p.pAberto||0)} abertas · ${fmt(p.pFechado||0)} fechadas</div></td>
-      <td><div class="tarefas-total">TOTAL ${fmt(p.npTotal||0)}</div><div class="tarefas-detalhe">${fmt(p.npAberto||0)} abertas · ${fmt(p.npFechado||0)} fechadas</div></td>
+      <td><div class="tarefas-total">TOTAL ${fmt(p.pTotal)}</div><div class="tarefas-detalhe">${fmt(p.pAberto)} abertas · ${fmt(p.pFechado)} fechadas</div></td>
+      <td><div class="tarefas-total">TOTAL ${fmt(p.npTotal)}</div><div class="tarefas-detalhe">${fmt(p.npAberto)} abertas · ${fmt(p.npFechado)} fechadas</div></td>
       <td style="text-align: center;">${l.isNova ? '<span class="nova-badge">+ Nova</span>' : ''}</td>
       <td style="text-align: center;"><button class="btn-detalhe" onclick="showDetail(${_lojas.indexOf(l)})">Detalhe →</button></td>
     </tr>`;
@@ -435,6 +439,7 @@ function renderDetail() {
 }
 
 function selectArea(idx) { _currentAreaIdx = idx; _currentSubareaIdx = 0; renderDetail(); }
+
 function selectSubarea(idx) { _currentSubareaIdx = Number(idx); document.getElementById('subarea-content').innerHTML = renderSubarea(); }
 
 function renderSubarea() {
