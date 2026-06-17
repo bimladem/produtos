@@ -412,13 +412,13 @@ tr:hover td {
           <th>LOJA</th>
           <th>P TAREFAS</th>
           <th>NP TAREFAS</th>
-          <th>COMPARAÇÃO P VS NP</th>
+
           <th>ESTADO</th>
-          <th style="width: 120px;">DETALHE</th>
+          <th style="width: 140px;">DETALHE</th>
         </tr>
       </thead>
       <tbody id="table-body">
-        <tr><td colspan="7" class="loading">A carregar dados...</td></tr>
+        <tr><td colspan="6" class="loading">A carregar dados...</td></tr>
       </tbody>
     </table>
   </div>
@@ -542,7 +542,7 @@ function renderTable() {
   var filtered = getFilteredLojas();
   
   if (filtered.length === 0) {
-    document.getElementById('table-body').innerHTML = '<tr><td colspan="7" class="loading">Sem dados para exibir.</td></tr>';
+    document.getElementById('table-body').innerHTML = '<tr><td colspan="6" class="loading">Sem dados para exibir.</td></tr>';
     return;
   }
   
@@ -569,7 +569,6 @@ function renderTable() {
       <td>
         <div class="loja-info">
           <div class="loja-nome">${loja.nome}</div>
-          <div class="loja-id">IM ${String(loja.nome).substring(0, 5).toUpperCase()}</div>
         </div>
       </td>
       <td>
@@ -584,20 +583,7 @@ function renderTable() {
           <div class="tarefas-detalhe">${fmt(npAberto)} abertas · ${fmt(npFechado)} fechadas</div>
         </div>
       </td>
-      <td>
-        <div class="comparacao-col">
-          <div class="progress-row">
-            <span class="progress-label">P</span>
-            <div class="progress-bar"><div class="progress-fill p" style="width: ${pPercent}%"></div></div>
-            <span class="progress-percent">${pPercent}%</span>
-          </div>
-          <div class="progress-row">
-            <span class="progress-label">NP</span>
-            <div class="progress-bar"><div class="progress-fill np" style="width: ${npPercent}%"></div></div>
-            <span class="progress-percent np">${npPercent}%</span>
-          </div>
-        </div>
-      </td>
+
       <td class="estado-col">
         ${novaHtml}
       </td>
