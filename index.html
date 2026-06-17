@@ -39,6 +39,22 @@ body {
   padding: 32px 24px;
 }
 
+/* ── HEADER (ONLY FOR DETAIL) ── */
+.hdr {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255,255,255,.98); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  height: 62px; padding: 0 32px;
+  display: none; align-items: center; gap: 20px;
+}
+.btn-back {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line-2);
+  background: #fff; font-size: 13px; font-weight: 700; color: var(--ink-2);
+  cursor: pointer; transition: all .15s;
+}
+.btn-back:hover { background: #f1f3f5; border-color: var(--ink-2); }
+
 /* ── KPI CARDS ── */
 .kpi-section {
   display: grid;
@@ -54,12 +70,6 @@ body {
   padding: 24px;
   text-align: center;
   box-shadow: var(--shadow);
-  transition: all .2s;
-}
-
-.kpi-card:hover {
-  border-color: var(--ink-3);
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 
 .kpi-label {
@@ -121,12 +131,6 @@ body {
   color: var(--ink-2);
   cursor: pointer;
   transition: all .15s;
-  white-space: nowrap;
-}
-
-.filter-btn:hover {
-  border-color: var(--ink-2);
-  background: #f1f3f5;
 }
 
 .filter-btn.active {
@@ -134,15 +138,6 @@ body {
   color: #fff;
   border-color: var(--ink);
 }
-
-.filter-btn.nivel-n1 { color: var(--n1); }
-.filter-btn.nivel-n1.active { background: var(--n1); color: #fff; border-color: var(--n1); }
-
-.filter-btn.nivel-n2 { color: var(--n2); }
-.filter-btn.nivel-n2.active { background: var(--n2); color: #fff; border-color: var(--n2); }
-
-.filter-btn.nivel-n3 { color: var(--n3); }
-.filter-btn.nivel-n3.active { background: var(--n3); color: #fff; border-color: var(--n3); }
 
 /* ── TABLE ── */
 .table-card {
@@ -178,21 +173,13 @@ td {
   border-bottom: 1px solid var(--line);
   border-right: 1px solid var(--line);
   vertical-align: middle;
-  font-weight: 500;
 }
 
 td:last-child { border-right: none; }
 
-tr:hover td {
-  background: #f8f9fa;
-}
+tr:hover td { background: #f8f9fa; }
 
 /* ── TABLE CELLS ── */
-.rank-col {
-  text-align: center;
-  width: 50px;
-}
-
 .rank-num {
   font-family: 'DM Serif Display', serif;
   font-size: 24px;
@@ -200,16 +187,14 @@ tr:hover td {
 }
 
 .nivel-badge {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
   font-size: 12px;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #fff;
+  padding: 2px 8px;
   margin-top: 4px;
 }
 
@@ -217,24 +202,10 @@ tr:hover td {
 .nivel-badge.n2 { background: var(--n2); }
 .nivel-badge.n3 { background: var(--n3); }
 
-.loja-info {
-  min-width: 200px;
-}
-
 .loja-nome {
   font-size: 15px;
   font-weight: 700;
   color: var(--ink);
-  margin-bottom: 4px;
-}
-
-.loja-id {
-  font-size: 12px;
-  color: var(--ink-4);
-}
-
-.tarefas-col {
-  min-width: 180px;
 }
 
 .tarefas-total {
@@ -249,70 +220,15 @@ tr:hover td {
   color: var(--ink-4);
 }
 
-.comparacao-col {
-  min-width: 200px;
-}
-
-.progress-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.progress-label {
-  font-size: 11px;
-  font-weight: 700;
-  width: 20px;
-  color: var(--ink-4);
-}
-
-.progress-bar {
-  flex: 1;
-  height: 6px;
-  background: #e5e2d9;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width .3s;
-}
-
-.progress-fill.p { background: var(--blue); }
-.progress-fill.np { background: var(--n2); }
-
-.progress-percent {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--blue);
-  min-width: 35px;
-  text-align: right;
-}
-
-.progress-percent.np { color: var(--n2); }
-
-.estado-col {
-  text-align: center;
-  min-width: 100px;
-}
-
 .nova-badge {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 6px;
   border: 1px solid var(--blue);
-  background: transparent;
   color: var(--blue);
   font-size: 12px;
   font-weight: 700;
-}
-
-.detalhe-col {
-  text-align: center;
-  min-width: 100px;
+  background: transparent;
 }
 
 .btn-detalhe {
@@ -324,107 +240,92 @@ tr:hover td {
   font-weight: 700;
   color: var(--ink-2);
   cursor: pointer;
-  transition: all .15s;
 }
 
-.btn-detalhe:hover {
-  background: #f1f3f5;
-  border-color: var(--ink-2);
+/* ── DETAIL VIEW STYLES ── */
+.loja-header {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r);
+  padding: 24px 32px; margin-bottom: 24px; box-shadow: var(--shadow);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.lh-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--ink); }
+.lh-meta { font-size: 14px; color: var(--ink-4); margin-top: 4px; display: flex; align-items: center; gap: 12px; }
+
+.area-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.area-tab {
+  padding: 8px 18px; border-radius: 99px; border: 1px solid var(--line-2);
+  background: #fff; font-size: 13px; font-weight: 700; color: var(--ink-3);
+  cursor: pointer; transition: all .15s;
+}
+.area-tab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.subarea-section {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r);
+  padding: 24px; box-shadow: var(--shadow);
+}
+.subarea-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.sub-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); }
+.sub-select {
+  padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-2);
+  background: #fff; font-size: 14px; font-weight: 600; color: var(--ink-2);
+  cursor: pointer; min-width: 280px;
 }
 
-.loading {
-  padding: 60px 20px;
-  text-align: center;
-  color: var(--ink-4);
-  font-size: 16px;
-  font-weight: 600;
+.vals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.val-card {
+  background: #f8f9fa; border: 1px solid var(--line); border-radius: 10px;
+  padding: 24px 16px; text-align: center;
 }
+.val-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); margin-bottom: 6px; }
+.val-num { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--ink); line-height: 1; }
 
-@media (max-width: 1200px) {
-  .kpi-section {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+.loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 16px; font-weight: 600; }
 
-@media (max-width: 768px) {
-  .kpi-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .filter-section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+@media (max-width: 1024px) {
+  .kpi-section { grid-template-columns: repeat(3, 1fr); }
+  .vals-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
 
-<header class="hdr" id="main-header" style="display:none; position: sticky; top: 0; z-index: 200; background: rgba(255,255,255,.98); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); height: 62px; padding: 0 32px; align-items: center; gap: 20px;">
-  <div style="display: flex; align-items: center; gap: 12px;">
-    <button class="btn-back" id="btn-back" onclick="goHome()" style="display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line-2); background: #fff; font-size: 13px; font-weight: 700; color: var(--ink-2); cursor: pointer;">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      Voltar
-    </button>
-    <div style="font-family: 'DM Serif Display', serif; font-size: 19px;">Monitorização HACCP</div>
-  </div>
+<header class="hdr" id="main-header">
+  <button class="btn-back" onclick="goHome()">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Voltar
+  </button>
+  <div style="font-family: 'DM Serif Display', serif; font-size: 19px;">Monitorização HACCP</div>
 </header>
 
 <div class="container" id="view-home">
-  <!-- KPI CARDS -->
-  <div class="kpi-section" id="kpi-section">
-    <div class="kpi-card">
-      <div class="kpi-label">Total de Lojas</div>
-      <div class="kpi-value" id="kpi-total">—</div>
-      <div class="kpi-subtitle">Esta semana</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Nível 1</div>
-      <div class="kpi-value n1" id="kpi-n1">—</div>
-      <div class="kpi-subtitle">0–20% prog. fechadas</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Nível 2</div>
-      <div class="kpi-value n2" id="kpi-n2">—</div>
-      <div class="kpi-subtitle">21–40% prog. fechadas</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Nível 3</div>
-      <div class="kpi-value n3" id="kpi-n3">—</div>
-      <div class="kpi-subtitle">41–50% prog. fechadas</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Entradas Novas</div>
-      <div class="kpi-value blue" id="kpi-novas">—</div>
-      <div class="kpi-subtitle" id="kpi-novas-sub">Não presentes em 09 mai a 16 mai</div>
-    </div>
+  <div class="kpi-section">
+    <div class="kpi-card"><div class="kpi-label">Total de Lojas</div><div class="kpi-value" id="kpi-total">—</div><div class="kpi-subtitle">Esta semana</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nível 1</div><div class="kpi-value n1" id="kpi-n1">—</div><div class="kpi-subtitle">0–20% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nível 2</div><div class="kpi-value n2" id="kpi-n2">—</div><div class="kpi-subtitle">21–40% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nível 3</div><div class="kpi-value n3" id="kpi-n3">—</div><div class="kpi-subtitle">41–50% prog. fechadas</div></div>
+    <div class="kpi-card"><div class="kpi-label">Entradas Novas</div><div class="kpi-value blue" id="kpi-novas">—</div><div class="kpi-subtitle">Novas esta semana</div></div>
   </div>
 
-  <!-- FILTERS -->
   <div class="filter-section">
     <span class="filter-label">Mostrar:</span>
     <div class="filter-buttons">
       <button class="filter-btn active" onclick="filterByType('all')">Todas (<span id="count-all">0</span>)</button>
-      <button class="filter-btn" onclick="filterByType('anteriores')">Lojas Anteriores (<span id="count-anteriores">0</span>)</button>
-      <button class="filter-btn" onclick="filterByType('novas')">Entradas Novas (<span id="count-novas">0</span>)</button>
-      <button class="filter-btn nivel-n1" onclick="filterByNivel('n1')">🔴 N1 (<span id="count-n1">0</span>)</button>
-      <button class="filter-btn nivel-n2" onclick="filterByNivel('n2')">🟠 N2 (<span id="count-n2">0</span>)</button>
-      <button class="filter-btn nivel-n3" onclick="filterByNivel('n3')">🟡 N3 (<span id="count-n3">0</span>)</button>
+      <button class="filter-btn" onclick="filterByNivel('n1')">🔴 N1 (<span id="count-n1">0</span>)</button>
+      <button class="filter-btn" onclick="filterByNivel('n2')">🟠 N2 (<span id="count-n2">0</span>)</button>
+      <button class="filter-btn" onclick="filterByNivel('n3')">🟡 N3 (<span id="count-n3">0</span>)</button>
     </div>
   </div>
 
-  <!-- TABLE -->
   <div class="table-card">
     <table>
       <thead>
         <tr>
-          <th style="width: 60px;">#</th>
+          <th style="width: 60px; text-align: center;">#</th>
           <th>LOJA</th>
           <th>P TAREFAS</th>
           <th>NP TAREFAS</th>
-          
-          <th>ESTADO</th>
-          <th style="width: 140px;">DETALHE</th>
+          <th style="text-align: center;">ESTADO</th>
+          <th style="width: 140px; text-align: center;">DETALHE</th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -434,194 +335,81 @@ tr:hover td {
   </div>
 </div>
 
-<!-- DETAIL VIEW -->
-<div id="view-detail" class="container" style="display: none;">
+<div class="container" id="view-detail" style="display: none;">
   <div id="detail-content"></div>
 </div>
 
 <script>
 var _lojas = [];
-var _filtroAtual = 'all';
-var _nivelAtual = null;
+var _currentLojaIdx = null;
+var _currentAreaIdx = 0;
+var _currentSubareaIdx = 0;
+var _nivelFiltro = null;
 
-function fmt(n) {
-  return Number(n).toLocaleString('pt-PT');
-}
-
-function calcularNivel(taxa) {
-  if (taxa === 0) return 'N3';
-  if (taxa <= 20) return 'N1';
-  if (taxa <= 40) return 'N2';
-  return 'N3';
-}
+function fmt(n) { return Number(n).toLocaleString('pt-PT'); }
 
 function loadData() {
   fetch('dados.json?t=' + Date.now())
     .then(r => r.json())
     .then(json => processData(json))
-    .catch(e => {
-      fetch('Dados.json?t=' + Date.now())
-        .then(r => r.json())
-        .then(json => processData(json))
-        .catch(err => {
-          document.getElementById('table-body').innerHTML = `<tr><td colspan="7" class="loading" style="color:red">Erro ao carregar dados: ${err.message}</td></tr>`;
-        });
+    .catch(err => {
+      document.getElementById('table-body').innerHTML = `<tr><td colspan="6" class="loading" style="color:red">Erro: ${err.message}</td></tr>`;
     });
 }
 
 function processData(json) {
-  if (json.lojas && Array.isArray(json.lojas)) {
-    _lojas = json.lojas.map((loja, idx) => ({
-      ...loja,
-      index: idx,
-      isNova: false
-    }));
-  }
-  
+  _lojas = json.lojas || [];
   renderKPIs();
-  renderFilters();
   renderTable();
 }
 
 function renderKPIs() {
-  var totalLojas = _lojas.length;
-  var n1Count = _lojas.filter(l => l.nivel === 'N1').length;
-  var n2Count = _lojas.filter(l => l.nivel === 'N2').length;
-  var n3Count = _lojas.filter(l => l.nivel === 'N3').length;
-  var novasCount = _lojas.filter(l => l.isNova).length;
+  document.getElementById('kpi-total').textContent = _lojas.length;
+  document.getElementById('kpi-n1').textContent = _lojas.filter(l => l.nivel === 'N1').length;
+  document.getElementById('kpi-n2').textContent = _lojas.filter(l => l.nivel === 'N2').length;
+  document.getElementById('kpi-n3').textContent = _lojas.filter(l => l.nivel === 'N3').length;
+  document.getElementById('kpi-novas').textContent = 0; // Exemplo
   
-  document.getElementById('kpi-total').textContent = totalLojas;
-  document.getElementById('kpi-n1').textContent = n1Count;
-  document.getElementById('kpi-n2').textContent = n2Count;
-  document.getElementById('kpi-n3').textContent = n3Count;
-  document.getElementById('kpi-novas').textContent = novasCount;
-}
-
-function renderFilters() {
-  var totalLojas = _lojas.length;
-  var anterioresCount = _lojas.filter(l => !l.isNova).length;
-  var novasCount = _lojas.filter(l => l.isNova).length;
-  var n1Count = _lojas.filter(l => l.nivel === 'N1').length;
-  var n2Count = _lojas.filter(l => l.nivel === 'N2').length;
-  var n3Count = _lojas.filter(l => l.nivel === 'N3').length;
-  
-  document.getElementById('count-all').textContent = totalLojas;
-  document.getElementById('count-anteriores').textContent = anterioresCount;
-  document.getElementById('count-novas').textContent = novasCount;
-  document.getElementById('count-n1').textContent = n1Count;
-  document.getElementById('count-n2').textContent = n2Count;
-  document.getElementById('count-n3').textContent = n3Count;
-}
-
-function filterByType(tipo) {
-  _filtroAtual = tipo;
-  _nivelAtual = null;
-  updateFilterButtons();
-  renderTable();
+  document.getElementById('count-all').textContent = _lojas.length;
+  document.getElementById('count-n1').textContent = _lojas.filter(l => l.nivel === 'N1').length;
+  document.getElementById('count-n2').textContent = _lojas.filter(l => l.nivel === 'N2').length;
+  document.getElementById('count-n3').textContent = _lojas.filter(l => l.nivel === 'N3').length;
 }
 
 function filterByNivel(nivel) {
-  _nivelAtual = _nivelAtual === nivel ? null : nivel;
-  _filtroAtual = 'all';
-  updateFilterButtons();
+  _nivelFiltro = _nivelFiltro === nivel ? null : nivel;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (!_nivelFiltro) document.querySelector('[onclick="filterByType(\'all\')"]').classList.add('active');
+  else document.querySelector(`[onclick="filterByNivel('${nivel}')"]`).classList.add('active');
   renderTable();
 }
 
-function updateFilterButtons() {
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  
-  if (_nivelAtual) {
-    document.querySelector(`.filter-btn.nivel-${_nivelAtual}`).classList.add('active');
-  } else {
-    document.querySelector(`.filter-btn[onclick="filterByType('${_filtroAtual}')"]`).classList.add('active');
-  }
-}
-
-function getFilteredLojas() {
-  var filtered = _lojas;
-  
-  if (_nivelAtual) {
-    filtered = filtered.filter(l => l.nivel === _nivelAtual.toUpperCase());
-  } else if (_filtroAtual === 'novas') {
-    filtered = filtered.filter(l => l.isNova);
-  } else if (_filtroAtual === 'anteriores') {
-    filtered = filtered.filter(l => !l.isNova);
-  }
-  
-  return filtered;
+function filterByType(type) {
+  _nivelFiltro = null;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('[onclick="filterByType(\'all\')"]').classList.add('active');
+  renderTable();
 }
 
 function renderTable() {
-  var filtered = getFilteredLojas();
-  
-  if (filtered.length === 0) {
-    document.getElementById('table-body').innerHTML = '<tr><td colspan="6" class="loading">Sem dados para exibir.</td></tr>';
-    return;
-  }
-  
+  var filtered = _nivelFiltro ? _lojas.filter(l => l.nivel === _nivelFiltro.toUpperCase()) : _lojas;
   var html = '';
-  filtered.forEach((loja, idx) => {
-    var pTotal = loja.totaisGlobais?.pTotal || 0;
-    var pAberto = loja.totaisGlobais?.pAberto || 0;
-    var pFechado = loja.totaisGlobais?.pFechado || 0;
-    var npTotal = loja.totaisGlobais?.npTotal || 0;
-    var npAberto = loja.totaisGlobais?.npAberto || 0;
-    var npFechado = loja.totaisGlobais?.npFechado || 0;
-    
-    var pPercent = pTotal > 0 ? Math.round((pAberto / pTotal) * 100) : 0;
-    var npPercent = npTotal > 0 ? Math.round((npAberto / npTotal) * 100) : 0;
-    
-    var nivelClass = `nivel-badge ${loja.nivel.toLowerCase()}`;
-    var novaHtml = loja.isNova ? '<button class="nova-badge">+ Nova</button>' : '';
-    
+  filtered.forEach((l, i) => {
+    var p = l.totaisGlobais || {};
     html += `<tr>
-      <td class="rank-col">
-        <div class="rank-num">${idx + 1}</div>
-        <div class="${nivelClass}">${loja.nivel}</div>
-      </td>
-      <td>
-        <div class="loja-info">
-          <div class="loja-nome">${loja.nome}</div>
-        </div>
-      </td>
-      <td>
-        <div class="tarefas-col">
-          <div class="tarefas-total">TOTAL ${fmt(pTotal)}</div>
-          <div class="tarefas-detalhe">${fmt(pAberto)} abertas · ${fmt(pFechado)} fechadas</div>
-        </div>
-      </td>
-      <td>
-        <div class="tarefas-col">
-          <div class="tarefas-total">TOTAL ${fmt(npTotal)}</div>
-          <div class="tarefas-detalhe">${fmt(npAberto)} abertas · ${fmt(npFechado)} fechadas</div>
-        </div>
-      </td>
-
-      <td class="estado-col">
-        ${novaHtml}
-      </td>
-      <td class="detalhe-col">
-        <button class="btn-detalhe" onclick="showDetail(${loja.index})">Detalhe →</button>
-      </td>
+      <td style="text-align: center;"><div class="rank-num">${i+1}</div><div class="nivel-badge ${l.nivel.toLowerCase()}">${l.nivel}</div></td>
+      <td><div class="loja-nome">${l.nome}</div></td>
+      <td><div class="tarefas-total">TOTAL ${fmt(p.pTotal||0)}</div><div class="tarefas-detalhe">${fmt(p.pAberto||0)} abertas · ${fmt(p.pFechado||0)} fechadas</div></td>
+      <td><div class="tarefas-total">TOTAL ${fmt(p.npTotal||0)}</div><div class="tarefas-detalhe">${fmt(p.npAberto||0)} abertas · ${fmt(p.npFechado||0)} fechadas</div></td>
+      <td style="text-align: center;">${l.isNova ? '<span class="nova-badge">+ Nova</span>' : ''}</td>
+      <td style="text-align: center;"><button class="btn-detalhe" onclick="showDetail(${_lojas.indexOf(l)})">Detalhe →</button></td>
     </tr>`;
   });
-  
-  document.getElementById('table-body').innerHTML = html;
-}
-
-function getNivelClass(nivel) {
-  if (nivel === 'N1') return 'n1';
-  if (nivel === 'N2') return 'n2';
-  if (nivel === 'N3') return 'n3';
-  return '';
+  document.getElementById('table-body').innerHTML = html || '<tr><td colspan="6" class="loading">Sem dados.</td></tr>';
 }
 
 function showDetail(idx) {
-  _currentLojaIdx = idx;
-  _currentAreaIdx = 0;
-  _currentSubareaIdx = 0;
+  _currentLojaIdx = idx; _currentAreaIdx = 0; _currentSubareaIdx = 0;
   document.getElementById('view-home').style.display = 'none';
   document.getElementById('view-detail').style.display = 'block';
   document.getElementById('main-header').style.display = 'flex';
@@ -637,88 +425,33 @@ function goHome() {
 function renderDetail() {
   var l = _lojas[_currentLojaIdx];
   if (!l) return;
-  
-  var totalTarefas = l.totaisGlobais?.pTotal || 0;
-  var nivelClass = l.nivel ? l.nivel.toLowerCase() : '';
-  
-  var h = `<div class="loja-header">
-    <div>
-      <div class="lh-title">${l.nome}</div>
-      <div class="lh-meta">
-        <span class="nivel-badge ${nivelClass}" style="display: inline-flex; margin-right: 12px; width: auto; padding: 0 8px;">${l.nivel || '—'}</span>
-        Taxa: ${l.taxa || 0}% | ${fmt(totalTarefas)} tarefas totais
-      </div>
-    </div>
-  </div>`;
-  
+  var h = `<div class="loja-header"><div><div class="lh-title">${l.nome}</div><div class="lh-meta"><span class="nivel-badge ${l.nivel.toLowerCase()}">${l.nivel}</span> Taxa: ${l.taxa}% | ${fmt(l.totaisGlobais.pTotal)} tarefas</div></div></div>`;
   if (l.areas && l.areas.length > 0) {
     h += `<div class="area-tabs">`;
-    l.areas.forEach((a, i) => {
-      h += `<button class="area-tab ${i === _currentAreaIdx ? 'on' : ''}" onclick="selectArea(${i})">${a.area}</button>`;
-    });
+    l.areas.forEach((a, i) => { h += `<button class="area-tab ${i===_currentAreaIdx?'on':''}" onclick="selectArea(${i})">${a.area}</button>`; });
     h += `</div><div class="subarea-section" id="subarea-content">${renderSubarea()}</div>`;
-  } else {
-    h += `<div class="loading">Sem detalhes de áreas disponíveis para esta loja.</div>`;
   }
-  
   document.getElementById('detail-content').innerHTML = h;
 }
 
-function selectArea(idx) {
-  _currentAreaIdx = idx;
-  _currentSubareaIdx = 0;
-  renderDetail();
-}
-
-function selectSubarea(idx) {
-  _currentSubareaIdx = Number(idx);
-  document.getElementById('subarea-content').innerHTML = renderSubarea();
-}
+function selectArea(idx) { _currentAreaIdx = idx; _currentSubareaIdx = 0; renderDetail(); }
+function selectSubarea(idx) { _currentSubareaIdx = Number(idx); document.getElementById('subarea-content').innerHTML = renderSubarea(); }
 
 function renderSubarea() {
   var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
-  if (!area || !area.subareas || area.subareas.length === 0) {
-    return '<div class="loading">Sem dados nesta área.</div>';
-  }
-  
   var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
-  var nivelClass = sub.nivel ? sub.nivel.toLowerCase() : '';
-  
-  var h = `<div class="subarea-row">
-    <span class="sub-lbl">Subárea:</span>
-    <select class="sub-select" onchange="selectSubarea(this.value)">`;
-  
-  area.subareas.forEach((s, i) => {
-    h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`;
-  });
-  
-  h += `</select>
-    <span class="nivel-badge ${nivelClass}" style="display: inline-flex; margin-left: 12px; width: auto; padding: 0 8px;">${sub.nivel || '—'}</span>
-  </div>
-  
+  var h = `<div class="subarea-row"><span class="sub-lbl">Subárea:</span><select class="sub-select" onchange="selectSubarea(this.value)">`;
+  area.subareas.forEach((s, i) => { h += `<option value="${i}" ${i===_currentSubareaIdx?'selected':''}>${s.subarea}</option>`; });
+  h += `</select><span class="nivel-badge ${sub.nivel.toLowerCase()}">${sub.nivel}</span></div>
   <div class="vals-grid">
-    <div class="val-card">
-      <div class="val-lbl">Total</div>
-      <div class="val-num">${fmt(sub.total || 0)}</div>
-    </div>
-    <div class="val-card">
-      <div class="val-lbl">Programadas Abertas</div>
-      <div class="val-num" style="color: var(--n1);">${fmt(sub.pAberto || 0)}</div>
-    </div>
-    <div class="val-card">
-      <div class="val-lbl">Programadas Fechadas</div>
-      <div class="val-num" style="color: var(--blue);">${fmt(sub.pFechado || 0)}</div>
-    </div>
-    <div class="val-card">
-      <div class="val-lbl">Não Programadas Abertas</div>
-      <div class="val-num" style="color: var(--n2);">${fmt(sub.npAberto || 0)}</div>
-    </div>
+    <div class="val-card"><div class="val-lbl">Total</div><div class="val-num">${fmt(sub.total)}</div></div>
+    <div class="val-card"><div class="val-lbl">P. Abertas</div><div class="val-num" style="color:var(--n1)">${fmt(sub.pAberto)}</div></div>
+    <div class="val-card"><div class="val-lbl">P. Fechadas</div><div class="val-num" style="color:var(--blue)">${fmt(sub.pFechado)}</div></div>
+    <div class="val-card"><div class="val-lbl">NP. Abertas</div><div class="val-num" style="color:var(--n2)">${fmt(sub.npAberto)}</div></div>
   </div>`;
-  
   return h;
 }
 
-// Carregar dados ao abrir a página
 window.addEventListener('load', loadData);
 </script>
 </body>
