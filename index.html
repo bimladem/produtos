@@ -135,7 +135,7 @@ tr:hover td { background: #f8f9fa; }
   cursor: pointer; min-width: 280px;
 }
 
-.vals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.vals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .val-card {
   background: #f8f9fa; border: 1px solid var(--line); border-radius: 10px;
   padding: 24px 16px; text-align: center;
@@ -145,6 +145,21 @@ tr:hover td { background: #f8f9fa; }
 .val-sub { font-size: 12px; color: var(--ink-4); margin-top: 6px; font-weight: 500; }
 
 .loading { padding: 80px; text-align: center; color: var(--ink-4); font-size: 16px; font-weight: 600; }
+
+/* Status indicators */
+.status-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.status-n1 { background: var(--n1-bg); color: var(--n1); }
+.status-n2 { background: var(--n2-bg); color: var(--n2); }
+.status-n3 { background: var(--n3-bg); color: var(--n3); }
+
+@media (max-width: 768px) {
+  .vals-grid { grid-template-columns: repeat(2, 1fr); }
+  .hdr { padding: 0 16px; }
+  .main { padding: 16px 12px 60px; }
+}
 </style>
 </head>
 <body>
@@ -171,8 +186,8 @@ tr:hover td { background: #f8f9fa; }
   <div id="view-home" class="view active">
     <div class="kpi-row" id="kpi-container">
       <div class="kpi-card"><div class="kpi-lbl">TOTAL DE LOJAS</div><div class="kpi-val" id="kpi-total">—</div></div>
-      <div class="kpi-card"><div class="kpi-lbl">TAREFAS FECHADAS</div><div class="kpi-val blue" id="kpi-fechadas">—</div></div>
-      <div class="kpi-card"><div class="kpi-lbl">TAREFAS POR FECHAR</div><div class="kpi-val red" id="kpi-por-fechar">—</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">TAXA MÉDIA</div><div class="kpi-val blue" id="kpi-taxa">—</div></div>
+      <div class="kpi-card"><div class="kpi-lbl">TAREFAS ABERTAS</div><div class="kpi-val red" id="kpi-abertas">—</div></div>
     </div>
 
     <div class="tbl-card">
@@ -181,14 +196,15 @@ tr:hover td { background: #f8f9fa; }
           <tr>
             <th style="width: 70px;">#</th>
             <th>LOJA</th>
-            <th class="col-center" style="width: 150px;">TOTAL</th>
-            <th class="col-center" style="width: 150px;">FECHADAS</th>
-            <th class="col-center" style="width: 150px;">POR FECHAR</th>
+            <th class="col-center" style="width: 120px;">TAXA</th>
+            <th class="col-center" style="width: 120px;">NÍVEL</th>
+            <th class="col-center" style="width: 140px;">TOTAL</th>
+            <th class="col-center" style="width: 140px;">ABERTAS</th>
             <th class="col-center" style="width: 140px;">DETALHES</th>
           </tr>
         </thead>
         <tbody id="tbl-body">
-          <tr><td colspan="6" class="loading">A carregar dados...</td></tr>
+          <tr><td colspan="7" class="loading">A carregar dados...</td></tr>
         </tbody>
       </table>
     </div>
@@ -208,6 +224,13 @@ var _currentSubareaIdx = 0;
 
 function fmt(n) { return Number(n).toLocaleString('pt-PT'); }
 
+function getNivelClass(nivel) {
+  if (nivel === 'N1') return 'status-n1';
+  if (nivel === 'N2') return 'status-n2';
+  if (nivel === 'N3') return 'status-n3';
+  return '';
+}
+
 function loadData() {
   fetch('dados.json?t=' + Date.now())
     .then(r => r.json())
@@ -217,106 +240,69 @@ function loadData() {
         .then(r => r.json())
         .then(json => processData(json))
         .catch(err => {
-          document.getElementById('tbl-body').innerHTML = `<tr><td colspan="6" class="loading" style="color:red">Erro ao carregar dados: ${err.message}</td></tr>`;
+          document.getElementById('tbl-body').innerHTML = `<tr><td colspan="7" class="loading" style="color:red">Erro ao carregar dados: ${err.message}</td></tr>`;
         });
     });
 }
 
 function processData(json) {
-  var rawData = json.data;
-  var processedLojas = json.lojas;
-
-  if (rawData && rawData.length > 0) {
-    var semanas = [];
-    rawData.forEach(function(i) { 
-      var s = String(i.Semana||'').trim(); 
-      if (s && semanas.indexOf(s)===-1) semanas.push(s); 
-    });
-    var ultima = semanas[semanas.length - 1] || '';
-    document.getElementById('hdate').textContent = ultima;
-
-    var dataSemana = rawData.filter(function(i) { return String(i.Semana||'').trim() === ultima; });
-    var lojasMap = {};
-
-    dataSemana.forEach(function(i) {
-      var lojaId = String(i.Loja || '').trim();
-      if (!lojaId) return;
-      if (!lojasMap[lojaId]) {
-        lojasMap[lojaId] = {
-          id: lojaId, nome: lojaId,
-          totais: { total: 0, fechadas: 0, porFechar: 0 },
-          areas: []
-        };
-      }
-      if (!i.Secção) {
-        var pT = Number(i['P Total'] || i['Total'] || 0);
-        var pF = Number(i['P Fechado'] || i['Fechadas'] || 0);
-        var loc = String(i['Resumo contactos.Localidade'] || i['IM.Localidade'] || '').trim();
-        if (loc) lojasMap[lojaId].nome = loc;
-        lojasMap[lojaId].totais = { total: pT, fechadas: pF, porFechar: pT - pF };
-      }
-    });
-
-    dataSemana.forEach(function(i) {
-      if (!i.Secção) return;
-      var secStr = String(i.Secção).trim();
-      var loja = null;
-      var areaFull = "";
-      var ids = Object.keys(lojasMap).sort((a,b) => b.length - a.length);
-      for (var j=0; j<ids.length; j++) {
-        var id = ids[j];
-        if (secStr === id || secStr.startsWith(id + ' ')) {
-          loja = lojasMap[id];
-          areaFull = secStr.substring(id.length).trim();
-          break;
-        }
-      }
-
-      if (loja && areaFull && areaFull.toLowerCase() !== 'admin') {
-        var pT = Number(i['Programadas Total'] || i['Total'] || 0);
-        var pF = Number(i['Programadas Fechadas'] || i['Fechadas'] || 0);
-        var partes = areaFull.split(/\s*-\s*/);
-        var areaNome = partes[0].trim();
-        var subareaNome = partes.length > 1 ? partes.slice(1).join(' - ').trim() : areaNome;
-
-        var areaObj = loja.areas.find(a => a.area === areaNome);
-        if (!areaObj) {
-          areaObj = { area: areaNome, subareas: [] };
-          loja.areas.push(areaObj);
-        }
-        var subareaObj = areaObj.subareas.find(s => s.subarea === subareaNome);
-        if (subareaObj) {
-          subareaObj.total += pT; subareaObj.fechadas += pF; subareaObj.porFechar += (pT - pF);
-        } else {
-          areaObj.subareas.push({ subarea: subareaNome, total: pT, fechadas: pF, porFechar: pT - pF });
-        }
-      }
-    });
-    _lojas = Object.values(lojasMap);
-  } else if (processedLojas) {
-    _lojas = processedLojas;
-    var dt = json.atualizadoEm ? new Date(json.atualizadoEm) : new Date();
-    document.getElementById('hdate').textContent = dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'});
+  // Nova estrutura de dados com lojas diretamente no array
+  if (json.lojas && Array.isArray(json.lojas)) {
+    _lojas = json.lojas;
+    
+    // Atualizar data de atualização
+    if (json.atualizadoEm) {
+      var dt = new Date(json.atualizadoEm);
+      document.getElementById('hdate').textContent = dt.toLocaleDateString('pt-PT', {day:'2-digit', month:'short', year:'numeric'});
+    }
+  } else {
+    // Fallback para estrutura antiga
+    _lojas = json.lojas || [];
   }
+  
   document.getElementById('hsub').textContent = _lojas.length + ' lojas monitorizadas';
   renderHome();
 }
 
 function renderHome() {
-  var totalFechadas = _lojas.reduce((sum, l) => sum + (l.totais.fechadas||0), 0);
-  var totalPorFechar = _lojas.reduce((sum, l) => sum + (l.totais.porFechar||0), 0);
+  var totalTaxa = 0;
+  var totalAbertas = 0;
+  
+  _lojas.forEach(l => {
+    totalTaxa += (l.taxa || 0);
+    totalAbertas += (l.totaisGlobais?.pAberto || 0);
+  });
+  
+  var mediaTaxa = _lojas.length > 0 ? Math.round(totalTaxa / _lojas.length) : 0;
+  
   document.getElementById('kpi-total').textContent = _lojas.length;
-  document.getElementById('kpi-fechadas').textContent = fmt(totalFechadas);
-  document.getElementById('kpi-por-fechar').textContent = fmt(totalPorFechar);
+  document.getElementById('kpi-taxa').textContent = mediaTaxa + '%';
+  document.getElementById('kpi-abertas').textContent = fmt(totalAbertas);
+  
   var html = '';
   _lojas.forEach((l, i) => {
-    html += `<tr><td class="col-center"><span class="rank-num">${i + 1}</span></td><td><span class="loja-nome">${l.nome}</span></td><td class="col-center">${fmt(l.totais.total)}</td><td class="col-center">${fmt(l.totais.fechadas)}</td><td class="col-center" style="color:var(--n1)">${fmt(l.totais.porFechar)}</td><td class="col-center"><button class="btn-detalhe" onclick="showDetail(${i})">Detalhe &rarr;</button></td></tr>`;
+    var totalTarefas = l.totaisGlobais?.pTotal || 0;
+    var tarefasAbertas = l.totaisGlobais?.pAberto || 0;
+    var nivelClass = getNivelClass(l.nivel);
+    
+    html += `<tr>
+      <td class="col-center"><span class="rank-num">${i + 1}</span></td>
+      <td><span class="loja-nome">${l.nome}</span></td>
+      <td class="col-center">${l.taxa || 0}%</td>
+      <td class="col-center"><span class="status-badge ${nivelClass}">${l.nivel || '—'}</span></td>
+      <td class="col-center">${fmt(totalTarefas)}</td>
+      <td class="col-center" style="color:var(--n1)">${fmt(tarefasAbertas)}</td>
+      <td class="col-center"><button class="btn-detalhe" onclick="showDetail(${i})">Detalhe &rarr;</button></td>
+    </tr>`;
   });
-  document.getElementById('tbl-body').innerHTML = html || '<tr><td colspan="6" class="loading">Sem dados disponíveis.</td></tr>';
+  
+  document.getElementById('tbl-body').innerHTML = html || '<tr><td colspan="7" class="loading">Sem dados disponíveis.</td></tr>';
 }
 
 function showDetail(idx) {
-  _currentLojaIdx = idx; _currentAreaIdx = 0; _currentSubareaIdx = 0;
+  _currentLojaIdx = idx;
+  _currentAreaIdx = 0;
+  _currentSubareaIdx = 0;
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-detail').classList.add('active');
   document.getElementById('btn-back').classList.add('visible');
@@ -332,42 +318,89 @@ function goHome() {
 function renderDetail() {
   var l = _lojas[_currentLojaIdx];
   if (!l) return;
-  var h = `<div class="loja-header"><div><div class="lh-title">${l.nome}</div><div class="lh-meta">${fmt(l.totais.total)} tarefas totais</div></div></div>`;
+  
+  var totalTarefas = l.totaisGlobais?.pTotal || 0;
+  var nivelClass = getNivelClass(l.nivel);
+  
+  var h = `<div class="loja-header">
+    <div>
+      <div class="lh-title">${l.nome}</div>
+      <div class="lh-meta">
+        <span class="status-badge ${nivelClass}" style="margin-right: 12px;">${l.nivel || '—'}</span>
+        Taxa: ${l.taxa || 0}% | ${fmt(totalTarefas)} tarefas totais
+      </div>
+    </div>
+  </div>`;
+  
   if (l.areas && l.areas.length > 0) {
     h += `<div class="area-tabs">`;
-    l.areas.forEach((a, i) => { h += `<button class="area-tab ${i === _currentAreaIdx ? 'on' : ''}" onclick="selectArea(${i})">${a.area}</button>`; });
+    l.areas.forEach((a, i) => {
+      h += `<button class="area-tab ${i === _currentAreaIdx ? 'on' : ''}" onclick="selectArea(${i})">${a.area}</button>`;
+    });
     h += `</div><div class="subarea-section" id="subarea-content">${renderSubarea()}</div>`;
   } else {
     h += `<div class="loading">Sem detalhes de áreas disponíveis para esta loja.</div>`;
   }
+  
   document.getElementById('detail-content').innerHTML = h;
 }
 
-function selectArea(idx) { _currentAreaIdx = idx; _currentSubareaIdx = 0; renderDetail(); }
-function selectSubarea(idx) { _currentSubareaIdx = Number(idx); document.getElementById('subarea-content').innerHTML = renderSubarea(); }
+function selectArea(idx) {
+  _currentAreaIdx = idx;
+  _currentSubareaIdx = 0;
+  renderDetail();
+}
+
+function selectSubarea(idx) {
+  _currentSubareaIdx = Number(idx);
+  document.getElementById('subarea-content').innerHTML = renderSubarea();
+}
 
 function renderSubarea() {
   var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
-  if (!area || !area.subareas || area.subareas.length === 0) return '<div class="loading">Sem dados nesta área.</div>';
-  var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
+  if (!area || !area.subareas || area.subareas.length === 0) {
+    return '<div class="loading">Sem dados nesta área.</div>';
+  }
   
-  // O menu de seleção (select) aparece SEMPRE, mesmo com apenas 1 opção
+  var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
+  var nivelClass = getNivelClass(sub.nivel);
+  
   var h = `<div class="subarea-row">
-            <span class="sub-lbl">Subárea:</span>
-            <select class="sub-select" onchange="selectSubarea(this.value)">`;
-  area.subareas.forEach((s, i) => { 
-    h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`; 
+    <span class="sub-lbl">Subárea:</span>
+    <select class="sub-select" onchange="selectSubarea(this.value)">`;
+  
+  area.subareas.forEach((s, i) => {
+    h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`;
   });
-  h += `</select></div>`;
-
-  h += `<div class="vals-grid">
-          <div class="val-card"><div class="val-lbl">FECHADAS</div><div class="val-num">${fmt(sub.fechadas)}</div><div class="val-sub">tarefas concluídas</div></div>
-          <div class="val-card"><div class="val-lbl">POR FECHAR</div><div class="val-num" style="color:var(--n1)">${fmt(sub.porFechar)}</div><div class="val-sub">tarefas pendentes</div></div>
-          <div class="val-card"><div class="val-lbl">TOTAL</div><div class="val-num">${fmt(sub.total)}</div><div class="val-sub">tarefas previstas</div></div>
-        </div>`;
+  
+  h += `</select>
+    <span class="status-badge ${nivelClass}" style="margin-left: 12px;">${sub.nivel || '—'}</span>
+  </div>
+  
+  <div class="vals-grid">
+    <div class="val-card">
+      <div class="val-lbl">Total</div>
+      <div class="val-num">${fmt(sub.total || 0)}</div>
+    </div>
+    <div class="val-card">
+      <div class="val-lbl">Programadas Abertas</div>
+      <div class="val-num" style="color: var(--n1);">${fmt(sub.pAberto || 0)}</div>
+    </div>
+    <div class="val-card">
+      <div class="val-lbl">Programadas Fechadas</div>
+      <div class="val-num" style="color: var(--blue);">${fmt(sub.pFechado || 0)}</div>
+    </div>
+    <div class="val-card">
+      <div class="val-lbl">Não Programadas Abertas</div>
+      <div class="val-num" style="color: var(--n2);">${fmt(sub.npAberto || 0)}</div>
+    </div>
+  </div>`;
+  
   return h;
 }
-loadData();
+
+// Carregar dados ao abrir a página
+window.addEventListener('load', loadData);
 </script>
 </body>
 </html>
