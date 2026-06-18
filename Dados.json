@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-06-18T09:34:10.144Z",
+  "atualizadoEm": "2026-06-18T16:31:44.605Z",
   "lojas": [
     {
       "nome": "COMA OU LEVE",
@@ -19,20 +19,20 @@
           "taxa": 0,
           "nivel": "N3",
           "totaisArea": {
-            "pAberto": 0,
+            "pAberto": 4,
             "pFechado": 0,
             "npAberto": 0,
             "npFechado": 0,
-            "total": 0
+            "total": 4
           },
           "subareas": [
             {
               "subarea": "Recolha do Óleo",
-              "pAberto": 0,
+              "pAberto": 4,
               "pFechado": 0,
               "npAberto": 0,
               "npFechado": 0,
-              "total": 0,
+              "total": 4,
               "taxa": 0,
               "nivel": "N3"
             }
@@ -43,20 +43,20 @@
           "taxa": 0,
           "nivel": "N3",
           "totaisArea": {
-            "pAberto": 0,
+            "pAberto": 5,
             "pFechado": 0,
             "npAberto": 0,
             "npFechado": 0,
-            "total": 0
+            "total": 5
           },
           "subareas": [
             {
               "subarea": "Desinfeção Frutas e Legumes",
-              "pAberto": 0,
+              "pAberto": 5,
               "pFechado": 0,
               "npAberto": 0,
               "npFechado": 0,
-              "total": 0,
+              "total": 5,
               "taxa": 0,
               "nivel": "N3"
             }
@@ -547,20 +547,20 @@
           "taxa": 0,
           "nivel": "N3",
           "totaisArea": {
-            "pAberto": 0,
+            "pAberto": 6,
             "pFechado": 0,
             "npAberto": 0,
             "npFechado": 0,
-            "total": 0
+            "total": 6
           },
           "subareas": [
             {
               "subarea": "Receção de Mercadoria",
-              "pAberto": 0,
+              "pAberto": 6,
               "pFechado": 0,
               "npAberto": 0,
               "npFechado": 0,
-              "total": 0,
+              "total": 6,
               "taxa": 0,
               "nivel": "N3"
             }
@@ -586,20 +586,20 @@
           "taxa": 0,
           "nivel": "N3",
           "totaisArea": {
-            "pAberto": 0,
+            "pAberto": 5,
             "pFechado": 0,
             "npAberto": 0,
             "npFechado": 0,
-            "total": 0
+            "total": 5
           },
           "subareas": [
             {
               "subarea": "Recolha do Óleo",
-              "pAberto": 0,
+              "pAberto": 5,
               "pFechado": 0,
               "npAberto": 0,
               "npFechado": 0,
-              "total": 0,
+              "total": 5,
               "taxa": 0,
               "nivel": "N3"
             }
@@ -610,20 +610,20 @@
           "taxa": 0,
           "nivel": "N3",
           "totaisArea": {
-            "pAberto": 0,
+            "pAberto": 4,
             "pFechado": 0,
             "npAberto": 0,
             "npFechado": 0,
-            "total": 0
+            "total": 4
           },
           "subareas": [
             {
               "subarea": "Desinfeção Frutas e Legumes",
-              "pAberto": 0,
+              "pAberto": 4,
               "pFechado": 0,
               "npAberto": 0,
               "npFechado": 0,
-              "total": 0,
+              "total": 4,
               "taxa": 0,
               "nivel": "N3"
             }
