@@ -151,7 +151,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
 }
 
 th {
@@ -164,6 +164,7 @@ th {
   color: var(--ink-2);
   border-bottom: 1px solid var(--line);
   border-right: 1px solid var(--line);
+  text-align: center;
 }
 
 th:last-child { border-right: none; }
@@ -402,12 +403,12 @@ function renderTable() {
   filtered.forEach((l, i) => {
     var p = l.totaisGlobais || {};
     html += `<tr>
-      <td style="text-align: center;"><div class="rank-num">${i+1}</div><div class="nivel-badge ${(l.nivel||'').toLowerCase()}">${l.nivel||'—'}</div></td>
+      <td><div class="rank-num">${i+1}</div><div class="nivel-badge ${(l.nivel||'').toLowerCase()}" style="margin: 4px auto 0;">${l.nivel||'—'}</div></td>
       <td><div class="loja-nome">${l.nome}</div></td>
       <td><div class="tarefas-total">TOTAL ${fmt(p.pTotal)}</div><div class="tarefas-detalhe">${fmt(p.pAberto)} abertas · ${fmt(p.pFechado)} fechadas</div></td>
       <td><div class="tarefas-total">TOTAL ${fmt(p.npTotal)}</div><div class="tarefas-detalhe">${fmt(p.npAberto)} abertas · ${fmt(p.npFechado)} fechadas</div></td>
-      <td style="text-align: center;">${l.isNova ? '<span class="nova-badge">+ Nova</span>' : ''}</td>
-      <td style="text-align: center;"><button class="btn-detalhe" onclick="showDetail(${_lojas.indexOf(l)})">Detalhe →</button></td>
+      <td>${l.isNova ? '<span class="nova-badge">+ Nova</span>' : ''}</td>
+      <td><button class="btn-detalhe" onclick="showDetail(${_lojas.indexOf(l)})">Detalhe →</button></td>
     </tr>`;
   });
   document.getElementById('table-body').innerHTML = html || '<tr><td colspan="6" class="loading">Sem dados disponíveis.</td></tr>';
@@ -479,8 +480,7 @@ function renderSubarea() {
     h += `<option value="${i}" ${i === _currentSubareaIdx ? 'selected' : ''}>${s.subarea}</option>`;
   });
   
-  h += `</select>
-    <span class="nivel-badge ${(sub.nivel||'').toLowerCase()}" style="margin-left:12px">${sub.nivel||'—'}</span>
+    h += `</select>
   </div>
   <div class="vals-grid">
     <div class="val-card"><div class="val-lbl">Total</div><div class="val-num">${fmt(sub.total)}</div></div>
