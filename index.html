@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Monitorização HACCP</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root {
   --ink:    #111111;
@@ -19,6 +21,8 @@
   --n2:     #ca8a04;
   --n3:     #eab308;
   --blue:   #2b2fd8;
+  --bar-orange: #d8722a;
+  --bar-track: #e4e4e8;
   --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.04);
   --r: 12px;
 }
@@ -282,6 +286,28 @@ tr:hover td { background: #f8f9fa; }
 
 .loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 16px; font-weight: 600; }
 
+/* chart wrapper */
+.chart-wrap-detail {
+  margin-top: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 20px 10px 20px;
+  box-shadow: var(--shadow);
+}
+.chart-wrap-detail canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 240px;
+}
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
 @media (max-width: 1024px) {
   .kpi-section { grid-template-columns: repeat(3, 1fr); }
   .vals-grid { grid-template-columns: repeat(2, 1fr); }
@@ -346,6 +372,7 @@ var _currentLojaIdx = null;
 var _currentAreaIdx = 0;
 var _currentSubareaIdx = 0;
 var _nivelFiltro = null;
+var _chartInstance = null;
 
 function fmt(n) { return Number(n || 0).toLocaleString('pt-PT'); }
 
@@ -428,6 +455,7 @@ function goHome() {
   document.getElementById('view-detail').style.display = 'none';
   document.getElementById('view-home').style.display = 'block';
   document.getElementById('main-header').style.display = 'none';
+  if (_chartInstance) { _chartInstance.destroy(); _chartInstance = null; }
 }
 
 function renderDetail() {
@@ -454,6 +482,8 @@ function renderDetail() {
     h += `<div class="loading">Sem detalhes disponíveis para esta loja.</div>`;
   }
   document.getElementById('detail-content').innerHTML = h;
+  // build chart after content is injected
+  setTimeout(buildSubareaChart, 100);
 }
 
 function selectArea(idx) {
@@ -465,6 +495,7 @@ function selectArea(idx) {
 function selectSubarea(idx) {
   _currentSubareaIdx = Number(idx);
   document.getElementById('subarea-content').innerHTML = renderSubarea();
+  setTimeout(buildSubareaChart, 100);
 }
 
 function renderSubarea() {
@@ -487,8 +518,79 @@ function renderSubarea() {
     <div class="val-card"><div class="val-lbl">P. Abertas</div><div class="val-num" style="color:var(--n1)">${fmt(sub.pAberto)}</div></div>
     <div class="val-card"><div class="val-lbl">P. Fechadas</div><div class="val-num" style="color:var(--blue)">${fmt(sub.pFechado)}</div></div>
     <div class="val-card"><div class="val-lbl">NP. Abertas</div><div class="val-num" style="color:var(--n2)">${fmt(sub.npAberto)}</div></div>
+  </div>
+  <div class="chart-wrap-detail">
+    <div class="chart-title">📊 Tarefas por categoria</div>
+    <canvas id="subareaChart" width="400" height="200"></canvas>
   </div>`;
   return h;
+}
+
+function buildSubareaChart() {
+  var area = _lojas[_currentLojaIdx].areas[_currentAreaIdx];
+  if (!area || !area.subareas || area.subareas.length === 0) return;
+  var sub = area.subareas[_currentSubareaIdx] || area.subareas[0];
+  if (!sub) return;
+
+  var canvas = document.getElementById('subareaChart');
+  if (!canvas) return;
+
+  // destroy previous chart
+  if (_chartInstance) { _chartInstance.destroy(); _chartInstance = null; }
+
+  var ctx = canvas.getContext('2d');
+
+  var labels = ['P. Fechadas', 'P. Abertas', 'NP Abertas', 'NP Fechadas'];
+  var values = [
+    sub.pFechado || 0,
+    sub.pAberto || 0,
+    sub.npAberto || 0,
+    sub.npFechado || 0
+  ];
+  var colors = ['#2b2fd8', '#dc2626', '#d8722a', '#ca8a04'];
+
+  _chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Tarefas',
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 4,
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+          formatter: function(v) { return v; },
+          font: { size: 12, weight: '700' },
+          color: '#333'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(0,0,0,.06)' },
+          ticks: { font: { size: 12, weight: '600' } }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 12, weight: '600' } }
+        }
+      },
+      layout: {
+        padding: { top: 24, bottom: 8, left: 8, right: 8 }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
 }
 
 window.addEventListener('load', loadData);
