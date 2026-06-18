@@ -286,24 +286,24 @@ tr:hover td { background: #f8f9fa; }
 
 .loading { padding: 60px; text-align: center; color: var(--ink-4); font-size: 16px; font-weight: 600; }
 
-/* chart wrapper - VERTICAL */
+/* ── CHART WRAPPER ── */
 .chart-wrap-detail {
   margin-top: 28px;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 20px 20px 10px 20px;
+  padding: 24px 24px 16px 24px;
   box-shadow: var(--shadow);
 }
 .chart-wrap-detail canvas {
   width: 100% !important;
-  max-height: 260px;
+  max-height: 400px;
 }
 .chart-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--ink-3);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   letter-spacing: 0.3px;
   display: flex;
   align-items: center;
@@ -540,7 +540,7 @@ function buildSubareaChart() {
 
   var ctx = canvas.getContext('2d');
 
-  // Dados para o gráfico VERTICAL
+  // Dados para o gráfico HORIZONTAL (barras na horizontal)
   var labels = ['P. Fechadas', 'P. Abertas', 'NP Abertas', 'NP Fechadas'];
   var values = [
     sub.pFechado || 0,
@@ -551,20 +551,21 @@ function buildSubareaChart() {
   var colors = ['#2b2fd8', '#dc2626', '#d8722a', '#ca8a04'];
 
   _chartInstance = new Chart(ctx, {
-    type: 'bar',  // VERTICAL por padrão
+    type: 'bar',
     data: {
       labels: labels,
       datasets: [{
         label: 'Tarefas',
         data: values,
         backgroundColor: colors,
-        borderRadius: 6,
+        borderRadius: 4,
         borderWidth: 0,
-        barPercentage: 0.65,
-        categoryPercentage: 0.8
+        barPercentage: 0.6,
+        categoryPercentage: 0.7
       }]
     },
     options: {
+      indexAxis: 'y',  // ← Torna o gráfico HORIZONTAL
       responsive: true,
       maintainAspectRatio: true,
       plugins: {
@@ -579,7 +580,7 @@ function buildSubareaChart() {
         }
       },
       scales: {
-        y: {
+        x: {
           beginAtZero: true,
           grid: { color: 'rgba(0,0,0,.06)' },
           ticks: { 
@@ -593,16 +594,16 @@ function buildSubareaChart() {
             font: { size: 12, weight: '700' }
           }
         },
-        x: {
+        y: {
           grid: { display: false },
           ticks: { 
-            font: { size: 13, weight: '700' },
+            font: { size: 14, weight: '700' },
             color: '#333'
           }
         }
       },
       layout: {
-        padding: { top: 28, bottom: 8, left: 8, right: 8 }
+        padding: { top: 12, bottom: 8, left: 8, right: 40 }
       }
     },
     plugins: [ChartDataLabels]
