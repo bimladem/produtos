@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monitorização HACCP</title>
+<title>Auditorias de Segurança Alimentar</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
@@ -18,9 +18,10 @@
   --paper-3: #f1f3f5;
   --line: #d1d1d1;
   --line-2: #b1b1b1;
-  --n1: #ff2222; --n1-bg: #fff2f2;
-  --n2: #ff7b00; --n2-bg: #fff3e6;
-  --n3: #ffcc00; --n3-bg: #fffbe6;
+  --n1: #70AD47; --n1-bg: #e8f5e9;
+  --n2: #FFC000; --n2-bg: #fff8e1;
+  --n3: #ED7D31; --n3-bg: #fff3e0;
+  --n4: #C00000; --n4-bg: #ffebee;
   --bar-blue: #2b2fd8;
   --bar-orange: #d8722a;
   --bar-track: #e4e4e8;
@@ -88,10 +89,10 @@ body {
 .stat-card-label { font-size: 12px; font-weight: 800; letter-spacing: 0.7px; text-transform: uppercase; color: var(--ink-4); }
 .stat-card-val { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1; color: var(--ink); }
 .stat-card-sub { font-size: 13px; color: var(--ink-4); margin-top: 2px; font-weight: 600; }
-.stat-card.accent-red    .stat-card-val { color: var(--n1); }
-.stat-card.accent-amber  .stat-card-val { color: var(--n2); }
-.stat-card.accent-yellow .stat-card-val { color: var(--n3); }
-.stat-card.accent-blue   .stat-card-val { color: var(--bar-blue); }
+.stat-card.n1 .stat-card-val { color: var(--n1); }
+.stat-card.n2 .stat-card-val { color: var(--n2); }
+.stat-card.n3 .stat-card-val { color: var(--n3); }
+.stat-card.n4 .stat-card-val { color: var(--n4); }
 
 /* ── FILTER BAR ── */
 .filter-bar {
@@ -138,8 +139,6 @@ body {
 }
 .ht-row:last-child { border-bottom: none; }
 .ht-row:hover { background: #f1f3f5; }
-.ht-row.nova-loja { background: #f6fef9; }
-.ht-row.nova-loja:hover { background: #edfaf2; }
 
 .ht-td {
   padding: 16px 12px; display: flex; align-items: center;
@@ -159,18 +158,16 @@ body {
 .pill-n1 { background: var(--n1-bg); color: var(--n1); }
 .pill-n2 { background: var(--n2-bg); color: var(--n2); }
 .pill-n3 { background: var(--n3-bg); color: var(--n3); }
+.pill-n4 { background: var(--n4-bg); color: var(--n4); }
 
 /* ── PROGRESS MINI ── */
 .mini-prog { flex: 1; display: flex; flex-direction: column; gap: 8px; width: 100%; }
 .mini-row { display: flex; align-items: center; gap: 8px; }
 .mini-track { flex: 1; height: 6px; background: var(--bar-track); border-radius: 99px; overflow: hidden; }
 .mini-fill { height: 100%; border-radius: 99px; }
-.fill-blue { background: var(--bar-blue); }
-.fill-orange { background: var(--bar-orange); }
+.fill-green { background: var(--n1); }
+.fill-red { background: var(--n4); }
 .mini-pct { font-size: 12px; font-weight: 700; min-width: 34px; text-align: right; }
-
-/* ── NOVA BADGE ── */
-.nova-badge { background: #e6f4ea; color: #1e7e34; border: 1px solid #1e7e34; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
 
 /* ── DETAIL BTN ── */
 .btn-detail {
@@ -203,8 +200,8 @@ body {
   padding: 20px; border-right: 1px solid var(--line);
   align-self: stretch; display: flex; flex-direction: column; justify-content: center;
 }
-.loja-nome { font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.2; }
-.loja-code { font-size: 13px; color: var(--ink-4); margin-top: 4px; }
+.unidade-nome { font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.unidade-code { font-size: 13px; color: var(--ink-4); margin-top: 4px; }
 
 .col-metrics {
   display: flex; align-items: stretch;
@@ -216,10 +213,10 @@ body {
   min-width: 88px; flex: 1; gap: 3px;
 }
 .metric-group:last-child { border-right: none; }
-.metric-group.is-total { background: #f0f2fb; }
-.metric-group.is-total .mg-val { color: var(--bar-blue); }
-.metric-group.is-total-np { background: #fdf3eb; }
-.metric-group.is-total-np .mg-val { color: var(--bar-orange); }
+.metric-group.is-total { background: #e8f5e9; }
+.metric-group.is-total .mg-val { color: var(--n1); }
+.metric-group.is-total-nok { background: #ffebee; }
+.metric-group.is-total-nok .mg-val { color: var(--n4); }
 .col-metrics-sep { width: 2px; background: var(--line-2); align-self: stretch; flex-shrink: 0; }
 .mg-label { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; margin-bottom: 3px; }
 .mg-val { font-size: 24px; font-weight: 700; color: var(--ink); line-height: 1; }
@@ -262,19 +259,19 @@ body {
   padding-bottom: 10px; border-bottom: 1px solid var(--line);
 }
 
-/* ── TABS (áreas) ── */
-.area-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-.area-tab {
+/* ── TABS (categorias) ── */
+.cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.cat-tab {
   padding: 7px 16px; border-radius: 99px; border: 1px solid var(--line-2);
   background: #fff; font-size: 13px; font-weight: 700; color: var(--ink-3);
   cursor: pointer; transition: all .15s; font-family: 'DM Sans', sans-serif;
 }
-.area-tab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.cat-tab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-/* Subárea select */
-.sub-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.sub-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); white-space: nowrap; }
-.sub-select {
+/* Itens select */
+.item-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.item-lbl { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--ink-4); white-space: nowrap; }
+.item-select {
   padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line-2);
   background: #fff; font-size: 14px; font-weight: 600; color: var(--ink-2);
   cursor: pointer; min-width: 280px; font-family: 'DM Sans', sans-serif;
@@ -356,7 +353,7 @@ body {
       <svg viewBox="0 0 24 24"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="5" width="4" height="16" rx="1"/></svg>
     </div>
     <div>
-      <div class="header-title" id="header-title">Monitorização HACCP</div>
+      <div class="header-title" id="header-title">Auditorias de Segurança Alimentar</div>
       <div class="header-subtitle" id="sub-info">A carregar…</div>
     </div>
   </div>
@@ -372,26 +369,23 @@ body {
 </main>
 
 <script>
-var _lojas = [];
+var _unidades = [];
 var _activeFilter = 'all';
 var _chartInstance = null;
-var _currentLojaIdx = null;
-var _currentAreaIdx = 0;
-var _currentSubareaIdx = 0;
-var _panelH = {}, _panelS = {};
-var _areaCharts = {};
+var _currentUnidadeIdx = null;
+var _currentCategoriaIdx = 0;
+var _currentItemIdx = 0;
+var _panelS = {};
+var _catCharts = {};
 
 function fmt(n) { return Number(n||0).toLocaleString('pt-PT'); }
 function pillCls(nivel) {
   if (!nivel) return 'pill-n1';
   var n = String(nivel).toUpperCase();
-  return n === 'N1' ? 'pill-n1' : n === 'N2' ? 'pill-n2' : 'pill-n3';
+  return n === 'N1' ? 'pill-n1' : n === 'N2' ? 'pill-n2' : n === 'N3' ? 'pill-n3' : 'pill-n4';
 }
 function svgArrow() {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-}
-function svgFolder() {
-  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>';
 }
 function svgLayers() {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>';
@@ -412,8 +406,8 @@ fetch('dados.json?t=' + Date.now())
   });
 
 function processData(json) {
-  _lojas = json.lojas || [];
-  document.getElementById('sub-info').textContent = _lojas.length + ' lojas';
+  _unidades = json.unidades || [];
+  document.getElementById('sub-info').textContent = _unidades.length + ' unidades';
   renderHome();
 }
 
@@ -422,64 +416,64 @@ function goHome() {
   document.getElementById('home-screen').classList.add('active');
   document.getElementById('detail-screen').classList.remove('active');
   document.getElementById('btn-back').classList.remove('visible');
-  document.getElementById('header-title').textContent = 'Monitorização HACCP';
-  document.getElementById('sub-info').textContent = _lojas.length + ' lojas';
+  document.getElementById('header-title').textContent = 'Auditorias de Segurança Alimentar';
+  document.getElementById('sub-info').textContent = _unidades.length + ' unidades';
 }
 
 function goDetail(idx) {
-  _currentLojaIdx = idx;
-  _currentAreaIdx = 0;
-  _currentSubareaIdx = 0;
-  _panelH = {}; _panelS = {};
+  _currentUnidadeIdx = idx;
+  _currentCategoriaIdx = 0;
+  _currentItemIdx = 0;
+  _panelS = {};
   document.getElementById('home-screen').classList.remove('active');
   document.getElementById('detail-screen').classList.add('active');
   document.getElementById('btn-back').classList.add('visible');
-  var l = _lojas[idx];
-  document.getElementById('header-title').textContent = l.nome;
-  document.getElementById('sub-info').textContent = 'Detalhe da loja · ' + (l.nivel || '—');
+  var u = _unidades[idx];
+  document.getElementById('header-title').textContent = u.nome;
+  document.getElementById('sub-info').textContent = 'Conformidade: ' + (u.taxa || 0) + '% · ' + (u.nivel || '—');
   renderDetail(idx);
   window.scrollTo(0, 0);
 }
 
 /* ── HOME ── */
 function renderHome() {
-  var lojas = _lojas;
-  var n1 = lojas.filter(function(l){ return (l.nivel||'').toUpperCase()==='N1'; }).length;
-  var n2 = lojas.filter(function(l){ return (l.nivel||'').toUpperCase()==='N2'; }).length;
-  var n3 = lojas.filter(function(l){ return (l.nivel||'').toUpperCase()==='N3'; }).length;
-  var novas = lojas.filter(function(l){ return l.isNova; }).length;
+  var unidades = _unidades;
+  var n1 = unidades.filter(function(u){ return (u.nivel||'').toUpperCase()==='N1'; }).length;
+  var n2 = unidades.filter(function(u){ return (u.nivel||'').toUpperCase()==='N2'; }).length;
+  var n3 = unidades.filter(function(u){ return (u.nivel||'').toUpperCase()==='N3'; }).length;
+  var n4 = unidades.filter(function(u){ return (u.nivel||'').toUpperCase()==='N4'; }).length;
 
   var html = '';
 
   /* Stats */
   html += '<div class="home-stats">';
-  html += statCard('Total de Lojas', lojas.length, 'Esta semana', '');
-  html += statCard('Nível 1', n1, '0–20% prog. fechadas', 'accent-red');
-  html += statCard('Nível 2', n2, '21–40% prog. fechadas', 'accent-amber');
-  html += statCard('Nível 3', n3, '41–50% prog. fechadas', 'accent-yellow');
-  html += statCard('Entradas Novas', novas, 'Novas esta semana', novas > 0 ? 'accent-blue' : '');
+  html += statCard('Total Unidades', unidades.length, 'Auditorias ativas', '');
+  html += statCard('Nível 1 (Excelente)', n1, '≥95% conformidade', 'n1');
+  html += statCard('Nível 2 (Bom)', n2, '80-94% conformidade', 'n2');
+  html += statCard('Nível 3 (Regular)', n3, '60-79% conformidade', 'n3');
+  html += statCard('Nível 4 (Crítico)', n4, '<60% conformidade', 'n4');
   html += '</div>';
 
   /* Filter bar */
   html += '<div class="filter-bar">';
   html += '<span class="filter-label">Mostrar:</span>';
-  html += '<button class="filter-btn active" data-filter="all" onclick="setFilter(\'all\')">Todas ('+lojas.length+')</button>';
+  html += '<button class="filter-btn active" data-filter="all" onclick="setFilter(\'all\')">Todas ('+unidades.length+')</button>';
   html += '<div class="filter-divider"></div>';
-  html += '<button class="filter-btn" data-filter="n1" onclick="setFilter(\'n1\')">🔴 N1 ('+n1+')</button>';
-  html += '<button class="filter-btn" data-filter="n2" onclick="setFilter(\'n2\')">🟠 N2 ('+n2+')</button>';
-  html += '<button class="filter-btn" data-filter="n3" onclick="setFilter(\'n3\')">🟡 N3 ('+n3+')</button>';
-  if (novas > 0) html += '<button class="filter-btn" data-filter="nova" onclick="setFilter(\'nova\')">✦ Novas ('+novas+')</button>';
+  html += '<button class="filter-btn" data-filter="n1" onclick="setFilter(\'n1\')">🟢 N1 ('+n1+')</button>';
+  html += '<button class="filter-btn" data-filter="n2" onclick="setFilter(\'n2\')">🟡 N2 ('+n2+')</button>';
+  html += '<button class="filter-btn" data-filter="n3" onclick="setFilter(\'n3\')">🟠 N3 ('+n3+')</button>';
+  html += '<button class="filter-btn" data-filter="n4" onclick="setFilter(\'n4\')">🔴 N4 ('+n4+')</button>';
   html += '</div>';
 
   /* Table */
   html += '<div class="home-table">';
   html += '<div class="ht-head">';
   html += '<div class="ht-th">#</div>';
-  html += '<div class="ht-th left">Loja</div>';
-  html += '<div class="ht-th">P Tarefas</div>';
-  html += '<div class="ht-th">NP Tarefas</div>';
-  html += '<div class="ht-th">Prog. P vs NP</div>';
-  html += '<div class="ht-th">Estado</div>';
+  html += '<div class="ht-th left">Unidade</div>';
+  html += '<div class="ht-th">Total Itens</div>';
+  html += '<div class="ht-th">NOK</div>';
+  html += '<div class="ht-th">Conformidade</div>';
+  html += '<div class="ht-th">Nível</div>';
   html += '<div class="ht-th">Detalhe</div>';
   html += '</div>';
   html += '<div id="ht-body"></div>';
@@ -487,12 +481,13 @@ function renderHome() {
 
   /* Bottom */
   html += '<div class="bottom-bar">';
-  html += '<div class="level-legend"><div class="level-legend-title">Classificação de Nível</div><div class="level-items">';
-  html += '<div class="level-item-row"><div class="level-dot pill-n1">N1</div><span>0–20% prog. fechadas</span></div>';
-  html += '<div class="level-item-row"><div class="level-dot pill-n2">N2</div><span>21–40% prog. fechadas</span></div>';
-  html += '<div class="level-item-row"><div class="level-dot pill-n3">N3</div><span>41–50% prog. fechadas</span></div>';
+  html += '<div class="level-legend"><div class="level-legend-title">Classificação de Conformidade</div><div class="level-items">';
+  html += '<div class="level-item-row"><div class="level-dot pill-n1">N1</div><span>≥95% conformidade (Excelente)</span></div>';
+  html += '<div class="level-item-row"><div class="level-dot pill-n2">N2</div><span>80-94% conformidade (Bom)</span></div>';
+  html += '<div class="level-item-row"><div class="level-dot pill-n3">N3</div><span>60-79% conformidade (Regular)</span></div>';
+  html += '<div class="level-item-row"><div class="level-dot pill-n4">N4</div><span><60% conformidade (Crítico)</span></div>';
   html += '</div></div>';
-  html += '<div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Ação Recomendada</div><div class="action-desc">Contactar urgentemente responsáveis das lojas N1 e N2. Clique em "Detalhe" para ver áreas e subáreas.</div></div></div>';
+  html += '<div class="action-banner"><div class="action-icon">⚠</div><div><div class="action-title">Ação Recomendada</div><div class="action-desc">Contactar urgentemente responsáveis das unidades N4 e N3. Clique em "Detalhe" para ver categorias e itens auditados.</div></div></div>';
   html += '</div>';
 
   document.getElementById('home-screen').innerHTML = html;
@@ -500,8 +495,8 @@ function renderHome() {
   renderHomeTable();
 }
 
-function statCard(label, val, sub, accent) {
-  return '<div class="stat-card '+(accent||'')+'">'
+function statCard(label, val, sub, nivelClass) {
+  return '<div class="stat-card '+(nivelClass||'')+'">'
     +'<div class="stat-card-label">'+label+'</div>'
     +'<div class="stat-card-val">'+val+'</div>'
     +'<div class="stat-card-sub">'+sub+'</div>'
@@ -517,78 +512,78 @@ function setFilter(f) {
 }
 
 function renderHomeTable() {
-  var lojas = _lojas;
+  var unidades = _unidades;
   var f = _activeFilter;
-  var filtered = lojas.filter(function(l) {
-    var nivel = (l.nivel||'').toUpperCase();
-    if (f === 'n1')   return nivel === 'N1';
-    if (f === 'n2')   return nivel === 'N2';
-    if (f === 'n3')   return nivel === 'N3';
-    if (f === 'nova') return l.isNova;
+  var filtered = unidades.filter(function(u) {
+    var nivel = (u.nivel||'').toUpperCase();
+    if (f === 'n1') return nivel === 'N1';
+    if (f === 'n2') return nivel === 'N2';
+    if (f === 'n3') return nivel === 'N3';
+    if (f === 'n4') return nivel === 'N4';
     return true;
   });
 
   var html = '';
   if (filtered.length === 0) {
-    html = '<div style="padding:32px;text-align:center;color:var(--ink-4);font-size:13px">Sem lojas para este filtro.</div>';
+    html = '<div style="padding:32px;text-align:center;color:var(--ink-4);font-size:13px">Sem unidades para este filtro.</div>';
   } else {
-    filtered.forEach(function(l) {
-      var li = lojas.indexOf(l);
-      var pc = pillCls(l.nivel);
-      var p = l.totaisGlobais || {};
-      var pT = p.pTotal || 0, pA = p.pAberto || 0, pF = p.pFechado || 0;
-      var nT = p.npTotal || 0, nA = p.npAberto || 0, nF = p.npFechado || 0;
-      var pctP = pT > 0 ? Math.round(pF / pT * 100) : 0;
-      var pctNP = nT > 0 ? Math.round(nF / nT * 100) : 0;
-      var taxa = l.taxa || pctP;
+    filtered.forEach(function(u) {
+      var ui = unidades.indexOf(u);
+      var pc = pillCls(u.nivel);
+      var t = u.totaisGlobais || {};
+      var totalItens = t.totalItens || 0;
+      var totalOK = t.totalOK || 0;
+      var totalNOK = t.totalNOK || 0;
+      var taxa = u.taxa || 0;
 
-      html += '<div class="ht-row'+(l.isNova?' nova-loja':'')+'" onclick="goDetail('+li+')">';
+      html += '<div class="ht-row" onclick="goDetail('+ui+')">';
 
       /* rank */
       html += '<div class="ht-td rank-td" style="flex-direction:column;gap:6px;align-items:center;background:#f1f3f5">';
-      html += '<div style="font-family:\'DM Serif Display\',serif;font-size:26px;font-weight:400;color:var(--ink-2);line-height:1">'+(li+1)+'</div>';
-      html += '<div class="rank-pill '+pc+'">'+(l.nivel||'—')+'</div>';
+      html += '<div style="font-family:\'DM Serif Display\',serif;font-size:26px;font-weight:400;color:var(--ink-2);line-height:1">'+(ui+1)+'</div>';
+      html += '<div class="rank-pill '+pc+'">'+(u.nivel||'—')+'</div>';
       html += '</div>';
 
       /* identity */
       html += '<div class="ht-td left" style="flex-direction:column;align-items:flex-start;gap:3px">';
-      html += '<div style="font-weight:700;font-size:15px">'+l.nome+'</div>';
+      html += '<div style="font-weight:700;font-size:15px">'+u.nome+'</div>';
+      html += '<div style="font-size:12px;color:var(--ink-4)">'+u.localizacao+'</div>';
       html += '</div>';
 
-      /* P metrics */
+      /* total itens */
       html += '<div class="ht-td" style="flex-direction:column;gap:3px">';
-      html += '<div style="font-size:12px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4)">Total '+fmt(pT)+'</div>';
-      html += '<div style="font-size:13px;color:var(--ink-3)">'+fmt(pA)+' abertas · '+fmt(pF)+' fechadas</div>';
+      html += '<div style="font-size:12px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4)">Total</div>';
+      html += '<div style="font-size:13px;color:var(--ink-3)">'+fmt(totalItens)+' itens</div>';
       html += '</div>';
 
-      /* NP metrics */
+      /* NOK */
       html += '<div class="ht-td" style="flex-direction:column;gap:3px">';
-      html += '<div style="font-size:12px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4)">Total '+fmt(nT)+'</div>';
-      html += '<div style="font-size:13px;color:var(--ink-3)">'+fmt(nA)+' abertas · '+fmt(nF)+' fechadas</div>';
+      html += '<div style="font-size:12px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4)">Não Conformes</div>';
+      html += '<div style="font-size:13px;color:var(--n4);font-weight:700">'+fmt(totalNOK)+' NOK</div>';
       html += '</div>';
 
       /* progress */
       html += '<div class="ht-td"><div class="mini-prog">';
       html += '<div class="mini-row">'
-        +'<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;color:var(--ink-4);min-width:22px">P</span>'
-        +'<div class="mini-track"><div class="mini-fill fill-blue" style="width:'+pctP+'%"></div></div>'
-        +'<span class="mini-pct" style="color:var(--bar-blue)">'+pctP+'%</span>'
+        +'<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;color:var(--ink-4);min-width:60px">Conformidade</span>'
+        +'<div class="mini-track"><div class="mini-fill fill-green" style="width:'+taxa+'%"></div></div>'
+        +'<span class="mini-pct" style="color:var(--n1)">'+taxa+'%</span>'
         +'</div>';
       html += '<div class="mini-row">'
-        +'<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;color:var(--ink-4);min-width:22px">NP</span>'
-        +'<div class="mini-track"><div class="mini-fill fill-orange" style="width:'+pctNP+'%"></div></div>'
-        +'<span class="mini-pct" style="color:var(--bar-orange)">'+pctNP+'%</span>'
+        +'<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;color:var(--ink-4);min-width:60px">Não Conforme</span>'
+        +'<div class="mini-track"><div class="mini-fill fill-red" style="width:'+(100-taxa)+'%"></div></div>'
+        +'<span class="mini-pct" style="color:var(--n4)">'+(100-taxa)+'%</span>'
         +'</div>';
       html += '</div></div>';
 
-      /* nova badge */
+      /* nivel */
       html += '<div class="ht-td">';
-      if (l.isNova) html += '<span class="nova-badge">✦ Nova</span>';
+      html += '<span class="rank-pill '+pc+'">'+(u.nivel||'—')+'</span>';
       html += '</div>';
 
       /* detail btn */
       html += '<div class="ht-td" onclick="event.stopPropagation()">';
-      html += '<button class="btn-detail" onclick="goDetail('+li+')">Detalhe '+svgArrow()+'</button>';
+      html += '<button class="btn-detail" onclick="goDetail('+ui+')">Detalhe '+svgArrow()+'</button>';
       html += '</div>';
 
       html += '</div>';
@@ -599,138 +594,143 @@ function renderHomeTable() {
 
 /* ── DETAIL ── */
 function renderDetail(idx) {
-  var l = _lojas[idx];
-  if (!l) return;
-  var p = l.totaisGlobais || {};
-  var pT = p.pTotal||0, pA = p.pAberto||0, pF = p.pFechado||0;
-  var nT = p.npTotal||0, nA = p.npAberto||0, nF = p.npFechado||0;
-  var pctP  = pT > 0 ? Math.round(pF/pT*100) : 0;
-  var pctNP = nT > 0 ? Math.round(nF/nT*100) : 0;
-  var pc = pillCls(l.nivel);
+  var u = _unidades[idx];
+  if (!u) return;
+  var t = u.totaisGlobais || {};
+  var totalItens = t.totalItens || 0;
+  var totalOK = t.totalOK || 0;
+  var totalNOK = t.totalNOK || 0;
+  var taxa = u.taxa || 0;
+  var pc = pillCls(u.nivel);
 
   var html = '<div class="detail-card">';
   html += '<div class="card-main">';
 
   /* rank */
-  html += '<div class="col-rank"><div class="rank-num">'+(idx+1)+'</div><div class="rank-pill '+pc+'">'+(l.nivel||'—')+'</div></div>';
+  html += '<div class="col-rank"><div class="rank-num">'+(idx+1)+'</div><div class="rank-pill '+pc+'">'+(u.nivel||'—')+'</div></div>';
 
   /* identity */
-  html += '<div class="col-id"><div class="loja-nome">'+l.nome+'</div><div class="loja-code">Taxa prog.: '+(l.taxa||pctP)+'%</div></div>';
+  html += '<div class="col-id"><div class="unidade-nome">'+u.nome+'</div><div class="unidade-code">Conformidade: '+(taxa)+'%</div></div>';
 
   /* metrics */
   html += '<div class="col-metrics">';
-  var gP = [{label:'P Total',val:fmt(pT),cls:'is-total'},{label:'P Abertas',val:fmt(pA),cls:''},{label:'P Fechadas',val:fmt(pF),cls:''}];
-  gP.forEach(function(g){ html += '<div class="metric-group '+g.cls+'"><div class="mg-label">'+g.label+'</div><div class="mg-val">'+g.val+'</div></div>'; });
-  html += '<div class="col-metrics-sep"></div>';
-  var gNP = [{label:'NP Total',val:fmt(nT),cls:'is-total-np'},{label:'NP Abertas',val:fmt(nA),cls:''},{label:'NP Fechadas',val:fmt(nF),cls:''}];
-  gNP.forEach(function(g){ html += '<div class="metric-group '+g.cls+'"><div class="mg-label">'+g.label+'</div><div class="mg-val">'+g.val+'</div></div>'; });
+  var gOK = [{label:'Total Itens',val:fmt(totalItens),cls:'is-total'},{label:'OK',val:fmt(totalOK),cls:''},{label:'NOK',val:fmt(totalNOK),cls:'is-total-nok'}];
+  gOK.forEach(function(g){ html += '<div class="metric-group '+g.cls+'"><div class="mg-label">'+g.label+'</div><div class="mg-val">'+g.val+'</div></div>'; });
   html += '</div>';
 
   /* right: progress + actions */
   html += '<div class="col-right">';
   html += '<div class="progress-block">';
-  html += '<div class="progress-row"><div class="progress-label-row"><span class="prog-label">Programadas</span><span class="prog-pct">'+pctP+'%</span></div><div class="prog-track"><div class="prog-fill fill-blue" style="width:'+pctP+'%"></div></div></div>';
-  html += '<div class="progress-row"><div class="progress-label-row"><span class="prog-label">Não Prog.</span><span class="prog-pct">'+pctNP+'%</span></div><div class="prog-track"><div class="prog-fill fill-orange" style="width:'+pctNP+'%"></div></div></div>';
+  html += '<div class="progress-row"><div class="progress-label-row"><span class="prog-label">Conformidade</span><span class="prog-pct">'+taxa+'%</span></div><div class="prog-track"><div class="prog-fill fill-green" style="width:'+taxa+'%"></div></div></div>';
+  html += '<div class="progress-row"><div class="progress-label-row"><span class="prog-label">Não Conforme</span><span class="prog-pct">'+(100-taxa)+'%</span></div><div class="prog-track"><div class="prog-fill fill-red" style="width:'+(100-taxa)+'%"></div></div></div>';
   html += '</div>';
   html += '<div class="actions-col">';
-  html += '<button class="btn-card" id="bs-'+idx+'" onclick="toggleAreas('+idx+')">'+svgLayers()+'Áreas</button>';
+  html += '<button class="btn-card" id="bs-'+idx+'" onclick="toggleCategorias('+idx+')">'+svgLayers()+'Categorias</button>';
   html += '</div>';
-  html += '</div>'; /* col-right */
+  html += '</div>';
 
-  html += '</div>'; /* card-main */
+  html += '</div>';
 
-  /* Areas panel */
+  /* Categorias panel */
   html += '<div class="panel" id="ps-'+idx+'"><div class="panel-body">';
-  if (l.areas && l.areas.length > 0) {
-    html += '<div class="panel-title">Áreas · '+l.nome+'</div>';
-    /* Area tabs */
-    html += '<div class="area-tabs" id="area-tabs-'+idx+'">';
-    l.areas.forEach(function(a, ai) {
-      html += '<button class="area-tab'+(ai===0?' on':'')+'" onclick="selectArea('+idx+','+ai+')">'+a.area+'</button>';
+  if (u.categorias && u.categorias.length > 0) {
+    html += '<div class="panel-title">Categorias · '+u.nome+'</div>';
+    /* Categoria tabs */
+    html += '<div class="cat-tabs" id="cat-tabs-'+idx+'">';
+    u.categorias.forEach(function(c, ci) {
+      html += '<button class="cat-tab'+(ci===0?' on':'')+'" onclick="selectCategoria('+idx+','+ci+')">'+c.categoria+'</button>';
     });
     html += '</div>';
-    /* Subarea content */
-    html += '<div id="subarea-wrap-'+idx+'">'+buildSubareaHTML(l, 0, 0, idx)+'</div>';
+    /* Itens content */
+    html += '<div id="itens-wrap-'+idx+'">'+buildItensHTML(u, 0, 0, idx)+'</div>';
   } else {
-    html += '<p style="color:var(--ink-4);font-size:14px">Sem áreas disponíveis para esta loja.</p>';
+    html += '<p style="color:var(--ink-4);font-size:14px">Sem categorias disponíveis para esta unidade.</p>';
   }
   html += '</div></div>';
 
-  html += '</div>'; /* detail-card */
+  html += '</div>';
 
   /* Legend */
   html += '<div class="legend-bar">';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--bar-blue)"></div><span style="font-weight:700">P</span> = Tarefas Programadas</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--n1)"></div><span style="font-weight:700">OK</span> = Conforme</div>';
   html += '<div class="legend-sep"></div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--bar-orange)"></div><span style="font-weight:700">NP</span> = Tarefas Não Programadas</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--n4)"></div><span style="font-weight:700">NOK</span> = Não Conforme</div>';
   html += '</div>';
 
   document.getElementById('detail-app').innerHTML = html;
 }
 
-function toggleAreas(idx) {
+function toggleCategorias(idx) {
   _panelS[idx] = !_panelS[idx];
   var p = document.getElementById('ps-'+idx);
   var b = document.getElementById('bs-'+idx);
   if (p) p.classList.toggle('open', _panelS[idx]);
   if (b) b.classList.toggle('active', _panelS[idx]);
   if (_panelS[idx]) {
-    setTimeout(function() { buildSubareaChart(idx, _currentAreaIdx, _currentSubareaIdx); }, 150);
+    setTimeout(function() { buildItensChart(idx, _currentCategoriaIdx, _currentItemIdx); }, 150);
   }
 }
 
-function selectArea(lojaIdx, areaIdx) {
-  _currentAreaIdx = areaIdx;
-  _currentSubareaIdx = 0;
-  /* Update tab styles */
-  var tabs = document.querySelectorAll('#area-tabs-'+lojaIdx+' .area-tab');
-  tabs.forEach(function(t, i) { t.classList.toggle('on', i === areaIdx); });
-  /* Rebuild subarea */
-  var wrap = document.getElementById('subarea-wrap-'+lojaIdx);
+function selectCategoria(unidadeIdx, catIdx) {
+  _currentCategoriaIdx = catIdx;
+  _currentItemIdx = 0;
+  var tabs = document.querySelectorAll('#cat-tabs-'+unidadeIdx+' .cat-tab');
+  tabs.forEach(function(t, i) { t.classList.toggle('on', i === catIdx); });
+  var wrap = document.getElementById('itens-wrap-'+unidadeIdx);
   if (wrap) {
-    if (_areaCharts['sub-'+lojaIdx]) { _areaCharts['sub-'+lojaIdx].destroy(); delete _areaCharts['sub-'+lojaIdx]; }
-    wrap.innerHTML = buildSubareaHTML(_lojas[lojaIdx], areaIdx, 0, lojaIdx);
-    setTimeout(function() { buildSubareaChart(lojaIdx, areaIdx, 0); }, 150);
+    if (_catCharts['cat-'+unidadeIdx]) { _catCharts['cat-'+unidadeIdx].destroy(); delete _catCharts['cat-'+unidadeIdx]; }
+    wrap.innerHTML = buildItensHTML(_unidades[unidadeIdx], catIdx, 0, unidadeIdx);
+    setTimeout(function() { buildItensChart(unidadeIdx, catIdx, 0); }, 150);
   }
 }
 
-function selectSubarea(lojaIdx, val) {
-  _currentSubareaIdx = Number(val);
-  var l = _lojas[lojaIdx];
-  var wrap = document.getElementById('subarea-wrap-'+lojaIdx);
+function selectItem(unidadeIdx, val) {
+  _currentItemIdx = Number(val);
+  var u = _unidades[unidadeIdx];
+  var wrap = document.getElementById('itens-wrap-'+unidadeIdx);
   if (wrap) {
-    if (_areaCharts['sub-'+lojaIdx]) { _areaCharts['sub-'+lojaIdx].destroy(); delete _areaCharts['sub-'+lojaIdx]; }
-    wrap.innerHTML = buildSubareaHTML(l, _currentAreaIdx, _currentSubareaIdx, lojaIdx);
-    setTimeout(function() { buildSubareaChart(lojaIdx, _currentAreaIdx, _currentSubareaIdx); }, 150);
+    if (_catCharts['cat-'+unidadeIdx]) { _catCharts['cat-'+unidadeIdx].destroy(); delete _catCharts['cat-'+unidadeIdx]; }
+    wrap.innerHTML = buildItensHTML(u, _currentCategoriaIdx, _currentItemIdx, unidadeIdx);
+    setTimeout(function() { buildItensChart(unidadeIdx, _currentCategoriaIdx, _currentItemIdx); }, 150);
   }
 }
 
-function buildSubareaHTML(l, areaIdx, subIdx, lojaIdx) {
-  var area = l.areas && l.areas[areaIdx];
-  if (!area || !area.subareas || area.subareas.length === 0) return '<p style="color:var(--ink-4);font-size:14px">Sem subáreas nesta área.</p>';
-  var sub = area.subareas[subIdx] || area.subareas[0];
+function buildItensHTML(u, catIdx, itemIdx, unidadeIdx) {
+  var cat = u.categorias && u.categorias[catIdx];
+  if (!cat || !cat.itens || cat.itens.length === 0) return '<p style="color:var(--ink-4);font-size:14px">Sem itens nesta categoria.</p>';
+  var item = cat.itens[itemIdx] || cat.itens[0];
 
-  var html = '<div class="sub-row">';
-  html += '<span class="sub-lbl">Subárea:</span>';
-  html += '<select class="sub-select" onchange="selectSubarea('+lojaIdx+', this.value)">';
-  area.subareas.forEach(function(s, i) {
-    html += '<option value="'+i+'"'+(i===subIdx?' selected':'')+'>'+s.subarea+'</option>';
+  var html = '<div class="item-row">';
+  html += '<span class="item-lbl">Item:</span>';
+  html += '<select class="item-select" onchange="selectItem('+unidadeIdx+', this.value)">';
+  cat.itens.forEach(function(it, i) {
+    html += '<option value="'+i+'"'+(i===itemIdx?' selected':'')+'>'+it.codigo_item+' - '+it.descricao+'</option>';
   });
   html += '</select></div>';
 
   html += '<div class="vals-grid">';
-  html += valCard('Total', fmt(sub.total), '');
-  html += valCard('P. Abertas', fmt(sub.pAberto), 'color:var(--n1)');
-  html += valCard('P. Fechadas', fmt(sub.pFechado), 'color:var(--bar-blue)');
-  html += valCard('NP. Abertas', fmt(sub.npAberto), 'color:var(--n2)');
+  html += valCard('Estado', item.estado, item.estado === 'OK' ? 'color:var(--n1)' : 'color:var(--n4)');
+  html += valCard('Status Ação', item.status_acao, item.status_acao === 'Concluida' ? 'color:var(--n1)' : item.status_acao === 'Em_Atraso' ? 'color:var(--n4)' : 'color:var(--n3)');
+  html += valCard('Dias Atraso', fmt(item.dias_atraso), item.dias_atraso > 0 ? 'color:var(--n4)' : 'color:var(--n1)');
+  html += valCard('Responsável', item.responsavel_acao || 'N/A', '');
   html += '</div>';
 
+  if (item.medida_corretiva) {
+    html += '<div style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px;">';
+    html += '<div style="font-size:11px;font-weight:800;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px">Medida Corretiva</div>';
+    html += '<div style="font-size:14px;color:var(--ink);font-weight:600">'+item.medida_corretiva+'</div>';
+    if (item.prazo) {
+      html += '<div style="font-size:12px;color:var(--ink-4);margin-top:4px">Prazo: '+item.prazo+'</div>';
+    }
+    html += '</div>';
+  }
+
   html += '<div class="chart-wrap">';
-  html += '<div style="font-size:13px;font-weight:700;color:var(--ink-3);margin-bottom:14px">📊 Tarefas por categoria</div>';
-  html += '<canvas id="subChart-'+lojaIdx+'" style="max-height:200px"></canvas>';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--ink-3);margin-bottom:14px">📊 Distribuição de Conformidade por Categoria</div>';
+  html += '<canvas id="catChart-'+unidadeIdx+'" style="max-height:200px"></canvas>';
   html += '<div class="chart-legend">';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--bar-blue)"></div>Programadas</div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--bar-orange)"></div>Não Programadas</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--n1)"></div>Conforme (OK)</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:var(--n4)"></div>Não Conforme (NOK)</div>';
   html += '</div></div>';
 
   return html;
@@ -740,38 +740,39 @@ function valCard(label, val, style) {
   return '<div class="val-card"><div class="val-lbl">'+label+'</div><div class="val-num" style="'+style+'">'+val+'</div></div>';
 }
 
-function buildSubareaChart(lojaIdx, areaIdx, subIdx) {
-  var l = _lojas[lojaIdx];
-  if (!l || !l.areas) return;
-  var area = l.areas[areaIdx];
-  if (!area || !area.subareas) return;
-  var sub = area.subareas[subIdx] || area.subareas[0];
-  if (!sub) return;
+function buildItensChart(unidadeIdx, catIdx, itemIdx) {
+  var u = _unidades[unidadeIdx];
+  if (!u || !u.categorias) return;
+  var cat = u.categorias[catIdx];
+  if (!cat || !cat.itens) return;
 
-  var canvas = document.getElementById('subChart-'+lojaIdx);
+  var canvas = document.getElementById('catChart-'+unidadeIdx);
   if (!canvas) return;
 
-  if (_areaCharts['sub-'+lojaIdx]) { _areaCharts['sub-'+lojaIdx].destroy(); delete _areaCharts['sub-'+lojaIdx]; }
+  if (_catCharts['cat-'+unidadeIdx]) { _catCharts['cat-'+unidadeIdx].destroy(); delete _catCharts['cat-'+unidadeIdx]; }
 
-  _areaCharts['sub-'+lojaIdx] = new Chart(canvas.getContext('2d'), {
+  var okCount = cat.totaisCategoria.ok || 0;
+  var nokCount = cat.totaisCategoria.nok || 0;
+
+  _catCharts['cat-'+unidadeIdx] = new Chart(canvas.getContext('2d'), {
     type: 'bar',
     plugins: [ChartDataLabels],
     data: {
-      labels: ['Fechadas', 'Abertas'],
+      labels: ['Conformidade'],
       datasets: [
         {
-          label: 'Programadas',
-          data: [sub.pFechado || 0, sub.pAberto || 0],
-          backgroundColor: 'rgba(43,47,216,.8)',
+          label: 'OK',
+          data: [okCount],
+          backgroundColor: 'rgba(112,173,71,.8)',
           borderRadius: 4,
           borderWidth: 0,
           barPercentage: 0.6,
           categoryPercentage: 0.7
         },
         {
-          label: 'Não Programadas',
-          data: [sub.npFechado || 0, sub.npAberto || 0],
-          backgroundColor: 'rgba(216,114,42,.85)',
+          label: 'NOK',
+          data: [nokCount],
+          backgroundColor: 'rgba(192,0,0,.85)',
           borderRadius: 4,
           borderWidth: 0,
           barPercentage: 0.6,
@@ -805,7 +806,7 @@ function buildSubareaChart(lojaIdx, areaIdx, subIdx) {
           beginAtZero: true,
           ticks: { font: { size: 12, weight: '600' }, stepSize: 1 },
           grid: { color: 'rgba(0,0,0,.06)' },
-          title: { display: true, text: 'Nº de Tarefas', color: '#777', font: { size: 12, weight: '700' } }
+          title: { display: true, text: 'Nº de Itens', color: '#777', font: { size: 12, weight: '700' } }
         },
         y: {
           ticks: { font: { size: 14, weight: '700', family: 'DM Sans' }, color: '#1a1a1a' },
