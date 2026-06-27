@@ -117,7 +117,7 @@ body {
 }
 .ht-head {
   display: grid;
-  grid-template-columns: 76px 220px 1fr 1fr 180px 110px 136px;
+  grid-template-columns: 76px 220px 1fr 1fr 180px 136px;
   background: #f1f3f5; border-bottom: 1px solid var(--line);
 }
 .ht-th {
@@ -131,7 +131,7 @@ body {
 
 .ht-row {
   display: grid;
-  grid-template-columns: 76px 220px 1fr 1fr 180px 110px 136px;
+  grid-template-columns: 76px 220px 1fr 1fr 180px 136px;
   border-bottom: 1px solid var(--line);
   transition: background 0.12s;
   cursor: pointer;
@@ -338,7 +338,7 @@ body {
 .home-screen.active, .detail-screen.active { display: block; }
 
 @media (max-width: 1024px) {
-  .ht-head, .ht-row { grid-template-columns: 60px 180px 1fr 1fr 140px 90px 110px; }
+  .ht-head, .ht-row { grid-template-columns: 60px 180px 1fr 1fr 140px 110px; }
   .ht-th, .ht-td { font-size: 12px; padding: 12px 6px; }
   .vals-grid { grid-template-columns: repeat(2,1fr); }
 }
@@ -479,7 +479,6 @@ function renderHome() {
   html += '<div class="ht-th">P Tarefas</div>';
   html += '<div class="ht-th">NP Tarefas</div>';
   html += '<div class="ht-th">Prog. P vs NP</div>';
-  html += '<div class="ht-th">Estado</div>';
   html += '<div class="ht-th">Detalhe</div>';
   html += '</div>';
   html += '<div id="ht-body"></div>';
@@ -580,11 +579,6 @@ function renderHomeTable() {
         +'<span class="mini-pct" style="color:var(--bar-orange)">'+pctNP+'%</span>'
         +'</div>';
       html += '</div></div>';
-
-      /* nova badge */
-      html += '<div class="ht-td">';
-      if (l.isNova) html += '<span class="nova-badge">✦ Nova</span>';
-      html += '</div>';
 
       /* detail btn */
       html += '<div class="ht-td" onclick="event.stopPropagation()">';
